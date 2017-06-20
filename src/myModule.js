@@ -6,11 +6,11 @@ export default class myModule {
         console.log('Hello, I am a module');
     }
 
-    hello() {
+    static hello() {
         return 'Hello!';
     }
 
-    goodbye() {
+    static goodbye() {
         return 'GoodBye!';
     }
 }

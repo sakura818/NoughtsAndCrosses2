@@ -63,15 +63,56 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * Created by yusuke-pc on 2017/06/20.
+ */
+var myModule = function () {
+    function myModule() {
+        _classCallCheck(this, myModule);
+
+        console.log('Hello, I am a module');
+    }
+
+    _createClass(myModule, [{
+        key: 'hello',
+        value: function hello() {
+            return 'Hello!';
+        }
+    }, {
+        key: 'goodbye',
+        value: function goodbye() {
+            return 'GoodBye!';
+        }
+    }]);
+
+    return myModule;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (myModule);
+
+/***/ }),
+/* 1 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__myModule__ = __webpack_require__(0);
+
 
 var root = document.querySelector('#root');
-root.innerHTML = '<p>○×ゲームを開始します。</p>';
+root.innerHTML = '<p>' + new __WEBPACK_IMPORTED_MODULE_0__myModule__["a" /* default */]().hello() + '</p>';
 
 /***/ })
 /******/ ]);

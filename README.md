@@ -1,7 +1,7 @@
 # OX_Game
 
 ## Description
-~~○×ゲーム~~
+○×ゲーム
 
 ## HowToPlay
 1. ?

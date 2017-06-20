@@ -63,11 +63,28 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* unused harmony export myModule2 */
+/* unused harmony export myFunction */
+/**
+ * Created by yusuke-pc on 2017/06/20.
+ */
+function myModule2() {
+    return 'Hello World !';
+}
+function myFunction() {
+    return 'this is my Func.';
+}
+
+/***/ }),
+/* 1 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -85,7 +102,7 @@ var myModule = function () {
         console.log('Hello, I am a module');
     }
 
-    _createClass(myModule, [{
+    _createClass(myModule, null, [{
         key: 'hello',
         value: function hello() {
             return 'Hello!';
@@ -103,16 +120,22 @@ var myModule = function () {
 /* harmony default export */ __webpack_exports__["a"] = (myModule);
 
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__myModule__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__myModule__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__myModule2__ = __webpack_require__(0);
+
+
 
 
 var root = document.querySelector('#root');
-root.innerHTML = '<p>' + new __WEBPACK_IMPORTED_MODULE_0__myModule__["a" /* default */]().hello() + '</p>';
+var greet1 = __WEBPACK_IMPORTED_MODULE_0__myModule__["a" /* default */].hello();
+var greet2 = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__myModule2__["default"])();
+var greet3 = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__myModule2__["default"])();
+root.innerHTML = '<p>' + greet1 + '</p><p>' + greet2 + '</p><p>' + greet3 + '</p>';
 
 /***/ })
 /******/ ]);

@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -76,60 +76,66 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
- * Created by yusuke-pc on 2017/06/20.
+ * boardクラス
+ *
+ * @author asada
  */
-var myModule = function () {
-    function myModule() {
-        _classCallCheck(this, myModule);
+var board = function () {
+    function board() {
+        _classCallCheck(this, board);
 
-        console.log('Hello, I am a module');
+        this.gameBoard = [-1, -1, -1, -1, -1, -1, -1, -1, -1];
     }
 
-    _createClass(myModule, null, [{
-        key: 'hello',
-        value: function hello() {
-            return 'Hello!';
+    _createClass(board, [{
+        key: 'init',
+        value: function init() {
+            this.gameBoard = [-1, -1, -1, -1, -1, -1, -1, -1, -1];
         }
     }, {
-        key: 'goodbye',
-        value: function goodbye() {
-            return 'GoodBye!';
+        key: 'print',
+        value: function print() {
+            var printData = '';
+            for (var i = 0; i < this.gameBoard.length; i++) {
+                printData += '<p>';
+
+                if (this.gameBoard[i] === -1) {
+                    printData += '[ ]';
+                } else if (this.gameBoard[i] === 0) {
+                    printData += '[○]';
+                } else if (this.gameBoard[i] === 1) {
+                    printData += '[×]';
+                }
+
+                if (i === 2) {
+                    printData += '</p>';
+                } else if (i === 5) {
+                    printData += '</p>';
+                }
+            }
+            printData += '</p>';
+            return printData;
         }
     }]);
 
-    return myModule;
+    return board;
 }();
 
-/* harmony default export */ __webpack_exports__["a"] = (myModule);
+/* harmony default export */ __webpack_exports__["a"] = (board);
 
 /***/ }),
 /* 1 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = myModule2;
-/**
- * Created by yusuke-pc on 2017/06/20.
- */
-function myModule2() {
-  return 'Hello World !';
-}
-
-/***/ }),
-/* 2 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__myModule__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__myModule2__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__board__ = __webpack_require__(0);
 
 
+var boardInstance = new __WEBPACK_IMPORTED_MODULE_0__board__["a" /* default */]();
 
 var root = document.getElementById('root');
-var greet1 = __WEBPACK_IMPORTED_MODULE_0__myModule__["a" /* default */].hello();
-var greet2 = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__myModule2__["a" /* default */])();
-root.innerHTML = '<p>' + greet1 + '</p><p>' + greet2 + '</p>';
+root.innerHTML = boardInstance.print();
 
 /***/ })
 /******/ ]);

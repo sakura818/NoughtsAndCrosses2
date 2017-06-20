@@ -2,6 +2,3 @@
 
 ## Description
 ○×ゲーム
-
-## HowToPlay
-1. ?

@@ -63,79 +63,23 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports) {
 
-"use strict";
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * boardクラス
- *
- * @author asada
- */
-var board = function () {
-    function board() {
-        _classCallCheck(this, board);
-
-        this.gameBoard = [-1, -1, -1, -1, -1, -1, -1, -1, -1];
-    }
-
-    _createClass(board, [{
-        key: 'init',
-        value: function init() {
-            this.gameBoard = [-1, -1, -1, -1, -1, -1, -1, -1, -1];
-        }
-    }, {
-        key: 'print',
-        value: function print() {
-            var printData = '';
-            for (var i = 0; i < this.gameBoard.length; i++) {
-                printData += '<p>';
-
-                if (this.gameBoard[i] === -1) {
-                    printData += '[ ]';
-                } else if (this.gameBoard[i] === 0) {
-                    printData += '[○]';
-                } else if (this.gameBoard[i] === 1) {
-                    printData += '[×]';
-                }
-
-                if (i === 2) {
-                    printData += '</p>';
-                } else if (i === 5) {
-                    printData += '</p>';
-                }
-            }
-            printData += '</p>';
-            return printData;
-        }
-    }]);
-
-    return board;
-}();
-
-/* harmony default export */ __webpack_exports__["a"] = (board);
-
-/***/ }),
-/* 1 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__board__ = __webpack_require__(0);
-
-
-var boardInstance = new __WEBPACK_IMPORTED_MODULE_0__board__["a" /* default */]();
-
+function print() {
+    return '<table>' + '<tr>' + '<td><input type="button" value="" id="11" onclick="select(id)"></td>' + '<td><input type="button" value="" id="12" onclick="select(12)"></td>' + '<td><input type="button" value="" id="13" onclick="select(13)"></td>' + '</tr>' + '<tr>' + '<td><input type="button" value="" id="21" onclick="select(21)"></td>' + '<td><input type="button" value="" id="22" onclick="select(22)"></td>' + '<td><input type="button" value="" id="23" onclick="select(23)"></td>' + '</tr>' + '<tr>' + '<td><input type="button" value="" id="31" onclick="select(31)"></td>' + '<td><input type="button" value="" id="32" onclick="select(32)"></td>' + '<td><input type="button" value="" id="33" onclick="select(33)"></td>' + '</tr>' + '</table>';
+}
+function select(id) {
+    console.log(id + 'のボタンが押されました。');
+}
 var root = document.getElementById('root');
-root.innerHTML = boardInstance.print();
+console.log(print());
+root.innerHTML = print();
+select(1);
 
 /***/ })
 /******/ ]);

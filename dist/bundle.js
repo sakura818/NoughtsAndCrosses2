@@ -71,14 +71,33 @@
 /***/ (function(module, exports) {
 
 function print() {
+    // template literal
+    return '\n        <table>\n        <tr>\n            <td><input type="button" value="" id="11" onclick="select(id)"></td>\n            <td><input type="button" value="" id="11" onclick="select(id)"></td>\n            <td><input type="button" value="" id="11" onclick="select(id)"></td>\n';
     return '<table>' + '<tr>' + '<td><input type="button" value="" id="11" onclick="select(id)"></td>' + '<td><input type="button" value="" id="12" onclick="select(12)"></td>' + '<td><input type="button" value="" id="13" onclick="select(13)"></td>' + '</tr>' + '<tr>' + '<td><input type="button" value="" id="21" onclick="select(21)"></td>' + '<td><input type="button" value="" id="22" onclick="select(22)"></td>' + '<td><input type="button" value="" id="23" onclick="select(23)"></td>' + '</tr>' + '<tr>' + '<td><input type="button" value="" id="31" onclick="select(31)"></td>' + '<td><input type="button" value="" id="32" onclick="select(32)"></td>' + '<td><input type="button" value="" id="33" onclick="select(33)"></td>' + '</tr>' + '</table>';
 }
 function select(id) {
-    console.log(id + 'のボタンが押されました。');
+    console.log(id + '\u306E\u30DC\u30BF\u30F3\u304C\u62BC\u3055\u308C\u307E\u3057\u305F\u3002');
 }
+
+function createDOM() {
+    var el = document.createElement("input");
+    el.type = "button";
+    el.addEventListener("click", function () {
+        select(11);
+    });
+    el.addEventListener("click", function () {
+        select(12);
+    });
+    return el;
+}
+
 var root = document.getElementById('root');
 console.log(print());
 root.innerHTML = print();
+
+var el = createDOM();
+root.appendChild(el);
+
 select(1);
 
 /***/ })

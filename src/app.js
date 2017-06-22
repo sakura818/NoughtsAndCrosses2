@@ -1,4 +1,12 @@
 function print() {
+    // template literal
+    return `
+        <table>
+        <tr>
+            <td><input type="button" value="" id="11" onclick="select(id)"></td>
+            <td><input type="button" value="" id="11" onclick="select(id)"></td>
+            <td><input type="button" value="" id="11" onclick="select(id)"></td>
+`;
     return '<table>' +
         '<tr>' +
         '<td><input type="button" value="" id="11" onclick="select(id)"></td>' +
@@ -18,9 +26,26 @@ function print() {
         '</table>';
 }
 function select(id) {
-    console.log(id + 'のボタンが押されました。');
+    console.log(`${id}のボタンが押されました。`);
 }
+
+function createDOM() {
+    let el = document.createElement("input");
+    el.type = "button";
+    el.addEventListener("click", () => {
+        select(11);
+    });
+    el.addEventListener("click", () => {
+        select(12);
+    });
+    return el;
+}
+
 const root = document.getElementById('root');
 console.log(print());
 root.innerHTML = print();
+
+const el = createDOM();
+root.appendChild(el);
+
 select(1);

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="index.js"></script>
+    <script type="text/javascript" src="board.js"></script>
+    <script>
+        //Object.freezeとすることで、再代入不可のconstをさらに、中身が変わることを防ぐ
+        const member = Object.freeze(['太郎', '次郎', '三郎']);
+        for (let m in member) {
+            console.log('名前は' + member[m]);
+        }
+        const square = {width: 100, height: 200};
+        for (let s in square) {
+            console.log(s + ' = ' + square[s]);
+        }
+        const Company = function (name, director) {
+            this.name = name;
+            this.director = director;
+            this.getName = function () {
+                return this.name
+            };
+            this.getDirector = function () {
+                return this.director;
+            };
+        };
+        let c1 = new Company('Kinky-Do', 'igarashi');
+        for (let c in c1) {
+            console.log(c);
+        }
+
+        //グローバル変数
+        let num;
+
+        //グローバルオブジェクトのプロパティ
+        window.num;
+
+        let num = function () {
+            //ローカル変数
+            let num;
+        }
+
+    </script>
+    <title>○×ゲーム</title>
+</head>
+
+<body>
+<h1>○×ゲーム</h1>
+<div id=times>○の番です</div>
+<table>
+    <tr>
+        <td>
+            <button onclick="select(id)" id="11">_</button>
+        </td>
+        <td>
+            <button onclick="select(id)" id="12">_</button>
+        </td>
+        <td>
+            <button onclick="select(id)" id="13">_</button>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <button onclick="select(id)" id="21">_</button>
+        </td>
+        <td>
+            <button onclick="select(id)" id="22">_</button>
+        </td>
+        <td>
+            <button onclick="select(id)" id="23">_</button>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <button onclick="select(id)" id="31">_</button>
+        </td>
+        <td>
+            <button onclick="select(id)" id="32">_</button>
+        </td>
+        <td>
+            <button onclick="select(id)" id="33">_</button>
+        </td>
+    </tr>
+</table>
+<button onclick="reset()">リセット</button>
+</body>
+
+</html>

@@ -1,10 +1,20 @@
 /**
  * CPUに関するものを集める
+ *
+ * @author asada
  */
-function selectByRandom() {
+function selectByCpu() {
     let random;
     do {
         random = Math.floor(Math.random() * 9);
+
+        /*
+         ゲームボードIDは
+         11 12 13
+         21 22 23
+         31 32 33
+         なので、乱数を変換する
+         */
         if (random === 0 || random === 1 || random === 2) {
             random += 11;
             //11,12,13

@@ -15,21 +15,18 @@ let endFlag = false;
  *
  * @param id 押したボタンのID
  */
-function select(id) {
-    if (endFlag === true) {
-        return;
+function selectByUser(id) {
+    if (endFlag === false) {
+        changeButtonState(id, NOUGHTS);
+
+        checkGameEnd(getGameBoard());
     }
-    changeButtonState(id, NOUGHTS);
 
-    checkGameEnd(getGameBoard());
+    if (endFlag === false) {
+        selectByCpu(getGameBoard());
 
-    if (endFlag === true) {
-        return;
+        checkGameEnd(getGameBoard());
     }
-    //ここからCPUの処理を追加する
-    selectByRandom(getGameBoard());
-
-    checkGameEnd(getGameBoard());
 }
 
 /**

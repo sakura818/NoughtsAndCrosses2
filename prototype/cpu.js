@@ -1,5 +1,5 @@
 /**
- * TODO CPUに関するものを集める
+ * CPUに関するものを集める
  */
 function selectByRandom() {
     let random;

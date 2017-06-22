@@ -1,5 +1,7 @@
 /**
- * TODO Boardに関するものを集める
+ * Boardに関するものを集める
+ *
+ * @author asada
  */
 
 function init() {
@@ -20,26 +22,26 @@ function checkGameEnd(gameBoardArray) {
 }
 
 function checkHorizontal(gameBoardArray) {
-    for (let x = 0; x < 3; x++) {
+    for (let x = 0; x < gameBoardArray.length; x++) {
         if (gameBoardArray[x][0] === NOUGHTS && gameBoardArray[x][1] === NOUGHTS && gameBoardArray[x][2] === NOUGHTS) {
-            setResult('WIN');
+            setResult(WIN);
             endFlag = true;
         }
         if (gameBoardArray[x][0] === CROSSES && gameBoardArray[x][1] === CROSSES && gameBoardArray[x][2] === CROSSES) {
-            setResult('LOSE');
+            setResult(LOSE);
             endFlag = true;
         }
     }
 }
 
 function checkVertical(gameBoardArray) {
-    for (let y = 0; y < 3; y++) {
+    for (let y = 0; y < gameBoardArray.length; y++) {
         if (gameBoardArray[0][y] === NOUGHTS && gameBoardArray[1][y] === NOUGHTS && gameBoardArray[2][y] === NOUGHTS) {
-            setResult('WIN');
+            setResult(WIN);
             endFlag = true;
         }
         if (gameBoardArray[0][y] === CROSSES && gameBoardArray[1][y] === CROSSES && gameBoardArray[2][y] === CROSSES) {
-            setResult('LOSE');
+            setResult(LOSE);
             endFlag = true;
         }
     }
@@ -47,22 +49,22 @@ function checkVertical(gameBoardArray) {
 
 function checkUpperLeftToLowerRight(gameBoardArray) {
     if (gameBoardArray[0][0] === NOUGHTS && gameBoardArray[1][1] === NOUGHTS && gameBoardArray[2][2] === NOUGHTS) {
-        setResult('WIN');
+        setResult(WIN);
         endFlag = true;
     }
     if (gameBoardArray[0][0] === CROSSES && gameBoardArray[1][1] === CROSSES && gameBoardArray[2][2] === CROSSES) {
-        setResult('LOSE');
+        setResult(LOSE);
         endFlag = true;
     }
 }
 
 function checkUpperRightToLowerLeft(gameBoardArray) {
     if (gameBoardArray[0][2] === NOUGHTS && gameBoardArray[1][1] === NOUGHTS && gameBoardArray[2][0] === NOUGHTS) {
-        setResult('WIN');
+        setResult(WIN);
         endFlag = true;
     }
     if (gameBoardArray[0][2] === CROSSES && gameBoardArray[1][1] === CROSSES && gameBoardArray[2][0] === CROSSES) {
-        setResult('LOSE');
+        setResult(LOSE);
         endFlag = true;
     }
 }
@@ -76,7 +78,7 @@ function checkDraw(gameBoardArray) {
         }
     }
     endFlag = true;
-    setResult('DRAW');
+    setResult(DRAW);
 }
 
 /**

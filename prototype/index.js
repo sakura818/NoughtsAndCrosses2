@@ -1,8 +1,10 @@
 /**
- * TODO index.htmlのボタンの処理をまとめる
+ * index.htmlのボタンの処理をまとめる
  *
  * @author asada
  */
+
+//TODO グローバル変数、関数になってしまっている(?)
 const NOUGHTS = '○';
 const CROSSES = '×';
 const DEFAULT = '_';
@@ -35,6 +37,6 @@ function select(id) {
  */
 function reset() {
     init();
-    setResult();
+    setResult(NOT_FINISH);
     endFlag = false;
 }

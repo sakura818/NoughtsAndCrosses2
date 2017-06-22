@@ -1,5 +1,5 @@
 /**
- * TODO UIに関するものを集める
+ * UIに関するものを集める
  *
  * @author asada
  */
@@ -9,33 +9,30 @@
  *
  * @param result
  */
+const WIN = 'あなたの勝ちです';
+const LOSE = 'あなたの負けです';
+const DRAW = '引き分けです';
+const NOT_FINISH = '';
+
 function setResult(result) {
-    let message;
-    if (result === 'WIN') {
-        message = 'あなたの勝ちです';
-
-    } else if (result === 'LOSE') {
-        message = 'あなたの負けです';
-
-    } else if (result === 'DRAW') {
-        message = '引き分けです';
-        
-    } else {
-        message = '';
-    }
-    document.getElementById('result').innerHTML = message;
+    document.getElementById('result').innerHTML = result;
 }
 
 /**
  * ボードの状態を変える関数
  *
- * @param id 変えたいID
+ * @param boardId 変えたいボードのID
  * @param state どう変えたいかを渡す
  */
-function changeButtonState(id, state) {
-    document.getElementById(id).innerHTML = state;
+function changeButtonState(boardId, state) {
+    document.getElementById(boardId).innerHTML = state;
 }
 
+/**
+ * HTML上のボードの状態を取得する
+ *
+ * @returns {Array}
+ */
 function getGameBoard() {
     let gameBoard = new Array(3);
     for (let x = 0; x < 3; x++) {
@@ -47,6 +44,12 @@ function getGameBoard() {
     return gameBoard;
 }
 
-function getGameBoardById(id) {
-    return document.getElementById(id).innerHTML;
+/**
+ * HTML上のボードの状態を取得する
+ *
+ * @param boardId 取得したいボードのID
+ * @returns {string}
+ */
+function getGameBoardById(boardId) {
+    return document.getElementById(boardId).innerHTML;
 }

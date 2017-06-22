@@ -9,11 +9,15 @@ function selectByCpu() {
         random = Math.floor(Math.random() * 9);
 
         /*
-         ゲームボードIDは
+         乱数を
+         0 1 2
+         3 4 5
+         6 7 8
+
+         ゲームボードIDに変換する
          11 12 13
          21 22 23
          31 32 33
-         なので、乱数を変換する
          */
         if (random === 0 || random === 1 || random === 2) {
             random += 11;

@@ -3,35 +3,35 @@
  *
  * @author asada
  */
-
-/**
- * 試合結果を表示する関数
- *
- * @param result
- */
 const WIN = 'あなたの勝ちです';
 const LOSE = 'あなたの負けです';
 const DRAW = '引き分けです';
 const NOT_FINISH = '';
 
+const ALREADY_PUT = 'そこはすでに埋まっています';
+const NO_ERROR = '';
+
+/**
+ * 試合結果を表示する
+ *
+ * @param result 表示したいものを渡す
+ */
 function setResult(result) {
     document.getElementById('result').innerHTML = result;
 }
 
 /**
- * ボードの状態を変える関数
+ * ボードに駒を置く
  *
  * @param boardId 変えたいボードのID
  * @param state どう変えたいかを渡す
  */
-function changeButtonState(boardId, state) {
+function put(boardId, state) {
     document.getElementById(boardId).innerHTML = state;
 }
 
 /**
  * HTML上のボードの状態を取得する
- *
- * @returns {Array}
  */
 function getGameBoard() {
     let gameBoard = new Array(3);
@@ -48,8 +48,11 @@ function getGameBoard() {
  * HTML上のボードの状態を取得する
  *
  * @param boardId 取得したいボードのID
- * @returns {string}
  */
 function getGameBoardById(boardId) {
     return document.getElementById(boardId).innerHTML;
+}
+
+function printError(message) {
+    document.getElementById('error').innerHTML = message;
 }

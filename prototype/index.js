@@ -12,21 +12,31 @@ let endFlag = false;
 
 /**
  * ユーザーが選択した場合に呼び出される関数
+ * TODO 先行、後攻が変わると困る。
  *
  * @param id 押したボタンのID
  */
 function selectByUser(id) {
-    if (endFlag === false) {
-        changeButtonState(id, NOUGHTS);
+    if (endFlag === true) {
+        return;
+    }
+    
+    if (!isAlreadyPut(id)) {
+        put(id, NOUGHTS);
+        printError(NO_ERROR);
 
-        checkGameEnd(getGameBoard());
+    } else {
+        printError(ALREADY_PUT);
+        return;
+    }
+    checkGameEnd(getGameBoard());
+
+    if (endFlag === true) {
+        return;
     }
 
-    if (endFlag === false) {
-        selectByCpu(getGameBoard());
-
-        checkGameEnd(getGameBoard());
-    }
+    selectByCpu(getGameBoard());
+    checkGameEnd(getGameBoard());
 }
 
 /**

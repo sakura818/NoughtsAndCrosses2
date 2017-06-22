@@ -10,7 +10,7 @@
 function init() {
     for (let i = 0; i < 3; i++) {
         for (let k = 0; k < 3; k++) {
-            changeButtonState(`${i + 1}${k + 1}`, DEFAULT);
+            put(`${i + 1}${k + 1}`, DEFAULT);
         }
     }
 }
@@ -34,7 +34,7 @@ function checkGameEnd(gameBoardArray) {
         }
     }
 
-    function checkVertical(gameBoardArray) {
+    function checkVertical() {
         for (let y = 0; y < gameBoardArray.length; y++) {
             if (gameBoardArray[0][y] === NOUGHTS && gameBoardArray[1][y] === NOUGHTS && gameBoardArray[2][y] === NOUGHTS) {
                 setResult(WIN);
@@ -47,7 +47,7 @@ function checkGameEnd(gameBoardArray) {
         }
     }
 
-    function checkUpperLeftToLowerRight(gameBoardArray) {
+    function checkUpperLeftToLowerRight() {
         if (gameBoardArray[0][0] === NOUGHTS && gameBoardArray[1][1] === NOUGHTS && gameBoardArray[2][2] === NOUGHTS) {
             setResult(WIN);
             endFlag = true;
@@ -58,7 +58,7 @@ function checkGameEnd(gameBoardArray) {
         }
     }
 
-    function checkUpperRightToLowerLeft(gameBoardArray) {
+    function checkUpperRightToLowerLeft() {
         if (gameBoardArray[0][2] === NOUGHTS && gameBoardArray[1][1] === NOUGHTS && gameBoardArray[2][0] === NOUGHTS) {
             setResult(WIN);
             endFlag = true;
@@ -69,7 +69,7 @@ function checkGameEnd(gameBoardArray) {
         }
     }
 
-    function checkDraw(gameBoardArray) {
+    function checkDraw() {
         for (let x = 0; x < gameBoardArray.length; x++) {
             for (let y = 0; y < gameBoardArray[x].length; y++) {
                 if (gameBoardArray[x][y] === DEFAULT) {
@@ -81,11 +81,15 @@ function checkGameEnd(gameBoardArray) {
         setResult(DRAW);
     }
 
-    checkHorizontal(gameBoardArray);
-    checkVertical(gameBoardArray);
-    checkUpperLeftToLowerRight(gameBoardArray);
-    checkUpperRightToLowerLeft(gameBoardArray);
-    checkDraw(gameBoardArray);
+    checkHorizontal();
+    checkVertical();
+    checkUpperLeftToLowerRight();
+    checkUpperRightToLowerLeft();
+
+    if (endFlag === true) {
+        return;
+    }
+    checkDraw();
 }
 
 /**

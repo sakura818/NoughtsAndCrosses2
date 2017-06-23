@@ -10,4 +10,4 @@ const selectByCpu = () => {
         boardId = boardIdArray[Math.floor(Math.random() * 9)];
     } while (isAlreadyPut(boardId));
     put(boardId, CROSSES);
-}
+};

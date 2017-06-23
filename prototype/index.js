@@ -4,7 +4,7 @@
  * @author asada
  */
 
-//TODO グローバル変数、関数になってしまっている(?)
+//TODO use strictすると死ぬ
 const NOUGHTS = '○';
 const CROSSES = '×';
 const DEFAULT = '_';

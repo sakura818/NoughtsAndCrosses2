@@ -24,11 +24,11 @@ const checkGameEnd = gameBoardArray => {
     (function checkHorizontal() {
         for (let val of gameBoardArray) {
             if (val[0] === NOUGHTS && val[1] === NOUGHTS && val[2] === NOUGHTS) {
-                setResult(WIN);
+                printResult(WIN);
                 endFlag = true;
             }
             if (val[0] === CROSSES && val[1] === CROSSES && val[2] === CROSSES) {
-                setResult(LOSE);
+                printResult(LOSE);
                 endFlag = true;
             }
         }
@@ -37,11 +37,11 @@ const checkGameEnd = gameBoardArray => {
     (function checkVertical() {
         for (let val of gameBoardArray) {
             if (val[0] === NOUGHTS && val[1] === NOUGHTS && val[2] === NOUGHTS) {
-                setResult(WIN);
+                printResult(WIN);
                 endFlag = true;
             }
             if (val[0] === CROSSES && val[1] === CROSSES && val[2] === CROSSES) {
-                setResult(LOSE);
+                printResult(LOSE);
                 endFlag = true;
             }
         }
@@ -49,22 +49,22 @@ const checkGameEnd = gameBoardArray => {
 
     (function checkUpperLeftToLowerRight() {
         if (gameBoardArray[0][0] === NOUGHTS && gameBoardArray[1][1] === NOUGHTS && gameBoardArray[2][2] === NOUGHTS) {
-            setResult(WIN);
+            printResult(WIN);
             endFlag = true;
         }
         if (gameBoardArray[0][0] === CROSSES && gameBoardArray[1][1] === CROSSES && gameBoardArray[2][2] === CROSSES) {
-            setResult(LOSE);
+            printResult(LOSE);
             endFlag = true;
         }
     })();
 
     (function checkUpperRightToLowerLeft() {
         if (gameBoardArray[0][2] === NOUGHTS && gameBoardArray[1][1] === NOUGHTS && gameBoardArray[2][0] === NOUGHTS) {
-            setResult(WIN);
+            printResult(WIN);
             endFlag = true;
         }
         if (gameBoardArray[0][2] === CROSSES && gameBoardArray[1][1] === CROSSES && gameBoardArray[2][0] === CROSSES) {
-            setResult(LOSE);
+            printResult(LOSE);
             endFlag = true;
         }
     })();

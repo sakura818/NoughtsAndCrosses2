@@ -22,12 +22,12 @@ function init() {
  */
 function checkGameEnd(gameBoardArray) {
     (function checkHorizontal() {
-        for (let x = 0; x < gameBoardArray.length; x++) {
-            if (gameBoardArray[x][0] === NOUGHTS && gameBoardArray[x][1] === NOUGHTS && gameBoardArray[x][2] === NOUGHTS) {
+        for (let val of gameBoardArray) {
+            if (val[0] === NOUGHTS && val[1] === NOUGHTS && val[2] === NOUGHTS) {
                 setResult(WIN);
                 endFlag = true;
             }
-            if (gameBoardArray[x][0] === CROSSES && gameBoardArray[x][1] === CROSSES && gameBoardArray[x][2] === CROSSES) {
+            if (val[0] === CROSSES && val[1] === CROSSES && val[2] === CROSSES) {
                 setResult(LOSE);
                 endFlag = true;
             }
@@ -35,12 +35,12 @@ function checkGameEnd(gameBoardArray) {
     })();
 
     (function checkVertical() {
-        for (let y = 0; y < gameBoardArray.length; y++) {
-            if (gameBoardArray[0][y] === NOUGHTS && gameBoardArray[1][y] === NOUGHTS && gameBoardArray[2][y] === NOUGHTS) {
+        for (let val of gameBoardArray) {
+            if (val[0] === NOUGHTS && val[1] === NOUGHTS && val[2] === NOUGHTS) {
                 setResult(WIN);
                 endFlag = true;
             }
-            if (gameBoardArray[0][y] === CROSSES && gameBoardArray[1][y] === CROSSES && gameBoardArray[2][y] === CROSSES) {
+            if (val[0] === CROSSES && val[1] === CROSSES && val[2] === CROSSES) {
                 setResult(LOSE);
                 endFlag = true;
             }

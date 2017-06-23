@@ -82,7 +82,7 @@ const checkGameEnd = gameBoardArray => {
             }
         }
         endFlag = true;
-        setResult(DRAW);
+        printResult(DRAW);
     };
     checkDraw();
 };

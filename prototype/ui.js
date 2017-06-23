@@ -16,7 +16,9 @@ const NO_ERROR = '';
  *
  * @param result 表示したいものを渡す
  */
-const printResult = result => document.getElementById('result').innerHTML = result;
+const printResult = result => {
+    document.getElementById('result').innerHTML = result;
+};
 
 /**
  * ボードに駒を置く

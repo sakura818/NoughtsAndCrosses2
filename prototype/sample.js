@@ -15,22 +15,25 @@ class Sample {
     }
 }
 
+//この時のthisはsample1を指す
 const sample1 = new Sample();
 sample1.name = "1だよ";
 console.log(3, sample1.hello());
 
+//
 const sample2 = new Sample();
 sample2.name = "2だよ";
+//関数を受け渡ししている
 sample2.hello = sample1.hello;
-console.log(4, sample2.hello);
+console.log(4, sample2.hello());
 
 const obj = {
     hello: sample1.hello(),
 };
 console.log(5, obj.hello());
-//
-// const hello = sample1.hello;
-// console.log(6, hello());
+
+const hello = sample1.hello;
+console.log(6, hello());
 //
 // sample2.hello = function () {
 //     return this;

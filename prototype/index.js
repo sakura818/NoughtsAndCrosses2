@@ -17,7 +17,7 @@ let endFlag = false;
  * @param id 押したボタンのID
  */
 const selectByUser = id => {
-    if (endFlag === true) {
+    if (endFlag) {
         return;
     }
 
@@ -31,7 +31,7 @@ const selectByUser = id => {
     }
     checkGameEnd(getGameBoard());
 
-    if (endFlag === true) {
+    if (endFlag) {
         return;
     }
 

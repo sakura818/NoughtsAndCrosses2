@@ -21,7 +21,7 @@ function init() {
  * @param gameBoardArray
  */
 function checkGameEnd(gameBoardArray) {
-    function checkHorizontal() {
+    (function checkHorizontal() {
         for (let x = 0; x < gameBoardArray.length; x++) {
             if (gameBoardArray[x][0] === NOUGHTS && gameBoardArray[x][1] === NOUGHTS && gameBoardArray[x][2] === NOUGHTS) {
                 setResult(WIN);
@@ -32,9 +32,9 @@ function checkGameEnd(gameBoardArray) {
                 endFlag = true;
             }
         }
-    }
+    })();
 
-    function checkVertical() {
+    (function checkVertical() {
         for (let y = 0; y < gameBoardArray.length; y++) {
             if (gameBoardArray[0][y] === NOUGHTS && gameBoardArray[1][y] === NOUGHTS && gameBoardArray[2][y] === NOUGHTS) {
                 setResult(WIN);
@@ -45,9 +45,9 @@ function checkGameEnd(gameBoardArray) {
                 endFlag = true;
             }
         }
-    }
+    })();
 
-    function checkUpperLeftToLowerRight() {
+    (function checkUpperLeftToLowerRight() {
         if (gameBoardArray[0][0] === NOUGHTS && gameBoardArray[1][1] === NOUGHTS && gameBoardArray[2][2] === NOUGHTS) {
             setResult(WIN);
             endFlag = true;
@@ -56,9 +56,9 @@ function checkGameEnd(gameBoardArray) {
             setResult(LOSE);
             endFlag = true;
         }
-    }
+    })();
 
-    function checkUpperRightToLowerLeft() {
+    (function checkUpperRightToLowerLeft() {
         if (gameBoardArray[0][2] === NOUGHTS && gameBoardArray[1][1] === NOUGHTS && gameBoardArray[2][0] === NOUGHTS) {
             setResult(WIN);
             endFlag = true;
@@ -67,9 +67,13 @@ function checkGameEnd(gameBoardArray) {
             setResult(LOSE);
             endFlag = true;
         }
+    })();
+
+    if (endFlag) {
+        return;
     }
 
-    function checkDraw() {
+    const checkDraw = function () {
         for (let x = 0; x < gameBoardArray.length; x++) {
             for (let y = 0; y < gameBoardArray[x].length; y++) {
                 if (gameBoardArray[x][y] === DEFAULT) {
@@ -79,16 +83,7 @@ function checkGameEnd(gameBoardArray) {
         }
         endFlag = true;
         setResult(DRAW);
-    }
-
-    checkHorizontal();
-    checkVertical();
-    checkUpperLeftToLowerRight();
-    checkUpperRightToLowerLeft();
-
-    if (endFlag === true) {
-        return;
-    }
+    };
     checkDraw();
 }
 

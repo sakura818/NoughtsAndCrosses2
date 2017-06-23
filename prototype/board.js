@@ -8,9 +8,9 @@
  * HTML上のボードを初期化する関数
  */
 const init = () => {
-    for (let i = 0; i < 3; i++) {
-        for (let k = 0; k < 3; k++) {
-            put(`${i + 1}${k + 1}`, DEFAULT);
+    for (let i = 1; i < 4; i++) {
+        for (let k = 1; k < 4; k++) {
+            put(`${i}${k}`, DEFAULT);
         }
     }
 };
@@ -34,6 +34,10 @@ const checkGameEnd = gameBoardArray => {
         }
     })();
 
+    if (endFlag) {
+        return;
+    }
+
     (function checkVertical() {
         for (let y = 0; y < gameBoardArray.length; y++) {
             if (gameBoardArray[0][y] === NOUGHTS && gameBoardArray[1][y] === NOUGHTS && gameBoardArray[2][y] === NOUGHTS) {
@@ -47,6 +51,10 @@ const checkGameEnd = gameBoardArray => {
         }
     })();
 
+    if (endFlag) {
+        return;
+    }
+
     (function checkUpperLeftToLowerRight() {
         if (gameBoardArray[0][0] === NOUGHTS && gameBoardArray[1][1] === NOUGHTS && gameBoardArray[2][2] === NOUGHTS) {
             printResult(WIN);
@@ -57,6 +65,10 @@ const checkGameEnd = gameBoardArray => {
             endFlag = true;
         }
     })();
+
+    if (endFlag) {
+        return;
+    }
 
     (function checkUpperRightToLowerLeft() {
         if (gameBoardArray[0][2] === NOUGHTS && gameBoardArray[1][1] === NOUGHTS && gameBoardArray[2][0] === NOUGHTS) {

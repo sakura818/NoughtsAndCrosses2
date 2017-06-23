@@ -44,6 +44,6 @@ const selectByUser = id => {
  */
 const reset = () => {
     init();
-    setResult(NOT_FINISH);
+    printResult(NOT_FINISH);
     endFlag = false;
 };

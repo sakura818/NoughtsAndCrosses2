@@ -18,10 +18,10 @@ const config = {
             include: path.resolve(__dirname, 'src'),
             use: [{
                 /*
-                ローダー
-                異なる形式のファイル（cssとかSass(css関連）を
-                どのようにインポートするかをwebpackに指示できる。
-                */
+                 ローダー
+                 異なる形式のファイル（cssとかSass(css関連）を
+                 どのようにインポートするかをwebpackに指示できる。
+                 */
                 loader: 'babel-loader',
                 options: {
                     presets: [

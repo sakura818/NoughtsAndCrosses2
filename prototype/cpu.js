@@ -3,7 +3,7 @@
  *
  * @author asada
  */
-function selectByCpu() {
+const selectByCpu = () => {
     let boardId;
     do {
         const boardIdArray = [11, 12, 13, 21, 22, 23, 31, 32, 33];

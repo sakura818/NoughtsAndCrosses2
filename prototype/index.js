@@ -16,11 +16,11 @@ let endFlag = false;
  *
  * @param id 押したボタンのID
  */
-function selectByUser(id) {
+const selectByUser = id => {
     if (endFlag === true) {
         return;
     }
-    
+
     if (!isAlreadyPut(id)) {
         put(id, NOUGHTS);
         printError(NO_ERROR);
@@ -37,13 +37,13 @@ function selectByUser(id) {
 
     selectByCpu(getGameBoard());
     checkGameEnd(getGameBoard());
-}
+};
 
 /**
  * ユーザーがリセットボタンを押した場合に呼び出される関数
  */
-function reset() {
+const reset = () => {
     init();
     setResult(NOT_FINISH);
     endFlag = false;
-}
+};

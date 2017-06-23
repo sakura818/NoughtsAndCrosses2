@@ -7,20 +7,20 @@
 /**
  * HTML上のボードを初期化する関数
  */
-function init() {
+const init = () => {
     for (let i = 0; i < 3; i++) {
         for (let k = 0; k < 3; k++) {
             put(`${i + 1}${k + 1}`, DEFAULT);
         }
     }
-}
+};
 
 /**
  * ゲームの終了条件を満たした確認する関数
  *
  * @param gameBoardArray
  */
-function checkGameEnd(gameBoardArray) {
+const checkGameEnd = gameBoardArray => {
     (function checkHorizontal() {
         for (let val of gameBoardArray) {
             if (val[0] === NOUGHTS && val[1] === NOUGHTS && val[2] === NOUGHTS) {
@@ -73,7 +73,7 @@ function checkGameEnd(gameBoardArray) {
         return;
     }
 
-    const checkDraw = function () {
+    const checkDraw = () => {
         for (let x = 0; x < gameBoardArray.length; x++) {
             for (let y = 0; y < gameBoardArray[x].length; y++) {
                 if (gameBoardArray[x][y] === DEFAULT) {
@@ -85,11 +85,11 @@ function checkGameEnd(gameBoardArray) {
         setResult(DRAW);
     };
     checkDraw();
-}
+};
 
 /**
  * ボード上で選択した場所が埋まっている確認する
  */
-function isAlreadyPut(id) {
-    return getGameBoardById(id) !== DEFAULT;
-}
+const isAlreadyPut = id => {
+    return getGameBoardById(id) !== DEFAULT
+};

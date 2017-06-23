@@ -16,9 +16,7 @@ const NO_ERROR = '';
  *
  * @param result 表示したいものを渡す
  */
-function setResult(result) {
-    document.getElementById('result').innerHTML = result;
-}
+const setResult = result => document.getElementById('result').innerHTML = result;
 
 /**
  * ボードに駒を置く
@@ -26,14 +24,12 @@ function setResult(result) {
  * @param boardId 変えたいボードのID
  * @param state どう変えたいかを渡す
  */
-function put(boardId, state) {
-    document.getElementById(boardId).innerHTML = state;
-}
+const put = (boardId, state) => document.getElementById(boardId).innerHTML = state;
 
 /**
  * HTML上のボードの状態を取得する
  */
-function getGameBoard() {
+const getGameBoard = () => {
     let gameBoard = new Array(3);
     for (let x = 0; x < 3; x++) {
         gameBoard[x] = new Array(3);
@@ -42,17 +38,21 @@ function getGameBoard() {
         }
     }
     return gameBoard;
-}
+};
 
 /**
  * HTML上のボードの状態を取得する
  *
  * @param boardId 取得したいボードのID
  */
-function getGameBoardById(boardId) {
+const getGameBoardById = boardId => {
     return document.getElementById(boardId).innerHTML;
-}
+};
 
-function printError(message) {
-    document.getElementById('error').innerHTML = message;
-}
+/**
+ * エラーを表示する。
+ * または表示したエラーを削除する。
+ *
+ * @param message
+ */
+const printError = message => document.getElementById('error').innerHTML = message;

@@ -35,12 +35,12 @@ const checkGameEnd = gameBoardArray => {
     })();
 
     (function checkVertical() {
-        for (let val of gameBoardArray) {
-            if (val[0] === NOUGHTS && val[1] === NOUGHTS && val[2] === NOUGHTS) {
+        for (let y = 0; y < gameBoardArray.length; y++) {
+            if (gameBoardArray[0][y] === NOUGHTS && gameBoardArray[1][y] === NOUGHTS && gameBoardArray[2][y] === NOUGHTS) {
                 printResult(WIN);
                 endFlag = true;
             }
-            if (val[0] === CROSSES && val[1] === CROSSES && val[2] === CROSSES) {
+            if (gameBoardArray[0][y] === CROSSES && gameBoardArray[1][y] === CROSSES && gameBoardArray[2][y] === CROSSES) {
                 printResult(LOSE);
                 endFlag = true;
             }

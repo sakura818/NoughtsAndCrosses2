@@ -1,5 +1,3 @@
-import {board} from './app';
-
 /**
  * コンピュータのプレイヤー
  *
@@ -11,10 +9,6 @@ export default class Cpu {
     }
 
     selectByCpu() {
-        let boardId;
-        do {
-            boardId = Math.floor(Math.random() * board.getOneSideLength() * board.getOneSideLength());
-        } while (board.isAlreadyPut(boardId));
-        board.put(boardId, this.playerId);
+        throw new Error('You have to implement the method doSomething!');
     }
 }

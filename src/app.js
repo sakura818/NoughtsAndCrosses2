@@ -1,7 +1,7 @@
 import Board from './Board';
 import Ui from './Ui';
 import HumanPlayer from './HumanPlayer';
-import Cpu from './Cpu';
+import EasyCpu from './EasyCpu';
 
 /**
  * index.htmlのボタンの処理をまとめる
@@ -18,7 +18,7 @@ export const RESULT = Object.freeze({DRAW: 0, WIN: 1, LOSE: 2});
 export const board = new Board(3, 3);
 export const ui = new Ui();
 export const humanPlayer = new HumanPlayer(1);
-export const cpu = new Cpu(2);
+export const cpu = new EasyCpu(2);
 
 // /**
 //  * 初回に一度だけ、呼び出される。

@@ -5,6 +5,16 @@ import Cpu from 'Cpu';
  *
  * @author asada
  */
-class EasyCpu extends Cpu {
+export default class EasyCpu extends Cpu {
+    constructor(playerId) {
+        super(playerId);
+    }
 
+    selectByCpu() {
+        let boardId;
+        do {
+            boardId = Math.floor(Math.random() * board.getOneSideLength() * board.getOneSideLength());
+        } while (board.isAlreadyPut(boardId));
+        board.put(boardId, this.playerId);
+    }
 }

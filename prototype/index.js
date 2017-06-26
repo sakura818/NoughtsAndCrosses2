@@ -1,49 +1,35 @@
+import {Board} from 'prototype/Board';
+import {Ui} from 'prototype/Ui';
+import HumanPlayer from 'HumanPlayer';
+import Cpu from 'prototype/Cpu';
+
 /**
  * index.htmlのボタンの処理をまとめる
  *
  * @author asada
  */
+export const NOUGHTS = '○';
+export const CROSSES = '×';
+export const DEFAULT = '_';
+export let endFlag = false;
 
-//TODO use strictすると死ぬ
-const NOUGHTS = '○';
-const CROSSES = '×';
-const DEFAULT = '_';
-let endFlag = false;
-
-/**
- * ユーザーが選択した場合に呼び出される関数
- * TODO 先行、後攻が変わると困る
- *
- * @param id 押したボタンのID
- */
-const selectByUser = id => {
-    if (endFlag) {
-        return;
-    }
-
-    if (!isAlreadyPut(id)) {
-        put(id, NOUGHTS);
-        printError(NO_ERROR);
-
-    } else {
-        printError(ALREADY_PUT);
-        return;
-    }
-    checkGameEnd(getGameBoard());
-
-    if (endFlag) {
-        return;
-    }
-
-    selectByCpu(getGameBoard());
-    checkGameEnd(getGameBoard());
-};
+export let board;
+export let ui;
+export let humanPlayer;
+export let cpu;
 
 /**
- * ユーザーがリセットボタンを押した場合に呼び出される関数
+ * 初回に一度だけ、呼び出される。
+ * Board
+ * Ui
+ * HumanPlayer
+ * Cpu
+ * のオブジェクトを作成する。
  */
-const reset = () => {
-    init();
-    printResult(NOT_FINISH);
-    endFlag = false;
+window.onloard = function () {
+    board = new Board();
+    ui = new Ui();
+    humanPlayer = new HumanPlayer();
+    cpu = new Cpu();
+    ui.createDom();
 };

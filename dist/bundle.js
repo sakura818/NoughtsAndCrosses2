@@ -73,10 +73,12 @@
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RESULT", function() { return RESULT; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CPU_LEVEL", function() { return CPU_LEVEL; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "board", function() { return board; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ui", function() { return ui; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "humanPlayer", function() { return humanPlayer; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "cpu", function() { return cpu; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setCpu", function() { return setCpu; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Board__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Ui__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__HumanPlayer__ = __webpack_require__(3);
@@ -93,30 +95,37 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
  */
 
 /**
- *
- * @type {Object}
+ * 試合結果の定数オブジェクト
  */
 var RESULT = Object.freeze({ DRAW: 0, WIN: 1, LOSE: 2 });
 
+/**
+ * CPUの強さの定数オブジェクト
+ */
+var CPU_LEVEL = Object.freeze({ EASY: 'Easy', NORMAL: 'Normal' });
+
 var board = new __WEBPACK_IMPORTED_MODULE_0__Board__["a" /* default */](3, 3);
+
 var ui = new __WEBPACK_IMPORTED_MODULE_1__Ui__["a" /* default */]();
 var humanPlayer = new __WEBPACK_IMPORTED_MODULE_2__HumanPlayer__["a" /* default */](1);
-var cpu = new __WEBPACK_IMPORTED_MODULE_3__Cpu__["a" /* default */](2);
+var cpu = new __WEBPACK_IMPORTED_MODULE_3__Cpu__["a" /* EasyCpu */](2);
 
-// /**
-//  * 初回に一度だけ、呼び出される。
-//  * Board
-//  * Ui
-//  * HumanPlayer
-//  * Cpu
-//  * のオブジェクトを作成する。
-//  */
-// window.addEventListener("load", function (eve) {
-//     board = new Board(3, 3);
-//     ui = new Ui();
-//     humanPlayer = new HumanPlayer(1);
-//     cpu = new Cpu(2);
-// }, false);
+/**
+ * CPUの強さを変更する関数
+ *
+ * @param cpuLevel
+ */
+var setCpu = function setCpu(cpuLevel) {
+  switch (cpuLevel) {
+    case CPU_LEVEL.EASY:
+      cpu = new __WEBPACK_IMPORTED_MODULE_3__Cpu__["a" /* EasyCpu */](2);
+      break;
+
+    case CPU_LEVEL.NORMAL:
+      cpu = new __WEBPACK_IMPORTED_MODULE_3__Cpu__["b" /* NormalCpu */](2);
+      break;
+  }
+};
 
 /***/ }),
 /* 1 */
@@ -304,11 +313,16 @@ var Board = function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return EasyCpu; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return NormalCpu; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app__ = __webpack_require__(0);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 
 /**
@@ -327,6 +341,35 @@ var Cpu = function () {
     _createClass(Cpu, [{
         key: 'selectByCpu',
         value: function selectByCpu() {
+            throw new Error('You have to implement the method doSomething!');
+        }
+    }]);
+
+    return Cpu;
+}();
+
+/**
+ * 弱いCPU
+ *
+ * @author asada
+ */
+
+
+var EasyCpu = function (_Cpu) {
+    _inherits(EasyCpu, _Cpu);
+
+    function EasyCpu(playerId) {
+        _classCallCheck(this, EasyCpu);
+
+        var _this = _possibleConstructorReturn(this, (EasyCpu.__proto__ || Object.getPrototypeOf(EasyCpu)).call(this, playerId));
+
+        console.log('イージーCPUが呼ばれました。');
+        return _this;
+    }
+
+    _createClass(EasyCpu, [{
+        key: 'selectByCpu',
+        value: function selectByCpu() {
             var boardId = void 0;
             do {
                 boardId = Math.floor(Math.random() * __WEBPACK_IMPORTED_MODULE_0__app__["board"].getOneSideLength() * __WEBPACK_IMPORTED_MODULE_0__app__["board"].getOneSideLength());
@@ -335,10 +378,28 @@ var Cpu = function () {
         }
     }]);
 
-    return Cpu;
-}();
+    return EasyCpu;
+}(Cpu);
 
-/* harmony default export */ __webpack_exports__["a"] = (Cpu);
+var NormalCpu = function (_Cpu2) {
+    _inherits(NormalCpu, _Cpu2);
+
+    function NormalCpu(playerId) {
+        _classCallCheck(this, NormalCpu);
+
+        var _this2 = _possibleConstructorReturn(this, (NormalCpu.__proto__ || Object.getPrototypeOf(NormalCpu)).call(this, playerId));
+
+        console.log('ノーマルCPUが呼ばれました。');
+        return _this2;
+    }
+
+    _createClass(NormalCpu, [{
+        key: 'selectByCpu',
+        value: function selectByCpu() {}
+    }]);
+
+    return NormalCpu;
+}(Cpu);
 
 /***/ }),
 /* 3 */
@@ -433,6 +494,49 @@ var Ui = function () {
             return title;
         };
 
+        var createCpuLevelSelectBox = function createCpuLevelSelectBox() {
+            var form = document.createElement('form');
+            form.action = '#';
+
+            var select = document.createElement('select');
+            select.name = 'CpuLevel';
+            select.addEventListener('change', function () {
+                __WEBPACK_IMPORTED_MODULE_0__app_js__["board"].init();
+                __WEBPACK_IMPORTED_MODULE_0__app_js__["ui"].printBoard();
+            });
+
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
+
+            try {
+                for (var _iterator = Object.keys(__WEBPACK_IMPORTED_MODULE_0__app_js__["CPU_LEVEL"])[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var value = _step.value;
+
+                    var option = document.createElement('option');
+                    option.value = __WEBPACK_IMPORTED_MODULE_0__app_js__["CPU_LEVEL"][value];
+                    option.innerHTML = __WEBPACK_IMPORTED_MODULE_0__app_js__["CPU_LEVEL"][value];
+                    select.appendChild(option);
+                }
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                        _iterator.return();
+                    }
+                } finally {
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
+                }
+            }
+
+            form.appendChild(select);
+            return form;
+        };
+
         var createGameBoard = function createGameBoard() {
             var fragment = document.createDocumentFragment();
 
@@ -480,6 +584,8 @@ var Ui = function () {
             divClassCenter.className = 'content';
 
             divClassCenter.appendChild(createTitle());
+
+            divClassCenter.appendChild(createCpuLevelSelectBox());
 
             divClassCenter.appendChild(createGameBoard());
 

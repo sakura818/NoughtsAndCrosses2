@@ -1,4 +1,4 @@
-import {board, ui, humanPlayer, RESULT} from './app.js';
+import {board, ui, humanPlayer, RESULT, CPU_LEVEL, setCpu} from './app.js';
 
 /**
  * UIクラス
@@ -15,6 +15,28 @@ export default class Ui {
             const title = document.createElement('h1');
             title.innerHTML = '○×ゲーム';
             return title;
+        };
+
+        const createCpuLevelSelectBox = () => {
+            const form = document.createElement('form');
+            form.action = '#';
+
+            const select = document.createElement('select');
+            select.name = 'CpuLevel';
+            select.addEventListener('change', () => {
+                board.init();
+                ui.printBoard();
+            });
+
+            for (let value of Object.keys(CPU_LEVEL)) {
+                let option = document.createElement('option');
+                option.value = CPU_LEVEL[value];
+                option.innerHTML = CPU_LEVEL[value];
+                select.appendChild(option);
+            }
+
+            form.appendChild(select);
+            return form;
         };
 
         const createGameBoard = () => {
@@ -59,6 +81,8 @@ export default class Ui {
             divClassCenter.className = 'content';
 
             divClassCenter.appendChild(createTitle());
+
+            divClassCenter.appendChild(createCpuLevelSelectBox());
 
             divClassCenter.appendChild(createGameBoard());
 

@@ -1,7 +1,7 @@
 import Board from './Board';
 import Ui from './Ui';
 import HumanPlayer from './HumanPlayer';
-import EasyCpu from './EasyCpu';
+import {EasyCpu, NormalCpu} from './Cpu';
 
 /**
  * index.htmlのボタンの処理をまとめる
@@ -10,27 +10,34 @@ import EasyCpu from './EasyCpu';
  */
 
 /**
- *
- * @type {Object}
+ * 試合結果の定数オブジェクト
  */
 export const RESULT = Object.freeze({DRAW: 0, WIN: 1, LOSE: 2});
 
+/**
+ * CPUの強さの定数オブジェクト
+ */
+export const CPU_LEVEL = Object.freeze({EASY: 'Easy', NORMAL: 'Normal'});
+
 export const board = new Board(3, 3);
+
 export const ui = new Ui();
 export const humanPlayer = new HumanPlayer(1);
-export const cpu = new EasyCpu(2);
+export let cpu = new EasyCpu(2);
 
-// /**
-//  * 初回に一度だけ、呼び出される。
-//  * Board
-//  * Ui
-//  * HumanPlayer
-//  * Cpu
-//  * のオブジェクトを作成する。
-//  */
-// window.addEventListener("load", function (eve) {
-//     board = new Board(3, 3);
-//     ui = new Ui();
-//     humanPlayer = new HumanPlayer(1);
-//     cpu = new Cpu(2);
-// }, false);
+/**
+ * CPUの強さを変更する関数
+ *
+ * @param cpuLevel
+ */
+export const setCpu = (cpuLevel) => {
+    switch (cpuLevel) {
+        case CPU_LEVEL.EASY:
+            cpu = new EasyCpu(2);
+            break;
+
+        case CPU_LEVEL.NORMAL:
+            cpu = new NormalCpu(2);
+            break;
+    }
+};

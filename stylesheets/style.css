@@ -3,3 +3,10 @@
 h1 {
     color: red;
 }
+
+.content {
+    border: 1px solid #aaa;
+    width: 200px;
+    height: 250px;
+    text-align: center;
+}

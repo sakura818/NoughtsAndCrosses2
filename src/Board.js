@@ -1,7 +1,7 @@
 import {ui, RESULT} from './app';
 
 /**
- * Boardに関するものを集める
+ * Boardクラス
  *
  * @author asada
  */

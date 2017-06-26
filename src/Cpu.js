@@ -6,12 +6,8 @@ import {board} from './app';
  * @author asada
  */
 export default class Cpu {
-    constructor() {
-        this.playerId = 2;
-    }
-
-    getId() {
-        return this.playerId;
+    constructor(playerId) {
+        this.playerId = playerId;
     }
 
     selectByCpu() {

@@ -91,27 +91,32 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
  *
  * @author asada
  */
-var RESULT = Object.freeze({ DRAW: 0, WIN: 1, LOSE: 2 });
-
-var board = void 0;
-var ui = void 0;
-var humanPlayer = void 0;
-var cpu = void 0;
 
 /**
- * 初回に一度だけ、呼び出される。
- * Board
- * Ui
- * HumanPlayer
- * Cpu
- * のオブジェクトを作成する。
+ *
+ * @type {Object}
  */
-window.addEventListener("load", function (eve) {
-  board = new __WEBPACK_IMPORTED_MODULE_0__Board__["a" /* default */](3, 3);
-  ui = new __WEBPACK_IMPORTED_MODULE_1__Ui__["a" /* default */]();
-  humanPlayer = new __WEBPACK_IMPORTED_MODULE_2__HumanPlayer__["a" /* default */]();
-  cpu = new __WEBPACK_IMPORTED_MODULE_3__Cpu__["a" /* default */]();
-}, false);
+var RESULT = Object.freeze({ DRAW: 0, WIN: 1, LOSE: 2 });
+
+var board = new __WEBPACK_IMPORTED_MODULE_0__Board__["a" /* default */](3, 3);
+var ui = new __WEBPACK_IMPORTED_MODULE_1__Ui__["a" /* default */]();
+var humanPlayer = new __WEBPACK_IMPORTED_MODULE_2__HumanPlayer__["a" /* default */](1);
+var cpu = new __WEBPACK_IMPORTED_MODULE_3__Cpu__["a" /* default */](2);
+
+// /**
+//  * 初回に一度だけ、呼び出される。
+//  * Board
+//  * Ui
+//  * HumanPlayer
+//  * Cpu
+//  * のオブジェクトを作成する。
+//  */
+// window.addEventListener("load", function (eve) {
+//     board = new Board(3, 3);
+//     ui = new Ui();
+//     humanPlayer = new HumanPlayer(1);
+//     cpu = new Cpu(2);
+// }, false);
 
 /***/ }),
 /* 1 */
@@ -126,7 +131,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
 /**
- * Boardに関するものを集める
+ * Boardクラス
  *
  * @author asada
  */
@@ -313,18 +318,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  */
 
 var Cpu = function () {
-    function Cpu() {
+    function Cpu(playerId) {
         _classCallCheck(this, Cpu);
 
-        this.playerId = 2;
+        this.playerId = playerId;
     }
 
     _createClass(Cpu, [{
-        key: 'getId',
-        value: function getId() {
-            return this.playerId;
-        }
-    }, {
         key: 'selectByCpu',
         value: function selectByCpu() {
             var boardId = void 0;
@@ -359,25 +359,20 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  */
 
 var HumanPlayer = function () {
-    function HumanPlayer() {
+    function HumanPlayer(playerId) {
         _classCallCheck(this, HumanPlayer);
 
-        this.playerId = 1;
+        this.playerId = playerId;
     }
 
+    /**
+     * ユーザーが選択した場合に呼び出される関数
+     *
+     * @param boardId 押したボタンのID
+     */
+
+
     _createClass(HumanPlayer, [{
-        key: 'getPlayerId',
-        value: function getPlayerId() {
-            return this.playerId;
-        }
-
-        /**
-         * ユーザーが選択した場合に呼び出される関数
-         *
-         * @param boardId 押したボタンのID
-         */
-
-    }, {
         key: 'selectByUser',
         value: function selectByUser(boardId) {
             if (__WEBPACK_IMPORTED_MODULE_0__app__["board"].endFlag) {
@@ -390,14 +385,13 @@ var HumanPlayer = function () {
             __WEBPACK_IMPORTED_MODULE_0__app__["board"].put(boardId, this.playerId);
             __WEBPACK_IMPORTED_MODULE_0__app__["board"].checkGameEnd(this.playerId);
 
-            //CPUに決めさせる。
+            //CPUの手番。
             if (__WEBPACK_IMPORTED_MODULE_0__app__["board"].endFlag) {
                 return;
             }
             __WEBPACK_IMPORTED_MODULE_0__app__["cpu"].selectByCpu();
             __WEBPACK_IMPORTED_MODULE_0__app__["board"].checkGameEnd(__WEBPACK_IMPORTED_MODULE_0__app__["cpu"].playerId);
 
-            //表示する
             __WEBPACK_IMPORTED_MODULE_0__app__["ui"].printBoard();
         }
     }]);
@@ -420,25 +414,28 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
 /**
- * UIに関するものを集める
+ * UIクラス
  *
  * @author asada
  */
 
 var Ui = function () {
+    /**
+     * コンストラクタ
+     * タイトル、ゲームボード、リセットボタンを作成して、表示する。
+     */
     function Ui() {
         _classCallCheck(this, Ui);
 
-        function createDOM() {
-            //DocumentFragmentを利用して再描画の回数を減らす
+        var createTitle = function createTitle() {
+            var title = document.createElement('h1');
+            title.innerHTML = '○×ゲーム';
+            return title;
+        };
+
+        var createGameBoard = function createGameBoard() {
             var fragment = document.createDocumentFragment();
 
-            //タイトル
-            var h1Tag = document.createElement('h1');
-            h1Tag.innerHTML = '○×ゲーム';
-            fragment.appendChild(h1Tag);
-
-            //ゲームボード
             var pTag = document.createElement('p');
 
             var _loop = function _loop(i) {
@@ -462,7 +459,10 @@ var Ui = function () {
                 _loop(i);
             }
 
-            //リセットボタン
+            return fragment;
+        };
+
+        var createResetButton = function createResetButton() {
             var resetButton = document.createElement('button');
             //IDを付与しているが、
             resetButton.id = 'reset';
@@ -471,14 +471,31 @@ var Ui = function () {
                 __WEBPACK_IMPORTED_MODULE_0__app_js__["board"].init();
                 __WEBPACK_IMPORTED_MODULE_0__app_js__["ui"].printBoard();
             });
-            fragment.appendChild(resetButton);
+            return resetButton;
+        };
 
-            return fragment;
-        }
+        var createDOM = function createDOM() {
+            //div class contentの中にタイトル、ゲームボード、リセットボタンを格納する。
+            var divClassCenter = document.createElement('div');
+            divClassCenter.className = 'content';
+
+            divClassCenter.appendChild(createTitle());
+
+            divClassCenter.appendChild(createGameBoard());
+
+            divClassCenter.appendChild(createResetButton());
+
+            return divClassCenter;
+        };
 
         var el = createDOM();
         document.getElementById('root').appendChild(el);
     }
+
+    /**
+     * 現在のボードの状況を表示する。
+     */
+
 
     _createClass(Ui, [{
         key: 'printBoard',
@@ -528,7 +545,7 @@ var Ui = function () {
                     break;
 
                 case __WEBPACK_IMPORTED_MODULE_0__app_js__["RESULT"].LOSE:
-                    window.alert('あたなの負けです。');
+                    window.alert('あなたの負けです。');
                     break;
 
                 default:

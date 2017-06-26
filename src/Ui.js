@@ -1,22 +1,25 @@
 import {board, ui, humanPlayer, RESULT} from './app.js';
 
 /**
- * UIに関するものを集める
+ * UIクラス
  *
  * @author asada
  */
 export default class Ui {
+    /**
+     * コンストラクタ
+     * タイトル、ゲームボード、リセットボタンを作成して、表示する。
+     */
     constructor() {
-        function createDOM() {
-            //DocumentFragmentを利用して再描画の回数を減らす
-            let fragment = document.createDocumentFragment();
+        const createTitle = () => {
+            const title = document.createElement('h1');
+            title.innerHTML = '○×ゲーム';
+            return title;
+        };
 
-            //タイトル
-            let h1Tag = document.createElement('h1');
-            h1Tag.innerHTML = '○×ゲーム';
-            fragment.appendChild(h1Tag);
+        const createGameBoard = () => {
+            const fragment = document.createDocumentFragment();
 
-            //ゲームボード
             let pTag = document.createElement('p');
             for (let i = 0; i < 9; i++) {
                 if (i % 3 === 0) {
@@ -35,8 +38,11 @@ export default class Ui {
                 fragment.appendChild(pTag);
             }
 
-            //リセットボタン
-            let resetButton = document.createElement('button');
+            return fragment;
+        };
+
+        const createResetButton = () => {
+            const resetButton = document.createElement('button');
             //IDを付与しているが、
             resetButton.id = 'reset';
             resetButton.innerHTML = 'リセット';
@@ -44,15 +50,30 @@ export default class Ui {
                 board.init();
                 ui.printBoard();
             });
-            fragment.appendChild(resetButton);
+            return resetButton;
+        };
 
-            return fragment;
-        }
+        const createDOM = () => {
+            //div class contentの中にタイトル、ゲームボード、リセットボタンを格納する。
+            const divClassCenter = document.createElement('div');
+            divClassCenter.className = 'content';
+
+            divClassCenter.appendChild(createTitle());
+
+            divClassCenter.appendChild(createGameBoard());
+
+            divClassCenter.appendChild(createResetButton());
+
+            return divClassCenter;
+        };
 
         const el = createDOM();
         document.getElementById('root').appendChild(el);
     }
 
+    /**
+     * 現在のボードの状況を表示する。
+     */
     printBoard() {
         for (let i = 0; i < 9; i++) {
             let el;
@@ -96,7 +117,7 @@ export default class Ui {
                 break;
 
             case RESULT.LOSE:
-                window.alert('あたなの負けです。');
+                window.alert('あなたの負けです。');
                 break;
 
             default:

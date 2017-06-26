@@ -6,12 +6,8 @@ import {board, ui, cpu} from './app';
  * @author asada
  */
 export default class HumanPlayer {
-    constructor() {
-        this.playerId = 1;
-    }
-
-    getPlayerId() {
-        return this.playerId;
+    constructor(playerId) {
+        this.playerId = playerId;
     }
 
     /**
@@ -30,14 +26,13 @@ export default class HumanPlayer {
         board.put(boardId, this.playerId);
         board.checkGameEnd(this.playerId);
 
-        //CPUに決めさせる。
+        //CPUの手番。
         if (board.endFlag) {
             return;
         }
         cpu.selectByCpu();
         board.checkGameEnd(cpu.playerId);
 
-        //表示する
         ui.printBoard();
     }
 }

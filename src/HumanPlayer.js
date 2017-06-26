@@ -1,33 +1,43 @@
-import {endFlag} from 'index';
+import {board, ui, cpu} from './app';
+
 /**
- * Created by yusuke-pc on 2017/06/26.
+ * 人間のプレイヤー
+ *
+ * @author asada
  */
 export default class HumanPlayer {
+    constructor() {
+        this.playerId = 1;
+    }
+
+    getPlayerId() {
+        return this.playerId;
+    }
+
     /**
      * ユーザーが選択した場合に呼び出される関数
      *
-     * @param id 押したボタンのID
+     * @param boardId 押したボタンのID
      */
-    selectByUser(id) {
-        if (endFlag) {
+    selectByUser(boardId) {
+        if (board.endFlag) {
             return;
         }
-
-        if (!board.isAlreadyPut(id)) {
-            put(id, NOUGHTS);
-            printError(NO_ERROR);
-
-        } else {
-            printError(ALREADY_PUT);
+        if (board.isAlreadyPut(boardId)) {
+            ui.printIsAlreadyPutMessage();
             return;
         }
-        checkGameEnd(getGameBoard());
+        board.put(boardId, this.playerId);
+        board.checkGameEnd(this.playerId);
 
-        if (endFlag) {
+        //CPUに決めさせる。
+        if (board.endFlag) {
             return;
         }
+        cpu.selectByCpu();
+        board.checkGameEnd(cpu.playerId);
 
-        selectByCpu(getGameBoard());
-        checkGameEnd(getGameBoard());
+        //表示する
+        ui.printBoard();
     }
 }

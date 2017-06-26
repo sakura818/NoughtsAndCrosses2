@@ -1,5 +1,4 @@
-import {NOUGHTS, CROSSES, DEFAULT, endFlag} from 'Constant';
-import {selectByUser} from 'HumanPlayer';
+import {board, humanPlayer} from 'index.js';
 /**
  * UIに関するものを集める
  *
@@ -25,7 +24,7 @@ export class Ui {
                 let el = document.createElement('button');
                 el.id = 'i';
                 el.addEventListener('click', () => {
-                    selectByUser(i);
+                    humanPlayer.selectByUser(i);
                 });
 
                 p.appendChild(el);
@@ -35,7 +34,7 @@ export class Ui {
             //リセットボタン作成
             let resetButton = document.createElement('button');
             resetButton.addEventListener('click', () => {
-                printResult(NOT_FINISH);
+                board.init();
             });
             fragment.appendChild(resetButton);
 
@@ -43,6 +42,6 @@ export class Ui {
         }
 
         const el = createDOM();
-        document.getElementById('root').appendChild(el);
+        document.getElementById('board').appendChild(el);
     }
 }

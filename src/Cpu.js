@@ -1,19 +1,24 @@
+import {board} from './app';
+
 /**
- * CPUに関するものを集める
+ * コンピュータのプレイヤー
  *
  * @author asada
  */
-export class Cpu {
+export default class Cpu {
     constructor() {
-
+        this.playerId = 2;
     }
 
-    select() {
+    getId() {
+        return this.playerId;
+    }
+
+    selectByCpu() {
         let boardId;
         do {
-            const boardIdArray = [11, 12, 13, 21, 22, 23, 31, 32, 33];
-            boardId = boardIdArray[Math.floor(Math.random() * 9)];
-        } while (isAlreadyPut(boardId));
-        put(boardId, CROSSES);
+            boardId = Math.floor(Math.random() * board.getOneSideLength() * board.getOneSideLength());
+        } while (board.isAlreadyPut(boardId));
+        board.put(boardId, this.playerId);
     }
 }

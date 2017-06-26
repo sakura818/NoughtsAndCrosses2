@@ -1,68 +1,110 @@
+import {board, ui, humanPlayer, RESULT} from './app.js';
+
 /**
  * UIに関するものを集める
  *
  * @author asada
  */
-export class Ui {
+export default class Ui {
     constructor() {
-        this.WIN = 'あなたの勝ちです';
-        this.LOSE = 'あなたの負けです';
-        this.DRAW = '引き分けです';
-        this.NOT_FINISH = '';
+        function createDOM() {
+            //DocumentFragmentを利用して再描画の回数を減らす
+            let fragment = document.createDocumentFragment();
 
-        this.ALREADY_PUT = 'そこはすでに埋まっています';
-        this.NO_ERROR = '';
-    }
+            //タイトル
+            let h1Tag = document.createElement('h1');
+            h1Tag.innerHTML = '○×ゲーム';
+            fragment.appendChild(h1Tag);
 
-    /**
-     * 試合結果を表示する
-     *
-     * @param result 表示したいものを渡す
-     */
-    printResult(result) {
-        document.getElementById('result').innerHTML = result;
-    }
+            //ゲームボード
+            let pTag = document.createElement('p');
+            for (let i = 0; i < 9; i++) {
+                if (i % 3 === 0) {
+                    pTag = document.createElement('p');
+                }
 
-    /**
-     * ボードに駒を置く
-     *
-     * @param boardId 変えたいボードのID
-     * @param state どう変えたいかを渡す
-     */
-    put(boardId, state) {
-        document.getElementById(boardId).innerHTML = state;
-    }
+                let button = document.createElement('button');
+                //TODO ここでIDを消すと、'innerHTML' of nul　となる原因について調べる。
+                button.id = `${i}`;
+                button.innerHTML = '_';
+                button.addEventListener('click', () => {
+                    humanPlayer.selectByUser(i);
+                });
 
-    /**
-     * HTML上のボードの状態を取得する
-     */
-    getGameBoard() {
-        let gameBoard = new Array(3);
-        for (let x = 0; x < 3; x++) {
-            gameBoard[x] = new Array(3);
-            for (let y = 0; y < 3; y++) {
-                gameBoard[x][y] = document.getElementById(`${x + 1}${y + 1}`).innerHTML;
+                pTag.appendChild(button);
+                fragment.appendChild(pTag);
             }
+
+            //リセットボタン
+            let resetButton = document.createElement('button');
+            //IDを付与しているが、
+            resetButton.id = 'reset';
+            resetButton.innerHTML = 'リセット';
+            resetButton.addEventListener('click', () => {
+                board.init();
+                ui.printBoard();
+            });
+            fragment.appendChild(resetButton);
+
+            return fragment;
         }
-        return gameBoard;
+
+        const el = createDOM();
+        document.getElementById('root').appendChild(el);
+    }
+
+    printBoard() {
+        for (let i = 0; i < 9; i++) {
+            let el;
+            switch (board.gameBoardArray[Math.floor(i / board.oneSideLength)][i % board.oneSideLength]) {
+                case board.DEFAULT:
+                    el = '_';
+                    break;
+
+                case 1:
+                    el = '○';
+                    break;
+
+                case 2:
+                    el = '×';
+                    break;
+
+                default:
+
+            }
+            document.getElementById(`${i}`).innerHTML = el;
+        }
     }
 
     /**
-     * HTML上のボードの状態を取得する
+     * 結果を表示する
+     * TODO alertでいいのか疑問
      *
-     * @param boardId 取得したいボードのID
+     * @param result DRAW,WIN,LOSE のいずれかを渡すこと。
      */
-    getGameBoardById(boardId) {
-        return document.getElementById(boardId).innerHTML;
+    printResultMessage(result) {
+
+        this.printBoard();
+
+        switch (result) {
+            case RESULT.DRAW:
+                window.alert('引き分けです。');
+                break;
+
+            case RESULT.WIN:
+                window.alert('あなたの勝ちです。');
+                break;
+
+            case RESULT.LOSE:
+                window.alert('あたなの負けです。');
+                break;
+
+            default:
+                window.alert('アプリ内で予期しない動作がありました。');
+        }
     }
 
-    /**
-     * エラーを表示する。
-     * または表示したエラーを削除する。
-     *
-     * @param message
-     */
-    printError(message) {
-        document.getElementById('error').innerHTML = message;
+    printIsAlreadyPutMessage() {
+        window.alert('そこはすでに埋まっています。');
     }
 }

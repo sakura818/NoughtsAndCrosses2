@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -71,142 +71,106 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Board; });
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RESULT", function() { return RESULT; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "board", function() { return board; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ui", function() { return ui; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "humanPlayer", function() { return humanPlayer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "cpu", function() { return cpu; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Board__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Ui__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__HumanPlayer__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Cpu__ = __webpack_require__(2);
+
+
+
+
+
+/**
+ * index.htmlのボタンの処理をまとめる
+ *
+ * @author asada
+ */
+var RESULT = Object.freeze({ DRAW: 0, WIN: 1, LOSE: 2 });
+
+var board = void 0;
+var ui = void 0;
+var humanPlayer = void 0;
+var cpu = void 0;
+
+/**
+ * 初回に一度だけ、呼び出される。
+ * Board
+ * Ui
+ * HumanPlayer
+ * Cpu
+ * のオブジェクトを作成する。
+ */
+window.addEventListener("load", function (eve) {
+  board = new __WEBPACK_IMPORTED_MODULE_0__Board__["a" /* default */](3, 3);
+  ui = new __WEBPACK_IMPORTED_MODULE_1__Ui__["a" /* default */]();
+  humanPlayer = new __WEBPACK_IMPORTED_MODULE_2__HumanPlayer__["a" /* default */]();
+  cpu = new __WEBPACK_IMPORTED_MODULE_3__Cpu__["a" /* default */]();
+}, false);
+
+/***/ }),
+/* 1 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app__ = __webpack_require__(0);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+
 
 /**
  * Boardに関するものを集める
  *
  * @author asada
  */
+
 var Board = function () {
-    function Board() {
+    function Board(oneSideLength, terminationCondition) {
         _classCallCheck(this, Board);
+
+        this.oneSideLength = oneSideLength;
+        this.terminationCondition = terminationCondition;
+        this.DEFAULT = 0;
+        this.endFlag = false;
+
+        this.init();
     }
 
-    /**
-     * HTML上のボードを初期化する関数
-     */
-
-
     _createClass(Board, [{
-        key: "init",
-        value: function init() {
-            for (var i = 1; i < 4; i++) {
-                for (var k = 1; k < 4; k++) {
-                    put("" + i + k, DEFAULT);
-                }
+        key: 'getOneSideLength',
+        value: function getOneSideLength() {
+            return this.oneSideLength;
+        }
+    }, {
+        key: 'copyGameBoardArray',
+        value: function copyGameBoardArray() {
+            var copyArray = new Array(3);
+            for (var i = 0; i < this.oneSideLength; i++) {
+                copyArray[i] = this.gameBoardArray.slice();
             }
+            return copyArray;
         }
 
         /**
-         * ゲームの終了条件を満たした確認する関数
-         *
-         * @param gameBoardArray
+         * HTML上のボードを初期化する関数
          */
 
     }, {
-        key: "checkGameEnd",
-        value: function checkGameEnd(gameBoardArray) {
-            (function checkHorizontal() {
-                var _iteratorNormalCompletion = true;
-                var _didIteratorError = false;
-                var _iteratorError = undefined;
-
-                try {
-                    for (var _iterator = gameBoardArray[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                        var val = _step.value;
-
-                        if (val[0] === NOUGHTS && val[1] === NOUGHTS && val[2] === NOUGHTS) {
-                            printResult(WIN);
-                            endFlag = true;
-                        }
-                        if (val[0] === CROSSES && val[1] === CROSSES && val[2] === CROSSES) {
-                            printResult(LOSE);
-                            endFlag = true;
-                        }
-                    }
-                } catch (err) {
-                    _didIteratorError = true;
-                    _iteratorError = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion && _iterator.return) {
-                            _iterator.return();
-                        }
-                    } finally {
-                        if (_didIteratorError) {
-                            throw _iteratorError;
-                        }
-                    }
-                }
-            })();
-
-            if (endFlag) {
-                return;
+        key: 'init',
+        value: function init() {
+            this.gameBoardArray = new Array(this.oneSideLength);
+            for (var i = 0; i < this.oneSideLength; i++) {
+                this.gameBoardArray[i] = new Array(this.oneSideLength).fill(this.DEFAULT);
             }
 
-            (function checkVertical() {
-                for (var y = 0; y < gameBoardArray.length; y++) {
-                    if (gameBoardArray[0][y] === NOUGHTS && gameBoardArray[1][y] === NOUGHTS && gameBoardArray[2][y] === NOUGHTS) {
-                        printResult(WIN);
-                        endFlag = true;
-                    }
-                    if (gameBoardArray[0][y] === CROSSES && gameBoardArray[1][y] === CROSSES && gameBoardArray[2][y] === CROSSES) {
-                        printResult(LOSE);
-                        endFlag = true;
-                    }
-                }
-            })();
-
-            if (endFlag) {
-                return;
-            }
-
-            (function checkUpperLeftToLowerRight() {
-                if (gameBoardArray[0][0] === NOUGHTS && gameBoardArray[1][1] === NOUGHTS && gameBoardArray[2][2] === NOUGHTS) {
-                    printResult(WIN);
-                    endFlag = true;
-                }
-                if (gameBoardArray[0][0] === CROSSES && gameBoardArray[1][1] === CROSSES && gameBoardArray[2][2] === CROSSES) {
-                    printResult(LOSE);
-                    endFlag = true;
-                }
-            })();
-
-            if (endFlag) {
-                return;
-            }
-
-            (function checkUpperRightToLowerLeft() {
-                if (gameBoardArray[0][2] === NOUGHTS && gameBoardArray[1][1] === NOUGHTS && gameBoardArray[2][0] === NOUGHTS) {
-                    printResult(WIN);
-                    endFlag = true;
-                }
-                if (gameBoardArray[0][2] === CROSSES && gameBoardArray[1][1] === CROSSES && gameBoardArray[2][0] === CROSSES) {
-                    printResult(LOSE);
-                    endFlag = true;
-                }
-            })();
-
-            if (endFlag) {
-                return;
-            }
-
-            var checkDraw = function checkDraw() {
-                for (var x = 0; x < gameBoardArray.length; x++) {
-                    for (var y = 0; y < gameBoardArray[x].length; y++) {
-                        if (gameBoardArray[x][y] === DEFAULT) {
-                            return;
-                        }
-                    }
-                }
-                endFlag = true;
-                printResult(DRAW);
-            };
-            checkDraw();
+            this.endFlag = false;
         }
 
         /**
@@ -214,243 +178,374 @@ var Board = function () {
          */
 
     }, {
-        key: "isAlreadyPut",
-        value: function isAlreadyPut(id) {
-            return getGameBoardById(id) !== DEFAULT;
+        key: 'isAlreadyPut',
+        value: function isAlreadyPut(choice) {
+            return this.gameBoardArray[Math.floor(choice / this.oneSideLength)][choice % this.oneSideLength] !== this.DEFAULT;
+        }
+    }, {
+        key: 'put',
+        value: function put(choice, playerID) {
+            this.gameBoardArray[Math.floor(choice / this.oneSideLength)][choice % this.oneSideLength] = playerID;
+        }
+
+        /**
+         * ゲームの終了条件を満たした確認する関数
+         */
+
+    }, {
+        key: 'checkGameEnd',
+        value: function checkGameEnd(playerId) {
+            this.checkHorizontal(playerId);
+            this.checkVertical(playerId);
+            this.checkUpperLeftToLowerRight(playerId);
+            this.checkUpperRightToLowerLeft(playerId);
+
+            if (this.endFlag) {
+                if (playerId === 1) {
+                    __WEBPACK_IMPORTED_MODULE_0__app__["ui"].printResultMessage(__WEBPACK_IMPORTED_MODULE_0__app__["RESULT"].WIN);
+                } else if (playerId === 2) {
+                    __WEBPACK_IMPORTED_MODULE_0__app__["ui"].printResultMessage(__WEBPACK_IMPORTED_MODULE_0__app__["RESULT"].LOSE);
+                }
+                return;
+            }
+            this.checkDraw();
+        }
+    }, {
+        key: 'checkHorizontal',
+        value: function checkHorizontal(playerId) {
+            for (var x = 0; x < this.oneSideLength; x++) {
+                var score = 0;
+                for (var y = 0; y < this.oneSideLength; y++) {
+                    if (this.gameBoardArray[x][y] !== playerId) {
+                        score = 0;
+                        continue;
+                    }
+                    score++;
+                    //スコアが終了条件と同じになると終了
+                    if (score === this.terminationCondition) {
+                        this.endFlag = true;
+                        return;
+                    }
+                }
+            }
+        }
+    }, {
+        key: 'checkVertical',
+        value: function checkVertical(playerId) {
+            for (var y = 0; y < this.oneSideLength; y++) {
+                var score = 0;
+                for (var x = 0; x < this.oneSideLength; x++) {
+                    if (this.gameBoardArray[x][y] !== playerId) {
+                        score = 0;
+                        continue;
+                    }
+                    score++;
+                    //スコアが終了条件と同じになると終了
+                    if (score === this.terminationCondition) {
+                        this.endFlag = true;
+                        return;
+                    }
+                }
+            }
+        }
+    }, {
+        key: 'checkUpperLeftToLowerRight',
+        value: function checkUpperLeftToLowerRight(playerId) {
+            for (var i = 0; i < this.oneSideLength; i++) {
+                if (this.gameBoardArray[i][i] !== playerId) {
+                    break;
+                }
+                if (i === this.terminationCondition - 1) {
+                    this.endFlag = true;
+                    return;
+                }
+            }
+        }
+    }, {
+        key: 'checkUpperRightToLowerLeft',
+        value: function checkUpperRightToLowerLeft(playerId) {
+            for (var i = 0; i < this.oneSideLength; i++) {
+                if (this.gameBoardArray[i][this.oneSideLength - 1 - i] !== playerId) {
+                    break;
+                }
+                if (i === this.terminationCondition - 1) {
+                    this.endFlag = true;
+                    return;
+                }
+            }
+        }
+    }, {
+        key: 'checkDraw',
+        value: function checkDraw() {
+            for (var x = 0; x < this.gameBoardArray.length; x++) {
+                for (var y = 0; y < this.gameBoardArray[x].length; y++) {
+                    if (this.gameBoardArray[x][y] === this.DEFAULT) {
+                        return;
+                    }
+                }
+            }
+            this.endFlag = true;
+            __WEBPACK_IMPORTED_MODULE_0__app__["ui"].printResultMessage(__WEBPACK_IMPORTED_MODULE_0__app__["RESULT"].DRAW);
         }
     }]);
 
     return Board;
 }();
 
-/***/ }),
-/* 1 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Cpu; });
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/**
- * CPUに関するものを集める
- *
- * @author asada
- */
-var Cpu = function () {
-    function Cpu() {
-        _classCallCheck(this, Cpu);
-    }
-
-    _createClass(Cpu, [{
-        key: "select",
-        value: function select() {
-            var boardId = void 0;
-            do {
-                var boardIdArray = [11, 12, 13, 21, 22, 23, 31, 32, 33];
-                boardId = boardIdArray[Math.floor(Math.random() * 9)];
-            } while (isAlreadyPut(boardId));
-            put(boardId, CROSSES);
-        }
-    }]);
-
-    return Cpu;
-}();
+/* harmony default export */ __webpack_exports__["a"] = (Board);
 
 /***/ }),
 /* 2 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Ui; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app__ = __webpack_require__(0);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+
+
 /**
- * UIに関するものを集める
+ * コンピュータのプレイヤー
  *
  * @author asada
  */
-var Ui = function () {
-    function Ui() {
-        _classCallCheck(this, Ui);
 
-        this.WIN = 'あなたの勝ちです';
-        this.LOSE = 'あなたの負けです';
-        this.DRAW = '引き分けです';
-        this.NOT_FINISH = '';
+var Cpu = function () {
+    function Cpu() {
+        _classCallCheck(this, Cpu);
 
-        this.ALREADY_PUT = 'そこはすでに埋まっています';
-        this.NO_ERROR = '';
+        this.playerId = 2;
     }
 
-    /**
-     * 試合結果を表示する
-     *
-     * @param result 表示したいものを渡す
-     */
-
-
-    _createClass(Ui, [{
-        key: 'printResult',
-        value: function printResult(result) {
-            document.getElementById('result').innerHTML = result;
+    _createClass(Cpu, [{
+        key: 'getId',
+        value: function getId() {
+            return this.playerId;
         }
-
-        /**
-         * ボードに駒を置く
-         *
-         * @param boardId 変えたいボードのID
-         * @param state どう変えたいかを渡す
-         */
-
     }, {
-        key: 'put',
-        value: function put(boardId, state) {
-            document.getElementById(boardId).innerHTML = state;
-        }
-
-        /**
-         * HTML上のボードの状態を取得する
-         */
-
-    }, {
-        key: 'getGameBoard',
-        value: function getGameBoard() {
-            var gameBoard = new Array(3);
-            for (var x = 0; x < 3; x++) {
-                gameBoard[x] = new Array(3);
-                for (var y = 0; y < 3; y++) {
-                    gameBoard[x][y] = document.getElementById('' + (x + 1) + (y + 1)).innerHTML;
-                }
-            }
-            return gameBoard;
-        }
-
-        /**
-         * HTML上のボードの状態を取得する
-         *
-         * @param boardId 取得したいボードのID
-         */
-
-    }, {
-        key: 'getGameBoardById',
-        value: function getGameBoardById(boardId) {
-            return document.getElementById(boardId).innerHTML;
-        }
-
-        /**
-         * エラーを表示する。
-         * または表示したエラーを削除する。
-         *
-         * @param message
-         */
-
-    }, {
-        key: 'printError',
-        value: function printError(message) {
-            document.getElementById('error').innerHTML = message;
+        key: 'selectByCpu',
+        value: function selectByCpu() {
+            var boardId = void 0;
+            do {
+                boardId = Math.floor(Math.random() * __WEBPACK_IMPORTED_MODULE_0__app__["board"].getOneSideLength() * __WEBPACK_IMPORTED_MODULE_0__app__["board"].getOneSideLength());
+            } while (__WEBPACK_IMPORTED_MODULE_0__app__["board"].isAlreadyPut(boardId));
+            __WEBPACK_IMPORTED_MODULE_0__app__["board"].put(boardId, this.playerId);
         }
     }]);
 
-    return Ui;
+    return Cpu;
 }();
+
+/* harmony default export */ __webpack_exports__["a"] = (Cpu);
 
 /***/ }),
 /* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Board__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Cpu__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Ui__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app__ = __webpack_require__(0);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 
 
+/**
+ * 人間のプレイヤー
+ *
+ * @author asada
+ */
 
-var NOUGHTS = '○';
-var CROSSES = '×';
-var DEFAULT = '_';
-var endFlag = false;
+var HumanPlayer = function () {
+    function HumanPlayer() {
+        _classCallCheck(this, HumanPlayer);
 
-function createDOM() {
-    //DocumentFragmentを利用して再描画を一回にする
-    var fragment = document.createDocumentFragment();
+        this.playerId = 1;
+    }
 
-    var p = document.createElement('p');
-
-    var _loop = function _loop(i) {
-        if (i % 3 === 1) {
-            p = document.createElement('p');
+    _createClass(HumanPlayer, [{
+        key: 'getPlayerId',
+        value: function getPlayerId() {
+            return this.playerId;
         }
 
-        var el = document.createElement('button');
-        el.addEventListener('click', function () {
-            selectByUser(i);
-        });
+        /**
+         * ユーザーが選択した場合に呼び出される関数
+         *
+         * @param boardId 押したボタンのID
+         */
 
-        p.appendChild(el);
-        fragment.appendChild(p);
-    };
+    }, {
+        key: 'selectByUser',
+        value: function selectByUser(boardId) {
+            if (__WEBPACK_IMPORTED_MODULE_0__app__["board"].endFlag) {
+                return;
+            }
+            if (__WEBPACK_IMPORTED_MODULE_0__app__["board"].isAlreadyPut(boardId)) {
+                __WEBPACK_IMPORTED_MODULE_0__app__["ui"].printIsAlreadyPutMessage();
+                return;
+            }
+            __WEBPACK_IMPORTED_MODULE_0__app__["board"].put(boardId, this.playerId);
+            __WEBPACK_IMPORTED_MODULE_0__app__["board"].checkGameEnd(this.playerId);
 
-    for (var i = 1; i < 10; i++) {
-        _loop(i);
+            //CPUに決めさせる。
+            if (__WEBPACK_IMPORTED_MODULE_0__app__["board"].endFlag) {
+                return;
+            }
+            __WEBPACK_IMPORTED_MODULE_0__app__["cpu"].selectByCpu();
+            __WEBPACK_IMPORTED_MODULE_0__app__["board"].checkGameEnd(__WEBPACK_IMPORTED_MODULE_0__app__["cpu"].playerId);
+
+            //表示する
+            __WEBPACK_IMPORTED_MODULE_0__app__["ui"].printBoard();
+        }
+    }]);
+
+    return HumanPlayer;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (HumanPlayer);
+
+/***/ }),
+/* 4 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_js__ = __webpack_require__(0);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+
+
+/**
+ * UIに関するものを集める
+ *
+ * @author asada
+ */
+
+var Ui = function () {
+    function Ui() {
+        _classCallCheck(this, Ui);
+
+        function createDOM() {
+            //DocumentFragmentを利用して再描画の回数を減らす
+            var fragment = document.createDocumentFragment();
+
+            //タイトル
+            var h1Tag = document.createElement('h1');
+            h1Tag.innerHTML = '○×ゲーム';
+            fragment.appendChild(h1Tag);
+
+            //ゲームボード
+            var pTag = document.createElement('p');
+
+            var _loop = function _loop(i) {
+                if (i % 3 === 0) {
+                    pTag = document.createElement('p');
+                }
+
+                var button = document.createElement('button');
+                //TODO ここでIDを消すと、'innerHTML' of nul　となる原因について調べる。
+                button.id = '' + i;
+                button.innerHTML = '_';
+                button.addEventListener('click', function () {
+                    __WEBPACK_IMPORTED_MODULE_0__app_js__["humanPlayer"].selectByUser(i);
+                });
+
+                pTag.appendChild(button);
+                fragment.appendChild(pTag);
+            };
+
+            for (var i = 0; i < 9; i++) {
+                _loop(i);
+            }
+
+            //リセットボタン
+            var resetButton = document.createElement('button');
+            //IDを付与しているが、
+            resetButton.id = 'reset';
+            resetButton.innerHTML = 'リセット';
+            resetButton.addEventListener('click', function () {
+                __WEBPACK_IMPORTED_MODULE_0__app_js__["board"].init();
+                __WEBPACK_IMPORTED_MODULE_0__app_js__["ui"].printBoard();
+            });
+            fragment.appendChild(resetButton);
+
+            return fragment;
+        }
+
+        var el = createDOM();
+        document.getElementById('root').appendChild(el);
     }
 
-    var resetButton = document.createElement('button');
-    resetButton.addEventListener('click', function () {
-        init();
-        printResult(NOT_FINISH);
-        endFlag = false;
-    });
-    fragment.appendChild(resetButton);
+    _createClass(Ui, [{
+        key: 'printBoard',
+        value: function printBoard() {
+            for (var i = 0; i < 9; i++) {
+                var el = void 0;
+                switch (__WEBPACK_IMPORTED_MODULE_0__app_js__["board"].gameBoardArray[Math.floor(i / __WEBPACK_IMPORTED_MODULE_0__app_js__["board"].oneSideLength)][i % __WEBPACK_IMPORTED_MODULE_0__app_js__["board"].oneSideLength]) {
+                    case __WEBPACK_IMPORTED_MODULE_0__app_js__["board"].DEFAULT:
+                        el = '_';
+                        break;
 
-    return fragment;
+                    case 1:
+                        el = '○';
+                        break;
 
-    // for (let i = 0; i < 3; i++) {
-    //     for (let k = 0; k < 3; k++) {
-    //         let el = document.createElement('input');
-    //         el.type = 'button';
-    //         el.addEventListener('click', () => {
-    //             selectByUser(i);
-    //         });
-    //         fragment.appendChild(el);
-    //     }
-    // }
-}
+                    case 2:
+                        el = '×';
+                        break;
 
-var el = createDOM();
-document.getElementById('root').appendChild(el);
+                    default:
 
-var selectByUser = function selectByUser(id) {
-    var board = new __WEBPACK_IMPORTED_MODULE_0__Board__["a" /* Board */]();
-    var ui = new __WEBPACK_IMPORTED_MODULE_2__Ui__["a" /* Ui */]();
-    var cpu = new __WEBPACK_IMPORTED_MODULE_1__Cpu__["a" /* Cpu */]();
+                }
+                document.getElementById('' + i).innerHTML = el;
+            }
+        }
 
-    console.log(id + '\u306E\u30DC\u30BF\u30F3\u304C\u62BC\u3055\u308C\u307E\u3057\u305F\u3002');
-    if (endFlag) {
-        return;
-    }
+        /**
+         * 結果を表示する
+         * TODO alertでいいのか疑問
+         *
+         * @param result DRAW,WIN,LOSE のいずれかを渡すこと。
+         */
 
-    if (!isAlreadyPut(id)) {
-        ui.put(id, NOUGHTS);
-        ui.printError(NO_ERROR);
-    } else {
-        ui.printError(ALREADY_PUT);
-        return;
-    }
-    board.checkGameEnd(ui.getGameBoard());
+    }, {
+        key: 'printResultMessage',
+        value: function printResultMessage(result) {
 
-    if (endFlag) {
-        return;
-    }
+            this.printBoard();
 
-    cpu.select(ui.getGameBoard());
-    board.checkGameEnd(ui.getGameBoard());
-};
+            switch (result) {
+                case __WEBPACK_IMPORTED_MODULE_0__app_js__["RESULT"].DRAW:
+                    window.alert('引き分けです。');
+                    break;
+
+                case __WEBPACK_IMPORTED_MODULE_0__app_js__["RESULT"].WIN:
+                    window.alert('あなたの勝ちです。');
+                    break;
+
+                case __WEBPACK_IMPORTED_MODULE_0__app_js__["RESULT"].LOSE:
+                    window.alert('あたなの負けです。');
+                    break;
+
+                default:
+                    window.alert('アプリ内で予期しない動作がありました。');
+            }
+        }
+    }, {
+        key: 'printIsAlreadyPutMessage',
+        value: function printIsAlreadyPutMessage() {
+            window.alert('そこはすでに埋まっています。');
+        }
+    }]);
+
+    return Ui;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (Ui);
 
 /***/ })
 /******/ ]);

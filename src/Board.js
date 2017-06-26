@@ -1,112 +1,145 @@
+import {ui, RESULT} from './app';
+
 /**
  * Boardに関するものを集める
  *
  * @author asada
  */
-export class Board {
-    constructor() {
-        
+export default class Board {
+    constructor(oneSideLength, terminationCondition) {
+        this.oneSideLength = oneSideLength;
+        this.terminationCondition = terminationCondition;
+        this.DEFAULT = 0;
+        this.endFlag = false;
+
+        this.init();
+    }
+
+    getOneSideLength() {
+        return this.oneSideLength;
+    }
+
+    copyGameBoardArray() {
+        let copyArray = new Array(3);
+        for (let i = 0; i < this.oneSideLength; i++) {
+            copyArray[i] = this.gameBoardArray.slice();
+        }
+        return copyArray;
     }
 
     /**
      * HTML上のボードを初期化する関数
      */
     init() {
-        for (let i = 1; i < 4; i++) {
-            for (let k = 1; k < 4; k++) {
-                put(`${i}${k}`, DEFAULT);
-            }
-        }
-    }
-
-    /**
-     * ゲームの終了条件を満たした確認する関数
-     *
-     * @param gameBoardArray
-     */
-    checkGameEnd(gameBoardArray) {
-        (function checkHorizontal() {
-            for (let val of gameBoardArray) {
-                if (val[0] === NOUGHTS && val[1] === NOUGHTS && val[2] === NOUGHTS) {
-                    printResult(WIN);
-                    endFlag = true;
-                }
-                if (val[0] === CROSSES && val[1] === CROSSES && val[2] === CROSSES) {
-                    printResult(LOSE);
-                    endFlag = true;
-                }
-            }
-        })();
-
-        if (endFlag) {
-            return;
+        this.gameBoardArray = new Array(this.oneSideLength);
+        for (let i = 0; i < this.oneSideLength; i++) {
+            this.gameBoardArray[i] = new Array(this.oneSideLength).fill(this.DEFAULT);
         }
 
-        (function checkVertical() {
-            for (let y = 0; y < gameBoardArray.length; y++) {
-                if (gameBoardArray[0][y] === NOUGHTS && gameBoardArray[1][y] === NOUGHTS && gameBoardArray[2][y] === NOUGHTS) {
-                    printResult(WIN);
-                    endFlag = true;
-                }
-                if (gameBoardArray[0][y] === CROSSES && gameBoardArray[1][y] === CROSSES && gameBoardArray[2][y] === CROSSES) {
-                    printResult(LOSE);
-                    endFlag = true;
-                }
-            }
-        })();
-
-        if (endFlag) {
-            return;
-        }
-
-        (function checkUpperLeftToLowerRight() {
-            if (gameBoardArray[0][0] === NOUGHTS && gameBoardArray[1][1] === NOUGHTS && gameBoardArray[2][2] === NOUGHTS) {
-                printResult(WIN);
-                endFlag = true;
-            }
-            if (gameBoardArray[0][0] === CROSSES && gameBoardArray[1][1] === CROSSES && gameBoardArray[2][2] === CROSSES) {
-                printResult(LOSE);
-                endFlag = true;
-            }
-        })();
-
-        if (endFlag) {
-            return;
-        }
-
-        (function checkUpperRightToLowerLeft() {
-            if (gameBoardArray[0][2] === NOUGHTS && gameBoardArray[1][1] === NOUGHTS && gameBoardArray[2][0] === NOUGHTS) {
-                printResult(WIN);
-                endFlag = true;
-            }
-            if (gameBoardArray[0][2] === CROSSES && gameBoardArray[1][1] === CROSSES && gameBoardArray[2][0] === CROSSES) {
-                printResult(LOSE);
-                endFlag = true;
-            }
-        })();
-
-        if (endFlag) {
-            return;
-        }
-
-        const checkDraw = () => {
-            for (let x = 0; x < gameBoardArray.length; x++) {
-                for (let y = 0; y < gameBoardArray[x].length; y++) {
-                    if (gameBoardArray[x][y] === DEFAULT) {
-                        return;
-                    }
-                }
-            }
-            endFlag = true;
-            printResult(DRAW);
-        };
-        checkDraw();
+        this.endFlag = false;
     }
 
     /**
      * ボード上で選択した場所が埋まっている確認する
      */
-    isAlreadyPut(id) {
-        return getGameBoardById(id) !== DEFAULT
+    isAlreadyPut(choice) {
+        return this.gameBoardArray[Math.floor(choice / this.oneSideLength)][choice % this.oneSideLength] !== this.DEFAULT;
+    }
+
+    put(choice, playerID) {
+        this.gameBoardArray[Math.floor(choice / this.oneSideLength)][choice % this.oneSideLength] = playerID;
+    }
+
+    /**
+     * ゲームの終了条件を満たした確認する関数
+     */
+    checkGameEnd(playerId) {
+        this.checkHorizontal(playerId);
+        this.checkVertical(playerId);
+        this.checkUpperLeftToLowerRight(playerId);
+        this.checkUpperRightToLowerLeft(playerId);
+
+        if (this.endFlag) {
+            if (playerId === 1) {
+                ui.printResultMessage(RESULT.WIN);
+
+            } else if (playerId === 2) {
+                ui.printResultMessage(RESULT.LOSE);
+            }
+            return;
+        }
+        this.checkDraw();
+    }
+
+    checkHorizontal(playerId) {
+        for (let x = 0; x < this.oneSideLength; x++) {
+            let score = 0;
+            for (let y = 0; y < this.oneSideLength; y++) {
+                if (this.gameBoardArray[x][y] !== playerId) {
+                    score = 0;
+                    continue;
+                }
+                score++;
+                //スコアが終了条件と同じになると終了
+                if (score === this.terminationCondition) {
+                    this.endFlag = true;
+                    return;
+                }
+            }
+        }
+    }
+
+    checkVertical(playerId) {
+        for (let y = 0; y < this.oneSideLength; y++) {
+            let score = 0;
+            for (let x = 0; x < this.oneSideLength; x++) {
+                if (this.gameBoardArray[x][y] !== playerId) {
+                    score = 0;
+                    continue;
+                }
+                score++;
+                //スコアが終了条件と同じになると終了
+                if (score === this.terminationCondition) {
+                    this.endFlag = true;
+                    return;
+                }
+            }
+        }
+    }
+
+    checkUpperLeftToLowerRight(playerId) {
+        for (let i = 0; i < this.oneSideLength; i++) {
+            if (this.gameBoardArray[i][i] !== playerId) {
+                break;
+            }
+            if (i === this.terminationCondition - 1) {
+                this.endFlag = true;
+                return;
+            }
+        }
+    }
+
+    checkUpperRightToLowerLeft(playerId) {
+        for (let i = 0; i < this.oneSideLength; i++) {
+            if (this.gameBoardArray[i][this.oneSideLength - 1 - i] !== playerId) {
+                break;
+            }
+            if (i === this.terminationCondition - 1) {
+                this.endFlag = true;
+                return;
+            }
+        }
+    }
+
+    checkDraw() {
+        for (let x = 0; x < this.gameBoardArray.length; x++) {
+            for (let y = 0; y < this.gameBoardArray[x].length; y++) {
+                if (this.gameBoardArray[x][y] === this.DEFAULT) {
+                    return;
+                }
+            }
+        }
+        this.endFlag = true;
+        ui.printResultMessage(RESULT.DRAW);
     }
 }

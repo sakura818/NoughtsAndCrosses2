@@ -52,7 +52,7 @@ export class SquareBoard {
     }
 
     /**
-     * ゲームの終了条件を満たした確認する
+     * ゲームの終了条件を満たしたか確認する
      */
     checkGameEnd(playerId) {
         if (this._checkHorizontal(playerId) || this._checkVertical(playerId) || this._checkUpperLeftToLowerRight(playerId) || this._checkUpperRightToLowerLeft(playerId)) {

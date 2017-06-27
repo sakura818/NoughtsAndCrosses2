@@ -1,4 +1,5 @@
 import {board} from './app';
+
 /**
  * コンピュータのプレイヤー
  *
@@ -15,7 +16,7 @@ class Cpu {
      * CPUがボードに何を置くか決めるメソッド
      */
     selectByCpu() {
-
+        throw Error('不正なCPUが呼ばれました。');
     }
 }
 
@@ -35,6 +36,12 @@ export class EasyCpu extends Cpu {
             boardId = Math.floor(Math.random() * board.getOneSideLength() * board.getOneSideLength());
         } while (board.isAlreadyPut(boardId));
         board.put(boardId, this.playerId);
+    }
+}
+
+export class TestCpu extends Cpu {
+    constructor(playerId) {
+        super(playerId);
     }
 }
 
@@ -187,7 +194,6 @@ export class NormalCpu extends Cpu {
             function isDefault(x, y) {
                 return gameBoardArray[x][y] === board.DEFAULT;
             }
-
 
             function isNotMineAndNotDefault(playerId, x, y) {
                 return gameBoardArray[x][y] !== board.DEFAULT && gameBoardArray[x][y] !== playerId;

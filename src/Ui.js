@@ -112,25 +112,8 @@ export default class Ui {
      * @param result Resultオブジェクトの項目を渡すこと。
      */
     printResultMessage(result) {
-
         this.printBoard();
-
-        switch (result) {
-            case Result.DRAW:
-                window.alert('引き分けです。');
-                break;
-
-            case Result.WIN:
-                window.alert('あなたの勝ちです。');
-                break;
-
-            case Result.LOSE:
-                window.alert('あなたの負けです。');
-                break;
-
-            default:
-                window.alert('アプリ内で予期しない動作がありました。');
-        }
+        window.alert(Result[result]);
     }
 
     printIsAlreadyPutMessage() {

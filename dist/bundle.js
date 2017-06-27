@@ -83,7 +83,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /**
- * index.htmlのボタンの処理をまとめる
+ * 各クラスをインスタンス化する
  *
  * @author asada
  */
@@ -128,6 +128,9 @@ const setCpu = (cpuLevel) => {
         case CpuLevel.NORMAL:
             cpu = new __WEBPACK_IMPORTED_MODULE_3__Cpu__["b" /* NormalCpu */](2);
             break;
+
+        default:
+            window.alert('存在しないCPUが選択されました。');
     }
 };
 /* harmony export (immutable) */ __webpack_exports__["setCpu"] = setCpu;
@@ -193,7 +196,7 @@ class SquareBoard {
     }
 
     /**
-     * ゲームの終了条件を満たした確認する
+     * ゲームの終了条件を満たしたか確認する
      */
     checkGameEnd(playerId) {
         if (this._checkHorizontal(playerId) || this._checkVertical(playerId) || this._checkUpperLeftToLowerRight(playerId) || this._checkUpperRightToLowerLeft(playerId)) {
@@ -296,6 +299,7 @@ class SquareBoard {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app__ = __webpack_require__(0);
 
+
 /**
  * コンピュータのプレイヤー
  *
@@ -312,7 +316,7 @@ class Cpu {
      * CPUがボードに何を置くか決めるメソッド
      */
     selectByCpu() {
-
+        throw Error('不正なCPUが呼ばれました。');
     }
 }
 
@@ -335,6 +339,14 @@ class EasyCpu extends Cpu {
     }
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = EasyCpu;
+
+
+class TestCpu extends Cpu {
+    constructor(playerId) {
+        super(playerId);
+    }
+}
+/* unused harmony export TestCpu */
 
 
 /**
@@ -487,7 +499,6 @@ class NormalCpu extends Cpu {
                 return gameBoardArray[x][y] === __WEBPACK_IMPORTED_MODULE_0__app__["board"].DEFAULT;
             }
 
-
             function isNotMineAndNotDefault(playerId, x, y) {
                 return gameBoardArray[x][y] !== __WEBPACK_IMPORTED_MODULE_0__app__["board"].DEFAULT && gameBoardArray[x][y] !== playerId;
             }
@@ -557,7 +568,12 @@ class HumanPlayer {
         if (__WEBPACK_IMPORTED_MODULE_0__app__["board"].endFlag) {
             return;
         }
-        __WEBPACK_IMPORTED_MODULE_0__app__["cpu"].selectByCpu();
+        try {
+            __WEBPACK_IMPORTED_MODULE_0__app__["cpu"].selectByCpu();
+        } catch (e) {
+            console.log(e);
+            window.alert('選択されたCPUは未実装です。');
+        }
         __WEBPACK_IMPORTED_MODULE_0__app__["board"].checkGameEnd(__WEBPACK_IMPORTED_MODULE_0__app__["cpu"].playerId);
 
         __WEBPACK_IMPORTED_MODULE_0__app__["ui"].printBoard();

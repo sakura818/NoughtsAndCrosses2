@@ -30,7 +30,12 @@ export default class HumanPlayer {
         if (board.endFlag) {
             return;
         }
-        cpu.selectByCpu();
+        try {
+            cpu.selectByCpu();
+        } catch (e) {
+            console.log(e);
+            window.alert('選択されたCPUは未実装です。');
+        }
         board.checkGameEnd(cpu.playerId);
 
         ui.printBoard();

@@ -1,10 +1,10 @@
 import {SquareBoard} from './Board';
 import Ui from './Ui';
 import HumanPlayer from './HumanPlayer';
-import {EasyCpu, NormalCpu} from './Cpu';
+import {EasyCpu, NormalCpu, TestCpu} from './Cpu';
 
 /**
- * index.htmlのボタンの処理をまとめる
+ * 各クラスをインスタンス化する
  *
  * @author asada
  */
@@ -12,7 +12,7 @@ import {EasyCpu, NormalCpu} from './Cpu';
 /**
  * 試合結果の定数オブジェクト
  */
-export const Result = Object.freeze({DRAW: Symbol(0), WIN: Symbol(1), LOSE: Symbol(2)});
+export const Result = Object.freeze({DRAW: '引き分けです。', WIN: 'あなたの勝ちです。', LOSE: 'あなたの負けです。'});
 
 /**
  * CPUの強さの定数オブジェクト
@@ -39,5 +39,8 @@ export const setCpu = (cpuLevel) => {
         case CpuLevel.NORMAL:
             cpu = new NormalCpu(2);
             break;
+
+        default:
+            window.alert('存在しないCPUが選択されました。');
     }
 };

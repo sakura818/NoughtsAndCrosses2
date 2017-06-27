@@ -60,7 +60,7 @@ export default class Ui {
                 button.id = `${i}`;
                 button.innerHTML = State[board.DEFAULT];
                 button.addEventListener('click', () => {
-                    humanPlayer.selectByUser(i);
+                    humanPlayer.selectByUser(Math.floor(i / board.oneSideLength), i % board.oneSideLength);
                 });
 
                 pTag.appendChild(button);

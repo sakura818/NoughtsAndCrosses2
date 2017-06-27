@@ -13,19 +13,17 @@ export default class HumanPlayer {
 
     /**
      * ユーザーが選択した場合に呼び出される関数
-     *
-     * @param boardId 押したボタンのID
      */
-    selectByUser(boardId) {
+    selectByUser(x, y) {
         if (board.endFlag) {
             return;
         }
 
-        if (board.isAlreadyPut(boardId)) {
+        if (board.isAlreadyPut(x)) {
             ui.printIsAlreadyPutMessage();
             return;
         }
-        board.put(boardId, this.playerId);
+        board.put(x, y, this.playerId);
         board.checkGameEnd(this.playerId);
 
         if (board.endFlag) {

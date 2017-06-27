@@ -5,11 +5,12 @@ import { ui, Result } from './app';
  *
  * @author asada
  */
+const DEFAULT_STATE = 0;
+
 export class SquareBoard {
     constructor(oneSideLength, terminationCondition) {
         this.oneSideLength = oneSideLength;
         this.terminationCondition = terminationCondition;
-        this.DEFAULT = 0;
         this.endFlag = false;
 
         this.init();
@@ -25,7 +26,7 @@ export class SquareBoard {
     init() {
         this.gameBoardArray = new Array(this.oneSideLength);
         for (let i = 0; i < this.oneSideLength; i++) {
-            this.gameBoardArray[i] = new Array(this.oneSideLength).fill(this.DEFAULT);
+            this.gameBoardArray[i] = new Array(this.oneSideLength).fill(DEFAULT_STATE);
         }
 
         this.endFlag = false;
@@ -35,12 +36,12 @@ export class SquareBoard {
      * ボード上で選択した場所が埋まっている確認する
      * @return {boolean} 埋まっている場合はtrue、埋まっていない場合はfalse
      */
-    isAlreadyPut(choice) {
-        return this.gameBoardArray[Math.floor(choice / this.oneSideLength)][choice % this.oneSideLength] !== this.DEFAULT;
+    isAlreadyPut(x, y) {
+        return this.gameBoardArray[x][y] !== DEFAULT_STATE;
     }
 
-    put(choice, playerID) {
-        this.gameBoardArray[Math.floor(choice / this.oneSideLength)][choice % this.oneSideLength] = playerID;
+    put(x, y, playerID) {
+        this.gameBoardArray[x][y] = playerID;
     }
 
     /**
@@ -128,7 +129,7 @@ export class SquareBoard {
     _checkDraw() {
         for (let x = 0; x < this.gameBoardArray.length; x++) {
             for (let y = 0; y < this.gameBoardArray[x].length; y++) {
-                if (this.gameBoardArray[x][y] === this.DEFAULT) {
+                if (this.gameBoardArray[x][y] === DEFAULT_STATE) {
                     return false;
                 }
             }

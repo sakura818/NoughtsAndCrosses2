@@ -155,7 +155,7 @@ const setCpu = (cpuLevel) => {
 'use strict';
 
 class SquareBoard {
-    constructor(oneSideLength = 3, terminationCondition = 3) {
+    constructor(oneSideLength, terminationCondition) {
         this.oneSideLength = oneSideLength;
         this.terminationCondition = terminationCondition;
         this.DEFAULT = 0;
@@ -562,6 +562,7 @@ class HumanPlayer {
         if (__WEBPACK_IMPORTED_MODULE_0__app__["board"].endFlag) {
             return;
         }
+
         if (__WEBPACK_IMPORTED_MODULE_0__app__["board"].isAlreadyPut(boardId)) {
             __WEBPACK_IMPORTED_MODULE_0__app__["ui"].printIsAlreadyPutMessage();
             return;

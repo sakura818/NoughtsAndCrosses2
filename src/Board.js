@@ -9,7 +9,7 @@ import {ui, Result} from './app';
 'use strict';
 
 export class SquareBoard {
-    constructor(oneSideLength = 3, terminationCondition = 3) {
+    constructor(oneSideLength, terminationCondition) {
         this.oneSideLength = oneSideLength;
         this.terminationCondition = terminationCondition;
         this.DEFAULT = 0;

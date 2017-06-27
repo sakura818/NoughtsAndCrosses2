@@ -22,6 +22,7 @@ export default class HumanPlayer {
         if (board.endFlag) {
             return;
         }
+
         if (board.isAlreadyPut(boardId)) {
             ui.printIsAlreadyPutMessage();
             return;

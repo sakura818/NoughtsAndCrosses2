@@ -5,6 +5,9 @@ import {ui, Result} from './app';
  *
  * @author asada
  */
+
+'use strict';
+
 export class SquareBoard {
     constructor(oneSideLength = 3, terminationCondition = 3) {
         this.oneSideLength = oneSideLength;

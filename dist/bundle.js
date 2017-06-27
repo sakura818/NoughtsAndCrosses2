@@ -88,10 +88,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
  * @author asada
  */
 
+'use strict';
+
 /**
  * 試合結果の定数オブジェクト
  */
-const Result = Object.freeze({DRAW: Symbol(0), WIN: Symbol(1), LOSE: Symbol(2)});
+const Result = Object.freeze({DRAW: '引き分けです。', WIN: 'あなたの勝ちです。', LOSE: 'あなたの負けです。'});
 /* harmony export (immutable) */ __webpack_exports__["Result"] = Result;
 
 
@@ -149,6 +151,9 @@ const setCpu = (cpuLevel) => {
  *
  * @author asada
  */
+
+'use strict';
+
 class SquareBoard {
     constructor(oneSideLength = 3, terminationCondition = 3) {
         this.oneSideLength = oneSideLength;
@@ -185,7 +190,7 @@ class SquareBoard {
 
     /**
      * ボード上で選択した場所が埋まっている確認する
-     * 埋まっている場合はtrue、埋まっていない場合はfalse
+     * @return {boolean} 埋まっている場合はtrue、埋まっていない場合はfalse
      */
     isAlreadyPut(choice) {
         return this._gameBoardArray[Math.floor(choice / this.oneSideLength)][choice % this.oneSideLength] !== this.DEFAULT;
@@ -305,6 +310,9 @@ class SquareBoard {
  *
  * @author asada
  */
+
+'use strict';
+
 const defaultScore = -1;
 
 class Cpu {
@@ -314,6 +322,8 @@ class Cpu {
 
     /**
      * CPUがボードに何を置くか決めるメソッド
+     *
+     * @throws {Error} CPUを継承してselectByCpuメソッドを実装しない場合にスローする
      */
     selectByCpu() {
         throw Error('不正なCPUが呼ばれました。');
@@ -339,14 +349,6 @@ class EasyCpu extends Cpu {
     }
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = EasyCpu;
-
-
-class TestCpu extends Cpu {
-    constructor(playerId) {
-        super(playerId);
-    }
-}
-/* unused harmony export TestCpu */
 
 
 /**
@@ -543,6 +545,9 @@ class NormalCpu extends Cpu {
  *
  * @author asada
  */
+
+'use strict';
+
 class HumanPlayer {
     constructor(playerId) {
         this.playerId = playerId;
@@ -564,7 +569,6 @@ class HumanPlayer {
         __WEBPACK_IMPORTED_MODULE_0__app__["board"].put(boardId, this.playerId);
         __WEBPACK_IMPORTED_MODULE_0__app__["board"].checkGameEnd(this.playerId);
 
-        //CPUの手番。
         if (__WEBPACK_IMPORTED_MODULE_0__app__["board"].endFlag) {
             return;
         }
@@ -595,6 +599,9 @@ class HumanPlayer {
  *
  * @author asada
  */
+
+'use strict';
+
 const State = Object.freeze({0: '_', 1: '○', 2: '×'});
 
 class Ui {
@@ -702,25 +709,8 @@ class Ui {
      * @param result Resultオブジェクトの項目を渡すこと。
      */
     printResultMessage(result) {
-
         this.printBoard();
-
-        switch (result) {
-            case __WEBPACK_IMPORTED_MODULE_0__app_js__["Result"].DRAW:
-                window.alert('引き分けです。');
-                break;
-
-            case __WEBPACK_IMPORTED_MODULE_0__app_js__["Result"].WIN:
-                window.alert('あなたの勝ちです。');
-                break;
-
-            case __WEBPACK_IMPORTED_MODULE_0__app_js__["Result"].LOSE:
-                window.alert('あなたの負けです。');
-                break;
-
-            default:
-                window.alert('アプリ内で予期しない動作がありました。');
-        }
+        window.alert(result);
     }
 
     printIsAlreadyPutMessage() {

@@ -5,6 +5,9 @@ import {board, ui, humanPlayer, Result, CpuLevel, setCpu} from './app.js';
  *
  * @author asada
  */
+
+'use strict';
+
 const State = Object.freeze({0: '_', 1: '○', 2: '×'});
 
 export default class Ui {
@@ -113,7 +116,7 @@ export default class Ui {
      */
     printResultMessage(result) {
         this.printBoard();
-        window.alert(Result[result]);
+        window.alert(result);
     }
 
     printIsAlreadyPutMessage() {

@@ -5,6 +5,9 @@ import {board} from './app';
  *
  * @author asada
  */
+
+'use strict';
+
 const defaultScore = -1;
 
 class Cpu {
@@ -14,6 +17,8 @@ class Cpu {
 
     /**
      * CPUがボードに何を置くか決めるメソッド
+     *
+     * @throws {Error} CPUを継承してselectByCpuメソッドを実装しない場合にスローする
      */
     selectByCpu() {
         throw Error('不正なCPUが呼ばれました。');

@@ -39,12 +39,6 @@ export class EasyCpu extends Cpu {
     }
 }
 
-export class TestCpu extends Cpu {
-    constructor(playerId) {
-        super(playerId);
-    }
-}
-
 /**
  * 普通の強さのCPU
  *

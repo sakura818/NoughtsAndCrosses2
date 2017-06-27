@@ -41,7 +41,7 @@ export class SquareBoard {
 
     /**
      * ボード上で選択した場所が埋まっている確認する
-     * 埋まっている場合はtrue、埋まっていない場合はfalse
+     * @return {boolean} 埋まっている場合はtrue、埋まっていない場合はfalse
      */
     isAlreadyPut(choice) {
         return this._gameBoardArray[Math.floor(choice / this.oneSideLength)][choice % this.oneSideLength] !== this.DEFAULT;

@@ -26,7 +26,6 @@ export default class HumanPlayer {
         board.put(boardId, this.playerId);
         board.checkGameEnd(this.playerId);
 
-        //CPUの手番。
         if (board.endFlag) {
             return;
         }

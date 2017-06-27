@@ -1,7 +1,7 @@
 import {SquareBoard} from './Board';
 import Ui from './Ui';
 import HumanPlayer from './HumanPlayer';
-import {EasyCpu, NormalCpu, TestCpu} from './Cpu';
+import {EasyCpu, NormalCpu} from './Cpu';
 
 /**
  * 各クラスをインスタンス化する

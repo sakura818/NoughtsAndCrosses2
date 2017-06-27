@@ -5,7 +5,7 @@ import {board, ui, humanPlayer, Result, CpuLevel, setCpu} from './app.js';
  *
  * @author asada
  */
-const State = {0: '_', 1: '○', 2: '×'};
+const State = Object.freeze({0: '_', 1: '○', 2: '×'});
 
 export default class Ui {
     /**
@@ -20,11 +20,10 @@ export default class Ui {
         };
 
         const createCpuLevelSelectBox = () => {
-            const form = document.createElement('form');
-
-            let pTag = document.createElement('p');
+            const pTag = document.createElement('p');
             pTag.innerHTML = 'CPUの難易度:';
 
+            //セレクトボックスを作る
             const select = document.createElement('select');
             select.id = 'CpuLevel';
             select.addEventListener('change', () => {
@@ -33,6 +32,7 @@ export default class Ui {
                 setCpu(document.getElementById('CpuLevel').value);
             });
 
+            //オプションを作る
             for (let value of Object.keys(CpuLevel)) {
                 let option = document.createElement('option');
                 option.value = CpuLevel[value];
@@ -41,14 +41,13 @@ export default class Ui {
             }
 
             pTag.appendChild(select);
-
-            form.appendChild(pTag);
-            return form;
+            return pTag;
         };
 
         const createGameBoard = () => {
             const fragment = document.createDocumentFragment();
 
+            //pタグで段落をつける
             let pTag = document.createElement('p');
             for (let i = 0; i < board.oneSideLength * board.oneSideLength; i++) {
                 if (i % board.oneSideLength === 0) {
@@ -66,7 +65,6 @@ export default class Ui {
                 pTag.appendChild(button);
                 fragment.appendChild(pTag);
             }
-
             return fragment;
         };
 
@@ -81,19 +79,18 @@ export default class Ui {
         };
 
         const createDOM = () => {
-            //div class contentの中にタイトル、ゲームボード、リセットボタンを格納する。
-            const divClassCenter = document.createElement('div');
-            divClassCenter.className = 'content';
+            const divClassContent = document.createElement('div');
+            divClassContent.className = 'content';
 
-            divClassCenter.appendChild(createTitle());
+            divClassContent.appendChild(createTitle());
 
-            divClassCenter.appendChild(createCpuLevelSelectBox());
+            divClassContent.appendChild(createCpuLevelSelectBox());
 
-            divClassCenter.appendChild(createGameBoard());
+            divClassContent.appendChild(createGameBoard());
 
-            divClassCenter.appendChild(createResetButton());
+            divClassContent.appendChild(createResetButton());
 
-            return divClassCenter;
+            return divClassContent;
         };
 
         const el = createDOM();

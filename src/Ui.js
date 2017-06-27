@@ -1,4 +1,5 @@
-import { board, ui, humanPlayer, Result, CpuLevel, setCpu } from './app.js';
+import { board, ui, humanPlayer, Result, CpuLevel, setCpu, } from './app.js';
+import { GAME_BOARD_DEFAULT_VALUE } from './board.js';
 
 /**
  * UIクラス
@@ -58,7 +59,7 @@ export default class Ui {
                 let button = document.createElement('button');
                 //TODO ここでIDを消すと、'innerHTML' of nul　となる原因について調べる。
                 button.id = `${i}`;
-                button.innerHTML = State[0];
+                button.innerHTML = State[GAME_BOARD_DEFAULT_VALUE];
                 button.addEventListener('click', () => {
                     humanPlayer.selectByUser(Math.floor(i / board.oneSideLength), i % board.oneSideLength);
                 });

@@ -74,10 +74,10 @@
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "cpu", function() { return cpu; });
 /* harmony export (immutable) */ __webpack_exports__["setCpu"] = setCpu;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Board__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Ui__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__HumanPlayer__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Cpu__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__board__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ui__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__humanPlayer__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__cpu__ = __webpack_require__(6);
 
 
 
@@ -103,27 +103,27 @@ const CpuLevel = Object.freeze({ EASY: 'Easy' });
 /* harmony export (immutable) */ __webpack_exports__["CpuLevel"] = CpuLevel;
 
 
-const board = new __WEBPACK_IMPORTED_MODULE_0__Board__["a" /* SquareBoard */](3, 3);
+const board = new __WEBPACK_IMPORTED_MODULE_0__board__["a" /* SquareBoard */](3, 3);
 /* harmony export (immutable) */ __webpack_exports__["board"] = board;
 
 
-const ui = new __WEBPACK_IMPORTED_MODULE_1__Ui__["a" /* default */]();
+const ui = new __WEBPACK_IMPORTED_MODULE_1__ui__["a" /* default */]();
 /* harmony export (immutable) */ __webpack_exports__["ui"] = ui;
 
-const humanPlayer = new __WEBPACK_IMPORTED_MODULE_2__HumanPlayer__["a" /* default */](1);
+const humanPlayer = new __WEBPACK_IMPORTED_MODULE_2__humanPlayer__["a" /* default */](1);
 /* harmony export (immutable) */ __webpack_exports__["humanPlayer"] = humanPlayer;
 
-let cpu = new __WEBPACK_IMPORTED_MODULE_3__Cpu__["a" /* EasyCpu */](2);
+let cpu = new __WEBPACK_IMPORTED_MODULE_3__cpu__["a" /* EasyCpu */](2);
 
 /**
- * CPUの強さを変更する関数
+ * CPUの強さを変更する
  *
  * @param cpuLevel
  */
 function setCpu(cpuLevel) {
     switch (cpuLevel) {
         case CpuLevel.EASY:
-            cpu = new __WEBPACK_IMPORTED_MODULE_3__Cpu__["a" /* EasyCpu */](2);
+            cpu = new __WEBPACK_IMPORTED_MODULE_3__cpu__["a" /* EasyCpu */](2);
             break;
 
         default:
@@ -132,7 +132,11 @@ function setCpu(cpuLevel) {
 }
 
 /***/ }),
-/* 1 */
+/* 1 */,
+/* 2 */,
+/* 3 */,
+/* 4 */,
+/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -140,12 +144,17 @@ function setCpu(cpuLevel) {
 
 
 /**
+ * BoardのgameBoardArrayの初期値
+ */
+const GAME_BOARD_DEFAULT_VALUE = 0;
+/* harmony export (immutable) */ __webpack_exports__["b"] = GAME_BOARD_DEFAULT_VALUE;
+
+
+/**
  * Boardクラス
  *
  * @author asada
  */
-const DEFAULT_STATE = 0;
-
 class SquareBoard {
     constructor(oneSideLength, terminationCondition) {
         this.oneSideLength = oneSideLength;
@@ -165,7 +174,7 @@ class SquareBoard {
     init() {
         this.gameBoardArray = new Array(this.oneSideLength);
         for (let i = 0; i < this.oneSideLength; i++) {
-            this.gameBoardArray[i] = new Array(this.oneSideLength).fill(DEFAULT_STATE);
+            this.gameBoardArray[i] = new Array(this.oneSideLength).fill(GAME_BOARD_DEFAULT_VALUE);
         }
 
         this.endFlag = false;
@@ -173,10 +182,11 @@ class SquareBoard {
 
     /**
      * ボード上で選択した場所が埋まっている確認する
+     * 
      * @return {boolean} 埋まっている場合はtrue、埋まっていない場合はfalse
      */
     isAlreadyPut(x, y) {
-        return this.gameBoardArray[x][y] !== DEFAULT_STATE;
+        return this.gameBoardArray[x][y] !== GAME_BOARD_DEFAULT_VALUE;
     }
 
     put(x, y, playerID) {
@@ -185,6 +195,8 @@ class SquareBoard {
 
     /**
      * ゲームの終了条件を満たしたか確認する
+     * 
+     * @param playerId 最後にプレイしたプレイヤーのIDを渡す
      */
     checkGameEnd(playerId) {
         if (this._checkHorizontal(playerId) || this._checkVertical(playerId) || this._checkUpperLeftToLowerRight(playerId) || this._checkUpperRightToLowerLeft(playerId)) {
@@ -268,7 +280,7 @@ class SquareBoard {
     _checkDraw() {
         for (let x = 0; x < this.gameBoardArray.length; x++) {
             for (let y = 0; y < this.gameBoardArray[x].length; y++) {
-                if (this.gameBoardArray[x][y] === DEFAULT_STATE) {
+                if (this.gameBoardArray[x][y] === GAME_BOARD_DEFAULT_VALUE) {
                     return false;
                 }
             }
@@ -281,7 +293,7 @@ class SquareBoard {
 
 
 /***/ }),
-/* 2 */
+/* 6 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -335,7 +347,7 @@ class EasyCpu extends Cpu {
 
 
 /***/ }),
-/* 3 */
+/* 7 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -386,11 +398,13 @@ class HumanPlayer {
 
 
 /***/ }),
-/* 4 */
+/* 8 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_js__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__board_js__ = __webpack_require__(5);
+
 
 
 /**
@@ -451,7 +465,7 @@ class Ui {
                 let button = document.createElement('button');
                 //TODO ここでIDを消すと、'innerHTML' of nul　となる原因について調べる。
                 button.id = `${i}`;
-                button.innerHTML = State[0];
+                button.innerHTML = State[__WEBPACK_IMPORTED_MODULE_1__board_js__["b" /* GAME_BOARD_DEFAULT_VALUE */]];
                 button.addEventListener('click', () => {
                     __WEBPACK_IMPORTED_MODULE_0__app_js__["humanPlayer"].selectByUser(Math.floor(i / __WEBPACK_IMPORTED_MODULE_0__app_js__["board"].oneSideLength), i % __WEBPACK_IMPORTED_MODULE_0__app_js__["board"].oneSideLength);
                 });

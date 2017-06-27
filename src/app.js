@@ -1,7 +1,7 @@
-import { SquareBoard } from './Board';
-import Ui from './Ui';
-import HumanPlayer from './HumanPlayer';
-import { EasyCpu } from './Cpu';
+import { SquareBoard } from './board';
+import Ui from './ui';
+import HumanPlayer from './humanPlayer';
+import { EasyCpu } from './cpu';
 
 /**
  * 各クラスをインスタンス化する
@@ -26,7 +26,7 @@ export const humanPlayer = new HumanPlayer(1);
 export let cpu = new EasyCpu(2);
 
 /**
- * CPUの強さを変更する関数
+ * CPUの強さを変更する
  *
  * @param cpuLevel
  */

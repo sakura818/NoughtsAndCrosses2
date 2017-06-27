@@ -1,4 +1,4 @@
-import {board, ui, humanPlayer, Result, CpuLevel, setCpu} from './app.js';
+import { board, ui, humanPlayer, Result, CpuLevel, setCpu } from './app.js';
 
 /**
  * UIクラス
@@ -8,7 +8,7 @@ import {board, ui, humanPlayer, Result, CpuLevel, setCpu} from './app.js';
 
 'use strict';
 
-const State = Object.freeze({0: '_', 1: '○', 2: '×'});
+const State = Object.freeze({ 0: '_', 1: '○', 2: '×' });
 
 export default class Ui {
     /**

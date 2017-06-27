@@ -1,4 +1,4 @@
-import {board, ui, cpu} from './app';
+import { board, ui, cpu } from './app';
 
 /**
  * 人間のプレイヤー

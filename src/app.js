@@ -1,7 +1,7 @@
-import {SquareBoard} from './Board';
+import { SquareBoard } from './Board';
 import Ui from './Ui';
 import HumanPlayer from './HumanPlayer';
-import {EasyCpu, NormalCpu} from './Cpu';
+import { EasyCpu, NormalCpu } from './Cpu';
 
 /**
  * 各クラスをインスタンス化する
@@ -14,12 +14,12 @@ import {EasyCpu, NormalCpu} from './Cpu';
 /**
  * 試合結果の定数オブジェクト
  */
-export const Result = Object.freeze({DRAW: '引き分けです。', WIN: 'あなたの勝ちです。', LOSE: 'あなたの負けです。'});
+export const Result = Object.freeze({ DRAW: '引き分けです。', WIN: 'あなたの勝ちです。', LOSE: 'あなたの負けです。' });
 
 /**
  * CPUの強さの定数オブジェクト
  */
-export const CpuLevel = Object.freeze({EASY: 'Easy', NORMAL: 'Normal'});
+export const CpuLevel = Object.freeze({ EASY: 'Easy', NORMAL: 'Normal' });
 
 export const board = new SquareBoard(3, 3);
 

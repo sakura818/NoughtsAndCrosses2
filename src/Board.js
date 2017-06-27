@@ -1,4 +1,4 @@
-import {ui, Result} from './app';
+import { ui, Result } from './app';
 
 /**
  * Boardクラス

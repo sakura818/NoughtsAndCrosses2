@@ -19,7 +19,7 @@ export default class HumanPlayer {
             return;
         }
 
-        if (board.isAlreadyPut(x)) {
+        if (board.isAlreadyPut(x, y)) {
             ui.printIsAlreadyPutMessage();
             return;
         }

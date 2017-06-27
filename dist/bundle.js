@@ -99,7 +99,7 @@ const Result = Object.freeze({ DRAW: '引き分けです。', WIN: 'あなたの
 /**
  * CPUの強さの定数オブジェクト
  */
-const CpuLevel = Object.freeze({ EASY: 'Easy', NORMAL: 'Normal' });
+const CpuLevel = Object.freeze({ EASY: 'Easy' });
 /* harmony export (immutable) */ __webpack_exports__["CpuLevel"] = CpuLevel;
 
 
@@ -126,10 +126,6 @@ function setCpu(cpuLevel) {
             cpu = new __WEBPACK_IMPORTED_MODULE_3__Cpu__["a" /* EasyCpu */](2);
             break;
 
-        case CpuLevel.NORMAL:
-            cpu = new __WEBPACK_IMPORTED_MODULE_3__Cpu__["b" /* NormalCpu */](2);
-            break;
-
         default:
             window.alert('存在しないCPUが選択されました。');
     }
@@ -148,11 +144,12 @@ function setCpu(cpuLevel) {
  *
  * @author asada
  */
+const DEFAULT_STATE = 0;
+
 class SquareBoard {
     constructor(oneSideLength, terminationCondition) {
         this.oneSideLength = oneSideLength;
         this.terminationCondition = terminationCondition;
-        this.DEFAULT = 0;
         this.endFlag = false;
 
         this.init();
@@ -168,7 +165,7 @@ class SquareBoard {
     init() {
         this.gameBoardArray = new Array(this.oneSideLength);
         for (let i = 0; i < this.oneSideLength; i++) {
-            this.gameBoardArray[i] = new Array(this.oneSideLength).fill(this.DEFAULT);
+            this.gameBoardArray[i] = new Array(this.oneSideLength).fill(DEFAULT_STATE);
         }
 
         this.endFlag = false;
@@ -178,12 +175,12 @@ class SquareBoard {
      * ボード上で選択した場所が埋まっている確認する
      * @return {boolean} 埋まっている場合はtrue、埋まっていない場合はfalse
      */
-    isAlreadyPut(choice) {
-        return this.gameBoardArray[Math.floor(choice / this.oneSideLength)][choice % this.oneSideLength] !== this.DEFAULT;
+    isAlreadyPut(x, y) {
+        return this.gameBoardArray[x][y] !== DEFAULT_STATE;
     }
 
-    put(choice, playerID) {
-        this.gameBoardArray[Math.floor(choice / this.oneSideLength)][choice % this.oneSideLength] = playerID;
+    put(x, y, playerID) {
+        this.gameBoardArray[x][y] = playerID;
     }
 
     /**
@@ -271,7 +268,7 @@ class SquareBoard {
     _checkDraw() {
         for (let x = 0; x < this.gameBoardArray.length; x++) {
             for (let y = 0; y < this.gameBoardArray[x].length; y++) {
-                if (this.gameBoardArray[x][y] === this.DEFAULT) {
+                if (this.gameBoardArray[x][y] === DEFAULT_STATE) {
                     return false;
                 }
             }
@@ -325,195 +322,16 @@ class EasyCpu extends Cpu {
     }
 
     selectByCpu() {
-        let boardId;
+        let x, y;
         do {
-            boardId = Math.floor(Math.random() * __WEBPACK_IMPORTED_MODULE_0__app__["board"].getOneSideLength() * __WEBPACK_IMPORTED_MODULE_0__app__["board"].getOneSideLength());
-        } while (__WEBPACK_IMPORTED_MODULE_0__app__["board"].isAlreadyPut(boardId));
-        __WEBPACK_IMPORTED_MODULE_0__app__["board"].put(boardId, this.playerId);
+            let random = Math.floor(Math.random() * __WEBPACK_IMPORTED_MODULE_0__app__["board"].getOneSideLength() * __WEBPACK_IMPORTED_MODULE_0__app__["board"].getOneSideLength());
+            x = Math.floor(random / __WEBPACK_IMPORTED_MODULE_0__app__["board"].oneSideLength);
+            y = random % __WEBPACK_IMPORTED_MODULE_0__app__["board"].oneSideLength;
+        } while (__WEBPACK_IMPORTED_MODULE_0__app__["board"].isAlreadyPut(x, y));
+        __WEBPACK_IMPORTED_MODULE_0__app__["board"].put(x, y, this.playerId);
     }
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = EasyCpu;
-
-
-/**
- * 普通の強さのCPU
- *
- * @author asada
- */
-class NormalCpu extends Cpu {
-    constructor(playerId) {
-        super(playerId);
-    }
-
-    selectByCpu() {
-        const gameBoardArray = __WEBPACK_IMPORTED_MODULE_0__app__["board"].gameBoardArray;
-
-        const checkHorizontal = () => {
-            let choice = DEFAULT_SCORE;
-
-            for (let x = 0; x < gameBoardArray.length; x++) {
-
-                let mine = 0;
-                let notMine = 0;
-
-                for (let y = 0; y < gameBoardArray[x].length; y++) {
-                    if (gameBoardArray[x][y] === this.playerId) {
-                        mine++;
-                    } else if (gameBoardArray[x][y] !== __WEBPACK_IMPORTED_MODULE_0__app__["board"].DEFAULT) {
-                        notMine++;
-                    }
-
-                    //自分がリーチ
-                    if (mine === __WEBPACK_IMPORTED_MODULE_0__app__["board"].terminationCondition - 1) {
-                        for (let i = 0; i < gameBoardArray[x].length; i++) {
-                            if (gameBoardArray[x][i] === __WEBPACK_IMPORTED_MODULE_0__app__["board"].DEFAULT) {
-                                return (x * gameBoardArray.length) + i;
-                            }
-                        }
-                    }
-
-                    //自分以外がリーチ
-                    if (notMine === __WEBPACK_IMPORTED_MODULE_0__app__["board"].terminationCondition - 1) {
-                        for (let i = 0; i < gameBoardArray[x].length; i++) {
-                            if (gameBoardArray[x][i] === __WEBPACK_IMPORTED_MODULE_0__app__["board"].DEFAULT) {
-                                choice = (x * gameBoardArray.length) + i;
-                            }
-                        }
-                    }
-                }
-            }
-            return choice;
-        };
-
-        const checkVertical = () => {
-            let choice = DEFAULT_SCORE;
-
-            for (let y = 0; y < 3; y++) {
-
-                let mine = 0;
-                let notMine = 0;
-
-                for (let x = 0; x < 3; x++) {
-                    if (gameBoardArray[x][y] === this.playerId) {
-                        mine++;
-                    } else if (gameBoardArray[x][y] !== __WEBPACK_IMPORTED_MODULE_0__app__["board"].DEFAULT) {
-                        notMine++;
-                    }
-
-                    //自分がリーチ
-                    if (mine === __WEBPACK_IMPORTED_MODULE_0__app__["board"].terminationCondition - 1) {
-                        for (let i = 0; i < 3; i++) {
-                            if (gameBoardArray[i][y] === __WEBPACK_IMPORTED_MODULE_0__app__["board"].DEFAULT) {
-                                return (i * 3) + y;
-                            }
-                        }
-                    }
-
-                    //自分以外がリーチ
-                    if (notMine === __WEBPACK_IMPORTED_MODULE_0__app__["board"].terminationCondition - 1) {
-                        for (let i = 0; i < 3; i++) {
-                            if (gameBoardArray[i][y] === __WEBPACK_IMPORTED_MODULE_0__app__["board"].DEFAULT) {
-                                choice = (i * 3) + y;
-                            }
-                        }
-                    }
-                }
-            }
-            return choice;
-        };
-
-        const checkSlanting = () => {
-            if (isDefault(1, 1)) {
-                return 4;
-
-            } else if (gameBoardArray[1][1] === this.playerId) {
-                //中央を自分が取っている場合は積極的に隅をとる
-                if (isDefault(0, 0)) {
-                    return 0;
-
-                } else if (isDefault(2, 2)) {
-                    return 8;
-
-                } else if (isDefault(0, 2)) {
-                    return 2;
-
-                } else if (isDefault(2, 0)) {
-                    return 6;
-                }
-
-            } else {
-                //自分以外が中央を取っている場合は邪魔をする
-
-                //相手のリーチを確認
-                if (isNotMineAndNotDefault(this.playerId, 0, 0)) {
-                    if (isDefault(2, 2)) {
-                        return 8;
-                    }
-                }
-                if (isNotMineAndNotDefault(this.playerId, 2, 2)) {
-                    if (isDefault(0, 0)) {
-                        return 0;
-                    }
-                }
-                if (isNotMineAndNotDefault(this.playerId, 0, 2)) {
-                    if (isDefault(2, 0)) {
-                        return 6;
-                    }
-                }
-                if (isNotMineAndNotDefault(this.playerId, 2, 0)) {
-                    if (isDefault(0, 2)) {
-                        return 2;
-                    }
-                }
-                //隅をとる
-                if (isDefault(0, 0)) {
-                    return 0;
-
-                } else if (isDefault(0, 2)) {
-                    return 2;
-
-                } else if (isDefault(2, 0)) {
-                    return 6;
-
-                } else if (isDefault(2, 2)) {
-                    return 8;
-                }
-            }
-            return DEFAULT_SCORE;
-
-            function isDefault(x, y) {
-                return gameBoardArray[x][y] === __WEBPACK_IMPORTED_MODULE_0__app__["board"].DEFAULT;
-            }
-
-            function isNotMineAndNotDefault(playerId, x, y) {
-                return gameBoardArray[x][y] !== __WEBPACK_IMPORTED_MODULE_0__app__["board"].DEFAULT && gameBoardArray[x][y] !== playerId;
-            }
-        };
-
-        let choice = checkHorizontal();
-        if (choice !== DEFAULT_SCORE) {
-            __WEBPACK_IMPORTED_MODULE_0__app__["board"].put(choice, this.playerId);
-            return;
-        }
-        choice = checkVertical();
-        if (choice !== DEFAULT_SCORE) {
-            __WEBPACK_IMPORTED_MODULE_0__app__["board"].put(choice, this.playerId);
-            return;
-        }
-        choice = checkSlanting();
-        if (choice !== DEFAULT_SCORE) {
-            __WEBPACK_IMPORTED_MODULE_0__app__["board"].put(choice, this.playerId);
-            return;
-        }
-
-        let boardId;
-        do {
-            boardId = Math.floor(Math.random() * __WEBPACK_IMPORTED_MODULE_0__app__["board"].getOneSideLength() * __WEBPACK_IMPORTED_MODULE_0__app__["board"].getOneSideLength());
-        } while (__WEBPACK_IMPORTED_MODULE_0__app__["board"].isAlreadyPut(boardId));
-        __WEBPACK_IMPORTED_MODULE_0__app__["board"].put(boardId, this.playerId);
-    }
-}
-/* harmony export (immutable) */ __webpack_exports__["b"] = NormalCpu;
 
 
 /***/ }),
@@ -537,19 +355,17 @@ class HumanPlayer {
 
     /**
      * ユーザーが選択した場合に呼び出される関数
-     *
-     * @param boardId 押したボタンのID
      */
-    selectByUser(boardId) {
+    selectByUser(x, y) {
         if (__WEBPACK_IMPORTED_MODULE_0__app__["board"].endFlag) {
             return;
         }
 
-        if (__WEBPACK_IMPORTED_MODULE_0__app__["board"].isAlreadyPut(boardId)) {
+        if (__WEBPACK_IMPORTED_MODULE_0__app__["board"].isAlreadyPut(x, y)) {
             __WEBPACK_IMPORTED_MODULE_0__app__["ui"].printIsAlreadyPutMessage();
             return;
         }
-        __WEBPACK_IMPORTED_MODULE_0__app__["board"].put(boardId, this.playerId);
+        __WEBPACK_IMPORTED_MODULE_0__app__["board"].put(x, y, this.playerId);
         __WEBPACK_IMPORTED_MODULE_0__app__["board"].checkGameEnd(this.playerId);
 
         if (__WEBPACK_IMPORTED_MODULE_0__app__["board"].endFlag) {
@@ -635,9 +451,9 @@ class Ui {
                 let button = document.createElement('button');
                 //TODO ここでIDを消すと、'innerHTML' of nul　となる原因について調べる。
                 button.id = `${i}`;
-                button.innerHTML = State[__WEBPACK_IMPORTED_MODULE_0__app_js__["board"].DEFAULT];
+                button.innerHTML = State[0];
                 button.addEventListener('click', () => {
-                    __WEBPACK_IMPORTED_MODULE_0__app_js__["humanPlayer"].selectByUser(i);
+                    __WEBPACK_IMPORTED_MODULE_0__app_js__["humanPlayer"].selectByUser(Math.floor(i / __WEBPACK_IMPORTED_MODULE_0__app_js__["board"].oneSideLength), i % __WEBPACK_IMPORTED_MODULE_0__app_js__["board"].oneSideLength);
                 });
 
                 pTag.appendChild(button);

@@ -1,7 +1,7 @@
 import { SquareBoard } from './Board';
 import Ui from './Ui';
 import HumanPlayer from './HumanPlayer';
-import { EasyCpu, NormalCpu } from './Cpu';
+import { EasyCpu } from './Cpu';
 
 /**
  * 各クラスをインスタンス化する
@@ -17,7 +17,7 @@ export const Result = Object.freeze({ DRAW: '引き分けです。', WIN: 'あ�
 /**
  * CPUの強さの定数オブジェクト
  */
-export const CpuLevel = Object.freeze({ EASY: 'Easy', NORMAL: 'Normal' });
+export const CpuLevel = Object.freeze({ EASY: 'Easy' });
 
 export const board = new SquareBoard(3, 3);
 
@@ -34,10 +34,6 @@ export function setCpu(cpuLevel) {
     switch (cpuLevel) {
         case CpuLevel.EASY:
             cpu = new EasyCpu(2);
-            break;
-
-        case CpuLevel.NORMAL:
-            cpu = new NormalCpu(2);
             break;
 
         default:

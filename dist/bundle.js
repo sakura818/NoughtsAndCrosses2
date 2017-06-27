@@ -73,6 +73,7 @@
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "cpu", function() { return cpu; });
+/* harmony export (immutable) */ __webpack_exports__["setCpu"] = setCpu;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Board__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Ui__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__HumanPlayer__ = __webpack_require__(3);
@@ -88,19 +89,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
  * @author asada
  */
 
-'use strict';
-
 /**
  * 試合結果の定数オブジェクト
  */
-const Result = Object.freeze({DRAW: '引き分けです。', WIN: 'あなたの勝ちです。', LOSE: 'あなたの負けです。'});
+const Result = Object.freeze({ DRAW: '引き分けです。', WIN: 'あなたの勝ちです。', LOSE: 'あなたの負けです。' });
 /* harmony export (immutable) */ __webpack_exports__["Result"] = Result;
 
 
 /**
  * CPUの強さの定数オブジェクト
  */
-const CpuLevel = Object.freeze({EASY: 'Easy', NORMAL: 'Normal'});
+const CpuLevel = Object.freeze({ EASY: 'Easy', NORMAL: 'Normal' });
 /* harmony export (immutable) */ __webpack_exports__["CpuLevel"] = CpuLevel;
 
 
@@ -121,7 +120,7 @@ let cpu = new __WEBPACK_IMPORTED_MODULE_3__Cpu__["a" /* EasyCpu */](2);
  *
  * @param cpuLevel
  */
-const setCpu = (cpuLevel) => {
+function setCpu(cpuLevel) {
     switch (cpuLevel) {
         case CpuLevel.EASY:
             cpu = new __WEBPACK_IMPORTED_MODULE_3__Cpu__["a" /* EasyCpu */](2);
@@ -134,9 +133,7 @@ const setCpu = (cpuLevel) => {
         default:
             window.alert('存在しないCPUが選択されました。');
     }
-};
-/* harmony export (immutable) */ __webpack_exports__["setCpu"] = setCpu;
-
+}
 
 /***/ }),
 /* 1 */
@@ -151,9 +148,6 @@ const setCpu = (cpuLevel) => {
  *
  * @author asada
  */
-
-'use strict';
-
 class SquareBoard {
     constructor(oneSideLength, terminationCondition) {
         this.oneSideLength = oneSideLength;
@@ -168,21 +162,13 @@ class SquareBoard {
         return this.oneSideLength;
     }
 
-    copyGameBoardArray() {
-        let copyArray = new Array(this.oneSideLength);
-        for (let i = 0; i < this.oneSideLength; i++) {
-            copyArray[i] = this._gameBoardArray[i].slice();
-        }
-        return copyArray;
-    }
-
     /**
      * ボードを初期化する
      */
     init() {
-        this._gameBoardArray = new Array(this.oneSideLength);
+        this.gameBoardArray = new Array(this.oneSideLength);
         for (let i = 0; i < this.oneSideLength; i++) {
-            this._gameBoardArray[i] = new Array(this.oneSideLength).fill(this.DEFAULT);
+            this.gameBoardArray[i] = new Array(this.oneSideLength).fill(this.DEFAULT);
         }
 
         this.endFlag = false;
@@ -193,11 +179,11 @@ class SquareBoard {
      * @return {boolean} 埋まっている場合はtrue、埋まっていない場合はfalse
      */
     isAlreadyPut(choice) {
-        return this._gameBoardArray[Math.floor(choice / this.oneSideLength)][choice % this.oneSideLength] !== this.DEFAULT;
+        return this.gameBoardArray[Math.floor(choice / this.oneSideLength)][choice % this.oneSideLength] !== this.DEFAULT;
     }
 
     put(choice, playerID) {
-        this._gameBoardArray[Math.floor(choice / this.oneSideLength)][choice % this.oneSideLength] = playerID;
+        this.gameBoardArray[Math.floor(choice / this.oneSideLength)][choice % this.oneSideLength] = playerID;
     }
 
     /**
@@ -228,7 +214,7 @@ class SquareBoard {
         for (let x = 0; x < this.oneSideLength; x++) {
             let score = 0;
             for (let y = 0; y < this.oneSideLength; y++) {
-                if (this._gameBoardArray[x][y] !== playerId) {
+                if (this.gameBoardArray[x][y] !== playerId) {
                     score = 0;
                     continue;
                 }
@@ -245,7 +231,7 @@ class SquareBoard {
         for (let y = 0; y < this.oneSideLength; y++) {
             let score = 0;
             for (let x = 0; x < this.oneSideLength; x++) {
-                if (this._gameBoardArray[x][y] !== playerId) {
+                if (this.gameBoardArray[x][y] !== playerId) {
                     score = 0;
                     continue;
                 }
@@ -260,7 +246,7 @@ class SquareBoard {
 
     _checkUpperLeftToLowerRight(playerId) {
         for (let i = 0; i < this.oneSideLength; i++) {
-            if (this._gameBoardArray[i][i] !== playerId) {
+            if (this.gameBoardArray[i][i] !== playerId) {
                 break;
             }
             if (i === this.terminationCondition - 1) {
@@ -272,7 +258,7 @@ class SquareBoard {
 
     _checkUpperRightToLowerLeft(playerId) {
         for (let i = 0; i < this.oneSideLength; i++) {
-            if (this._gameBoardArray[i][this.oneSideLength - 1 - i] !== playerId) {
+            if (this.gameBoardArray[i][this.oneSideLength - 1 - i] !== playerId) {
                 break;
             }
             if (i === this.terminationCondition - 1) {
@@ -283,9 +269,9 @@ class SquareBoard {
     }
 
     _checkDraw() {
-        for (let x = 0; x < this._gameBoardArray.length; x++) {
-            for (let y = 0; y < this._gameBoardArray[x].length; y++) {
-                if (this._gameBoardArray[x][y] === this.DEFAULT) {
+        for (let x = 0; x < this.gameBoardArray.length; x++) {
+            for (let y = 0; y < this.gameBoardArray[x].length; y++) {
+                if (this.gameBoardArray[x][y] === this.DEFAULT) {
                     return false;
                 }
             }
@@ -311,9 +297,7 @@ class SquareBoard {
  * @author asada
  */
 
-'use strict';
-
-const defaultScore = -1;
+const DEFAULT_SCORE = -1;
 
 class Cpu {
     constructor(playerId) {
@@ -362,10 +346,10 @@ class NormalCpu extends Cpu {
     }
 
     selectByCpu() {
-        const gameBoardArray = __WEBPACK_IMPORTED_MODULE_0__app__["board"].copyGameBoardArray();
+        const gameBoardArray = __WEBPACK_IMPORTED_MODULE_0__app__["board"].gameBoardArray;
 
         const checkHorizontal = () => {
-            let choice = defaultScore;
+            let choice = DEFAULT_SCORE;
 
             for (let x = 0; x < gameBoardArray.length; x++) {
 
@@ -402,7 +386,7 @@ class NormalCpu extends Cpu {
         };
 
         const checkVertical = () => {
-            let choice = defaultScore;
+            let choice = DEFAULT_SCORE;
 
             for (let y = 0; y < 3; y++) {
 
@@ -495,7 +479,7 @@ class NormalCpu extends Cpu {
                     return 8;
                 }
             }
-            return defaultScore;
+            return DEFAULT_SCORE;
 
             function isDefault(x, y) {
                 return gameBoardArray[x][y] === __WEBPACK_IMPORTED_MODULE_0__app__["board"].DEFAULT;
@@ -507,17 +491,17 @@ class NormalCpu extends Cpu {
         };
 
         let choice = checkHorizontal();
-        if (choice !== defaultScore) {
+        if (choice !== DEFAULT_SCORE) {
             __WEBPACK_IMPORTED_MODULE_0__app__["board"].put(choice, this.playerId);
             return;
         }
         choice = checkVertical();
-        if (choice !== defaultScore) {
+        if (choice !== DEFAULT_SCORE) {
             __WEBPACK_IMPORTED_MODULE_0__app__["board"].put(choice, this.playerId);
             return;
         }
         choice = checkSlanting();
-        if (choice !== defaultScore) {
+        if (choice !== DEFAULT_SCORE) {
             __WEBPACK_IMPORTED_MODULE_0__app__["board"].put(choice, this.playerId);
             return;
         }
@@ -545,8 +529,6 @@ class NormalCpu extends Cpu {
  *
  * @author asada
  */
-
-'use strict';
 
 class HumanPlayer {
     constructor(playerId) {
@@ -601,9 +583,7 @@ class HumanPlayer {
  * @author asada
  */
 
-'use strict';
-
-const State = Object.freeze({0: '_', 1: '○', 2: '×'});
+const State = Object.freeze({ 0: '_', 1: '○', 2: '×' });
 
 class Ui {
     /**
@@ -700,7 +680,7 @@ class Ui {
      */
     printBoard() {
         for (let i = 0; i < __WEBPACK_IMPORTED_MODULE_0__app_js__["board"].oneSideLength * __WEBPACK_IMPORTED_MODULE_0__app_js__["board"].oneSideLength; i++) {
-            document.getElementById(`${i}`).innerHTML = State[__WEBPACK_IMPORTED_MODULE_0__app_js__["board"].copyGameBoardArray()[Math.floor(i / __WEBPACK_IMPORTED_MODULE_0__app_js__["board"].oneSideLength)][i % __WEBPACK_IMPORTED_MODULE_0__app_js__["board"].oneSideLength]];
+            document.getElementById(`${i}`).innerHTML = State[__WEBPACK_IMPORTED_MODULE_0__app_js__["board"].gameBoardArray[Math.floor(i / __WEBPACK_IMPORTED_MODULE_0__app_js__["board"].oneSideLength)][i % __WEBPACK_IMPORTED_MODULE_0__app_js__["board"].oneSideLength]];
         }
     }
 

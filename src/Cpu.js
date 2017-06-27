@@ -6,7 +6,7 @@ import { board } from './app';
  * @author asada
  */
 
-const defaultScore = -1;
+const DEFAULT_SCORE = -1;
 
 class Cpu {
     constructor(playerId) {
@@ -53,10 +53,10 @@ export class NormalCpu extends Cpu {
     }
 
     selectByCpu() {
-        const gameBoardArray = board.copyGameBoardArray();
+        const gameBoardArray = board.gameBoardArray;
 
         const checkHorizontal = () => {
-            let choice = defaultScore;
+            let choice = DEFAULT_SCORE;
 
             for (let x = 0; x < gameBoardArray.length; x++) {
 
@@ -93,7 +93,7 @@ export class NormalCpu extends Cpu {
         };
 
         const checkVertical = () => {
-            let choice = defaultScore;
+            let choice = DEFAULT_SCORE;
 
             for (let y = 0; y < 3; y++) {
 
@@ -186,7 +186,7 @@ export class NormalCpu extends Cpu {
                     return 8;
                 }
             }
-            return defaultScore;
+            return DEFAULT_SCORE;
 
             function isDefault(x, y) {
                 return gameBoardArray[x][y] === board.DEFAULT;
@@ -198,17 +198,17 @@ export class NormalCpu extends Cpu {
         };
 
         let choice = checkHorizontal();
-        if (choice !== defaultScore) {
+        if (choice !== DEFAULT_SCORE) {
             board.put(choice, this.playerId);
             return;
         }
         choice = checkVertical();
-        if (choice !== defaultScore) {
+        if (choice !== DEFAULT_SCORE) {
             board.put(choice, this.playerId);
             return;
         }
         choice = checkSlanting();
-        if (choice !== defaultScore) {
+        if (choice !== DEFAULT_SCORE) {
             board.put(choice, this.playerId);
             return;
         }

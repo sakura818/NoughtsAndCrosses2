@@ -19,21 +19,13 @@ export class SquareBoard {
         return this.oneSideLength;
     }
 
-    copyGameBoardArray() {
-        let copyArray = new Array(this.oneSideLength);
-        for (let i = 0; i < this.oneSideLength; i++) {
-            copyArray[i] = this._gameBoardArray[i].slice();
-        }
-        return copyArray;
-    }
-
     /**
      * ボードを初期化する
      */
     init() {
-        this._gameBoardArray = new Array(this.oneSideLength);
+        this.gameBoardArray = new Array(this.oneSideLength);
         for (let i = 0; i < this.oneSideLength; i++) {
-            this._gameBoardArray[i] = new Array(this.oneSideLength).fill(this.DEFAULT);
+            this.gameBoardArray[i] = new Array(this.oneSideLength).fill(this.DEFAULT);
         }
 
         this.endFlag = false;
@@ -44,11 +36,11 @@ export class SquareBoard {
      * @return {boolean} 埋まっている場合はtrue、埋まっていない場合はfalse
      */
     isAlreadyPut(choice) {
-        return this._gameBoardArray[Math.floor(choice / this.oneSideLength)][choice % this.oneSideLength] !== this.DEFAULT;
+        return this.gameBoardArray[Math.floor(choice / this.oneSideLength)][choice % this.oneSideLength] !== this.DEFAULT;
     }
 
     put(choice, playerID) {
-        this._gameBoardArray[Math.floor(choice / this.oneSideLength)][choice % this.oneSideLength] = playerID;
+        this.gameBoardArray[Math.floor(choice / this.oneSideLength)][choice % this.oneSideLength] = playerID;
     }
 
     /**
@@ -79,7 +71,7 @@ export class SquareBoard {
         for (let x = 0; x < this.oneSideLength; x++) {
             let score = 0;
             for (let y = 0; y < this.oneSideLength; y++) {
-                if (this._gameBoardArray[x][y] !== playerId) {
+                if (this.gameBoardArray[x][y] !== playerId) {
                     score = 0;
                     continue;
                 }
@@ -96,7 +88,7 @@ export class SquareBoard {
         for (let y = 0; y < this.oneSideLength; y++) {
             let score = 0;
             for (let x = 0; x < this.oneSideLength; x++) {
-                if (this._gameBoardArray[x][y] !== playerId) {
+                if (this.gameBoardArray[x][y] !== playerId) {
                     score = 0;
                     continue;
                 }
@@ -111,7 +103,7 @@ export class SquareBoard {
 
     _checkUpperLeftToLowerRight(playerId) {
         for (let i = 0; i < this.oneSideLength; i++) {
-            if (this._gameBoardArray[i][i] !== playerId) {
+            if (this.gameBoardArray[i][i] !== playerId) {
                 break;
             }
             if (i === this.terminationCondition - 1) {
@@ -123,7 +115,7 @@ export class SquareBoard {
 
     _checkUpperRightToLowerLeft(playerId) {
         for (let i = 0; i < this.oneSideLength; i++) {
-            if (this._gameBoardArray[i][this.oneSideLength - 1 - i] !== playerId) {
+            if (this.gameBoardArray[i][this.oneSideLength - 1 - i] !== playerId) {
                 break;
             }
             if (i === this.terminationCondition - 1) {
@@ -134,9 +126,9 @@ export class SquareBoard {
     }
 
     _checkDraw() {
-        for (let x = 0; x < this._gameBoardArray.length; x++) {
-            for (let y = 0; y < this._gameBoardArray[x].length; y++) {
-                if (this._gameBoardArray[x][y] === this.DEFAULT) {
+        for (let x = 0; x < this.gameBoardArray.length; x++) {
+            for (let y = 0; y < this.gameBoardArray[x].length; y++) {
+                if (this.gameBoardArray[x][y] === this.DEFAULT) {
                     return false;
                 }
             }

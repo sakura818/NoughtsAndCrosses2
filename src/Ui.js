@@ -103,7 +103,7 @@ export default class Ui {
      */
     printBoard() {
         for (let i = 0; i < board.oneSideLength * board.oneSideLength; i++) {
-            document.getElementById(`${i}`).innerHTML = State[board.copyGameBoardArray()[Math.floor(i / board.oneSideLength)][i % board.oneSideLength]];
+            document.getElementById(`${i}`).innerHTML = State[board.gameBoardArray[Math.floor(i / board.oneSideLength)][i % board.oneSideLength]];
         }
     }
 

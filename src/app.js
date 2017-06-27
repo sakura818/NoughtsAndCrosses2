@@ -30,7 +30,7 @@ export let cpu = new EasyCpu(2);
  *
  * @param cpuLevel
  */
-export const setCpu = (cpuLevel) => {
+export function setCpu(cpuLevel) {
     switch (cpuLevel) {
         case CpuLevel.EASY:
             cpu = new EasyCpu(2);
@@ -43,4 +43,4 @@ export const setCpu = (cpuLevel) => {
         default:
             window.alert('存在しないCPUが選択されました。');
     }
-};
+}

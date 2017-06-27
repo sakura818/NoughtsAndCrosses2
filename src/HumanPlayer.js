@@ -6,8 +6,6 @@ import { board, ui, cpu } from './app';
  * @author asada
  */
 
-'use strict';
-
 export default class HumanPlayer {
     constructor(playerId) {
         this.playerId = playerId;

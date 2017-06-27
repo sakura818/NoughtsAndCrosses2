@@ -6,8 +6,6 @@ import { board } from './app';
  * @author asada
  */
 
-'use strict';
-
 const defaultScore = -1;
 
 class Cpu {

@@ -9,8 +9,6 @@ import { EasyCpu, NormalCpu } from './Cpu';
  * @author asada
  */
 
-'use strict';
-
 /**
  * 試合結果の定数オブジェクト
  */

@@ -3,7 +3,7 @@
 ## Description
 ○×ゲーム
 
-##Usage
+## Usage
 1.npm start コマンドを実行する。
 
 2.open index.html コマンドを実行する。

@@ -102,7 +102,7 @@ const CpuLevel = Object.freeze({EASY: 'Easy', NORMAL: 'Normal'});
 /* harmony export (immutable) */ __webpack_exports__["CpuLevel"] = CpuLevel;
 
 
-const board = new __WEBPACK_IMPORTED_MODULE_0__Board__["a" /* default */](3, 3);
+const board = new __WEBPACK_IMPORTED_MODULE_0__Board__["a" /* SquareBoard */](3, 3);
 /* harmony export (immutable) */ __webpack_exports__["board"] = board;
 
 
@@ -146,7 +146,7 @@ const setCpu = (cpuLevel) => {
  *
  * @author asada
  */
-class Board {
+class SquareBoard {
     constructor(oneSideLength = 3, terminationCondition = 3) {
         this.oneSideLength = oneSideLength;
         this.terminationCondition = terminationCondition;
@@ -169,7 +169,7 @@ class Board {
     }
 
     /**
-     * HTML上のボードを初期化する関数
+     * ボードを初期化する
      */
     init() {
         this._gameBoardArray = new Array(this.oneSideLength);
@@ -182,6 +182,7 @@ class Board {
 
     /**
      * ボード上で選択した場所が埋まっている確認する
+     * 埋まっている場合はtrue、埋まっていない場合はfalse
      */
     isAlreadyPut(choice) {
         return this._gameBoardArray[Math.floor(choice / this.oneSideLength)][choice % this.oneSideLength] !== this.DEFAULT;
@@ -192,13 +193,12 @@ class Board {
     }
 
     /**
-     * ゲームの終了条件を満たした確認する関数
+     * ゲームの終了条件を満たした確認する
      */
     checkGameEnd(playerId) {
-        this.checkHorizontal(playerId);
-        this.checkVertical(playerId);
-        this.checkUpperLeftToLowerRight(playerId);
-        this.checkUpperRightToLowerLeft(playerId);
+        if (this._checkHorizontal(playerId) || this._checkVertical(playerId) || this._checkUpperLeftToLowerRight(playerId) || this._checkUpperRightToLowerLeft(playerId)) {
+            this.endFlag = true;
+        }
 
         if (this.endFlag) {
             if (playerId === 1) {
@@ -209,10 +209,14 @@ class Board {
             }
             return;
         }
-        this.checkDraw();
+
+        if (this._checkDraw()) {
+            this.endFlag = true;
+            __WEBPACK_IMPORTED_MODULE_0__app__["ui"].printResultMessage(__WEBPACK_IMPORTED_MODULE_0__app__["Result"].DRAW);
+        }
     }
 
-    checkHorizontal(playerId) {
+    _checkHorizontal(playerId) {
         for (let x = 0; x < this.oneSideLength; x++) {
             let score = 0;
             for (let y = 0; y < this.oneSideLength; y++) {
@@ -221,16 +225,15 @@ class Board {
                     continue;
                 }
                 score++;
-                //スコアが終了条件と同じになると終了
                 if (score === this.terminationCondition) {
-                    this.endFlag = true;
-                    return;
+                    return true;
                 }
             }
         }
+        return false;
     }
 
-    checkVertical(playerId) {
+    _checkVertical(playerId) {
         for (let y = 0; y < this.oneSideLength; y++) {
             let score = 0;
             for (let x = 0; x < this.oneSideLength; x++) {
@@ -239,52 +242,50 @@ class Board {
                     continue;
                 }
                 score++;
-                //スコアが終了条件と同じになると終了
                 if (score === this.terminationCondition) {
-                    this.endFlag = true;
-                    return;
+                    return true;
                 }
             }
         }
+        return false;
     }
 
-    checkUpperLeftToLowerRight(playerId) {
+    _checkUpperLeftToLowerRight(playerId) {
         for (let i = 0; i < this.oneSideLength; i++) {
             if (this._gameBoardArray[i][i] !== playerId) {
                 break;
             }
             if (i === this.terminationCondition - 1) {
-                this.endFlag = true;
-                return;
+                return true;
             }
         }
+        return false;
     }
 
-    checkUpperRightToLowerLeft(playerId) {
+    _checkUpperRightToLowerLeft(playerId) {
         for (let i = 0; i < this.oneSideLength; i++) {
             if (this._gameBoardArray[i][this.oneSideLength - 1 - i] !== playerId) {
                 break;
             }
             if (i === this.terminationCondition - 1) {
-                this.endFlag = true;
-                return;
+                return true;
             }
         }
+        return false;
     }
 
-    checkDraw() {
+    _checkDraw() {
         for (let x = 0; x < this._gameBoardArray.length; x++) {
             for (let y = 0; y < this._gameBoardArray[x].length; y++) {
                 if (this._gameBoardArray[x][y] === this.DEFAULT) {
-                    return;
+                    return false;
                 }
             }
         }
-        this.endFlag = true;
-        __WEBPACK_IMPORTED_MODULE_0__app__["ui"].printResultMessage(__WEBPACK_IMPORTED_MODULE_0__app__["Result"].DRAW);
+        return true;
     }
 }
-/* harmony export (immutable) */ __webpack_exports__["a"] = Board;
+/* harmony export (immutable) */ __webpack_exports__["a"] = SquareBoard;
 
 
 
@@ -307,8 +308,11 @@ class Cpu {
         this.playerId = playerId;
     }
 
+    /**
+     * CPUがボードに何を置くか決めるメソッド
+     */
     selectByCpu() {
-        throw new Error('You have to implement the method doSomething!');
+
     }
 }
 
@@ -504,7 +508,7 @@ class NormalCpu extends Cpu {
             __WEBPACK_IMPORTED_MODULE_0__app__["board"].put(choice, this.playerId);
             return;
         }
-        
+
         let boardId;
         do {
             boardId = Math.floor(Math.random() * __WEBPACK_IMPORTED_MODULE_0__app__["board"].getOneSideLength() * __WEBPACK_IMPORTED_MODULE_0__app__["board"].getOneSideLength());
@@ -575,7 +579,7 @@ class HumanPlayer {
  *
  * @author asada
  */
-const State = {0: '_', 1: '○', 2: '×'};
+const State = Object.freeze({0: '_', 1: '○', 2: '×'});
 
 class Ui {
     /**
@@ -590,11 +594,10 @@ class Ui {
         };
 
         const createCpuLevelSelectBox = () => {
-            const form = document.createElement('form');
-
-            let pTag = document.createElement('p');
+            const pTag = document.createElement('p');
             pTag.innerHTML = 'CPUの難易度:';
 
+            //セレクトボックスを作る
             const select = document.createElement('select');
             select.id = 'CpuLevel';
             select.addEventListener('change', () => {
@@ -603,6 +606,7 @@ class Ui {
                 __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__app_js__["setCpu"])(document.getElementById('CpuLevel').value);
             });
 
+            //オプションを作る
             for (let value of Object.keys(__WEBPACK_IMPORTED_MODULE_0__app_js__["CpuLevel"])) {
                 let option = document.createElement('option');
                 option.value = __WEBPACK_IMPORTED_MODULE_0__app_js__["CpuLevel"][value];
@@ -611,14 +615,13 @@ class Ui {
             }
 
             pTag.appendChild(select);
-
-            form.appendChild(pTag);
-            return form;
+            return pTag;
         };
 
         const createGameBoard = () => {
             const fragment = document.createDocumentFragment();
 
+            //pタグで段落をつける
             let pTag = document.createElement('p');
             for (let i = 0; i < __WEBPACK_IMPORTED_MODULE_0__app_js__["board"].oneSideLength * __WEBPACK_IMPORTED_MODULE_0__app_js__["board"].oneSideLength; i++) {
                 if (i % __WEBPACK_IMPORTED_MODULE_0__app_js__["board"].oneSideLength === 0) {
@@ -636,7 +639,6 @@ class Ui {
                 pTag.appendChild(button);
                 fragment.appendChild(pTag);
             }
-
             return fragment;
         };
 
@@ -651,19 +653,18 @@ class Ui {
         };
 
         const createDOM = () => {
-            //div class contentの中にタイトル、ゲームボード、リセットボタンを格納する。
-            const divClassCenter = document.createElement('div');
-            divClassCenter.className = 'content';
+            const divClassContent = document.createElement('div');
+            divClassContent.className = 'content';
 
-            divClassCenter.appendChild(createTitle());
+            divClassContent.appendChild(createTitle());
 
-            divClassCenter.appendChild(createCpuLevelSelectBox());
+            divClassContent.appendChild(createCpuLevelSelectBox());
 
-            divClassCenter.appendChild(createGameBoard());
+            divClassContent.appendChild(createGameBoard());
 
-            divClassCenter.appendChild(createResetButton());
+            divClassContent.appendChild(createResetButton());
 
-            return divClassCenter;
+            return divClassContent;
         };
 
         const el = createDOM();

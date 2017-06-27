@@ -1,4 +1,4 @@
-import Board from './Board';
+import {SquareBoard} from './Board';
 import Ui from './Ui';
 import HumanPlayer from './HumanPlayer';
 import {EasyCpu, NormalCpu} from './Cpu';
@@ -19,7 +19,7 @@ export const Result = Object.freeze({DRAW: Symbol(0), WIN: Symbol(1), LOSE: Symb
  */
 export const CpuLevel = Object.freeze({EASY: 'Easy', NORMAL: 'Normal'});
 
-export const board = new Board(3, 3);
+export const board = new SquareBoard(3, 3);
 
 export const ui = new Ui();
 export const humanPlayer = new HumanPlayer(1);

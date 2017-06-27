@@ -5,7 +5,7 @@ import {ui, Result} from './app';
  *
  * @author asada
  */
-export default class Board {
+export class SquareBoard {
     constructor(oneSideLength = 3, terminationCondition = 3) {
         this.oneSideLength = oneSideLength;
         this.terminationCondition = terminationCondition;
@@ -28,7 +28,7 @@ export default class Board {
     }
 
     /**
-     * HTML上のボードを初期化する関数
+     * ボードを初期化する
      */
     init() {
         this._gameBoardArray = new Array(this.oneSideLength);
@@ -41,6 +41,7 @@ export default class Board {
 
     /**
      * ボード上で選択した場所が埋まっている確認する
+     * 埋まっている場合はtrue、埋まっていない場合はfalse
      */
     isAlreadyPut(choice) {
         return this._gameBoardArray[Math.floor(choice / this.oneSideLength)][choice % this.oneSideLength] !== this.DEFAULT;
@@ -51,13 +52,12 @@ export default class Board {
     }
 
     /**
-     * ゲームの終了条件を満たした確認する関数
+     * ゲームの終了条件を満たした確認する
      */
     checkGameEnd(playerId) {
-        this.checkHorizontal(playerId);
-        this.checkVertical(playerId);
-        this.checkUpperLeftToLowerRight(playerId);
-        this.checkUpperRightToLowerLeft(playerId);
+        if (this._checkHorizontal(playerId) || this._checkVertical(playerId) || this._checkUpperLeftToLowerRight(playerId) || this._checkUpperRightToLowerLeft(playerId)) {
+            this.endFlag = true;
+        }
 
         if (this.endFlag) {
             if (playerId === 1) {
@@ -68,10 +68,14 @@ export default class Board {
             }
             return;
         }
-        this.checkDraw();
+
+        if (this._checkDraw()) {
+            this.endFlag = true;
+            ui.printResultMessage(Result.DRAW);
+        }
     }
 
-    checkHorizontal(playerId) {
+    _checkHorizontal(playerId) {
         for (let x = 0; x < this.oneSideLength; x++) {
             let score = 0;
             for (let y = 0; y < this.oneSideLength; y++) {
@@ -80,16 +84,15 @@ export default class Board {
                     continue;
                 }
                 score++;
-                //スコアが終了条件と同じになると終了
                 if (score === this.terminationCondition) {
-                    this.endFlag = true;
-                    return;
+                    return true;
                 }
             }
         }
+        return false;
     }
 
-    checkVertical(playerId) {
+    _checkVertical(playerId) {
         for (let y = 0; y < this.oneSideLength; y++) {
             let score = 0;
             for (let x = 0; x < this.oneSideLength; x++) {
@@ -98,48 +101,46 @@ export default class Board {
                     continue;
                 }
                 score++;
-                //スコアが終了条件と同じになると終了
                 if (score === this.terminationCondition) {
-                    this.endFlag = true;
-                    return;
+                    return true;
                 }
             }
         }
+        return false;
     }
 
-    checkUpperLeftToLowerRight(playerId) {
+    _checkUpperLeftToLowerRight(playerId) {
         for (let i = 0; i < this.oneSideLength; i++) {
             if (this._gameBoardArray[i][i] !== playerId) {
                 break;
             }
             if (i === this.terminationCondition - 1) {
-                this.endFlag = true;
-                return;
+                return true;
             }
         }
+        return false;
     }
 
-    checkUpperRightToLowerLeft(playerId) {
+    _checkUpperRightToLowerLeft(playerId) {
         for (let i = 0; i < this.oneSideLength; i++) {
             if (this._gameBoardArray[i][this.oneSideLength - 1 - i] !== playerId) {
                 break;
             }
             if (i === this.terminationCondition - 1) {
-                this.endFlag = true;
-                return;
+                return true;
             }
         }
+        return false;
     }
 
-    checkDraw() {
+    _checkDraw() {
         for (let x = 0; x < this._gameBoardArray.length; x++) {
             for (let y = 0; y < this._gameBoardArray[x].length; y++) {
                 if (this._gameBoardArray[x][y] === this.DEFAULT) {
-                    return;
+                    return false;
                 }
             }
         }
-        this.endFlag = true;
-        ui.printResultMessage(Result.DRAW);
+        return true;
     }
 }

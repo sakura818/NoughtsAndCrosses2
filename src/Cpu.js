@@ -11,8 +11,11 @@ class Cpu {
         this.playerId = playerId;
     }
 
+    /**
+     * CPUがボードに何を置くか決めるメソッド
+     */
     selectByCpu() {
-        throw new Error('You have to implement the method doSomething!');
+
     }
 }
 
@@ -206,7 +209,7 @@ export class NormalCpu extends Cpu {
             board.put(choice, this.playerId);
             return;
         }
-        
+
         let boardId;
         do {
             boardId = Math.floor(Math.random() * board.getOneSideLength() * board.getOneSideLength());

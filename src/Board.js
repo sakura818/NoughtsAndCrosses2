@@ -1,4 +1,4 @@
-import {ui, RESULT} from './app';
+import {ui, Result} from './app';
 
 /**
  * Boardクラス
@@ -6,7 +6,7 @@ import {ui, RESULT} from './app';
  * @author asada
  */
 export default class Board {
-    constructor(oneSideLength, terminationCondition) {
+    constructor(oneSideLength = 3, terminationCondition = 3) {
         this.oneSideLength = oneSideLength;
         this.terminationCondition = terminationCondition;
         this.DEFAULT = 0;
@@ -20,9 +20,9 @@ export default class Board {
     }
 
     copyGameBoardArray() {
-        let copyArray = new Array(3);
+        let copyArray = new Array(this.oneSideLength);
         for (let i = 0; i < this.oneSideLength; i++) {
-            copyArray[i] = this.gameBoardArray.slice();
+            copyArray[i] = this._gameBoardArray[i].slice();
         }
         return copyArray;
     }
@@ -31,9 +31,9 @@ export default class Board {
      * HTML上のボードを初期化する関数
      */
     init() {
-        this.gameBoardArray = new Array(this.oneSideLength);
+        this._gameBoardArray = new Array(this.oneSideLength);
         for (let i = 0; i < this.oneSideLength; i++) {
-            this.gameBoardArray[i] = new Array(this.oneSideLength).fill(this.DEFAULT);
+            this._gameBoardArray[i] = new Array(this.oneSideLength).fill(this.DEFAULT);
         }
 
         this.endFlag = false;
@@ -43,11 +43,11 @@ export default class Board {
      * ボード上で選択した場所が埋まっている確認する
      */
     isAlreadyPut(choice) {
-        return this.gameBoardArray[Math.floor(choice / this.oneSideLength)][choice % this.oneSideLength] !== this.DEFAULT;
+        return this._gameBoardArray[Math.floor(choice / this.oneSideLength)][choice % this.oneSideLength] !== this.DEFAULT;
     }
 
     put(choice, playerID) {
-        this.gameBoardArray[Math.floor(choice / this.oneSideLength)][choice % this.oneSideLength] = playerID;
+        this._gameBoardArray[Math.floor(choice / this.oneSideLength)][choice % this.oneSideLength] = playerID;
     }
 
     /**
@@ -61,10 +61,10 @@ export default class Board {
 
         if (this.endFlag) {
             if (playerId === 1) {
-                ui.printResultMessage(RESULT.WIN);
+                ui.printResultMessage(Result.WIN);
 
             } else if (playerId === 2) {
-                ui.printResultMessage(RESULT.LOSE);
+                ui.printResultMessage(Result.LOSE);
             }
             return;
         }
@@ -75,7 +75,7 @@ export default class Board {
         for (let x = 0; x < this.oneSideLength; x++) {
             let score = 0;
             for (let y = 0; y < this.oneSideLength; y++) {
-                if (this.gameBoardArray[x][y] !== playerId) {
+                if (this._gameBoardArray[x][y] !== playerId) {
                     score = 0;
                     continue;
                 }
@@ -93,7 +93,7 @@ export default class Board {
         for (let y = 0; y < this.oneSideLength; y++) {
             let score = 0;
             for (let x = 0; x < this.oneSideLength; x++) {
-                if (this.gameBoardArray[x][y] !== playerId) {
+                if (this._gameBoardArray[x][y] !== playerId) {
                     score = 0;
                     continue;
                 }
@@ -109,7 +109,7 @@ export default class Board {
 
     checkUpperLeftToLowerRight(playerId) {
         for (let i = 0; i < this.oneSideLength; i++) {
-            if (this.gameBoardArray[i][i] !== playerId) {
+            if (this._gameBoardArray[i][i] !== playerId) {
                 break;
             }
             if (i === this.terminationCondition - 1) {
@@ -121,7 +121,7 @@ export default class Board {
 
     checkUpperRightToLowerLeft(playerId) {
         for (let i = 0; i < this.oneSideLength; i++) {
-            if (this.gameBoardArray[i][this.oneSideLength - 1 - i] !== playerId) {
+            if (this._gameBoardArray[i][this.oneSideLength - 1 - i] !== playerId) {
                 break;
             }
             if (i === this.terminationCondition - 1) {
@@ -132,14 +132,14 @@ export default class Board {
     }
 
     checkDraw() {
-        for (let x = 0; x < this.gameBoardArray.length; x++) {
-            for (let y = 0; y < this.gameBoardArray[x].length; y++) {
-                if (this.gameBoardArray[x][y] === this.DEFAULT) {
+        for (let x = 0; x < this._gameBoardArray.length; x++) {
+            for (let y = 0; y < this._gameBoardArray[x].length; y++) {
+                if (this._gameBoardArray[x][y] === this.DEFAULT) {
                     return;
                 }
             }
         }
         this.endFlag = true;
-        ui.printResultMessage(RESULT.DRAW);
+        ui.printResultMessage(Result.DRAW);
     }
 }

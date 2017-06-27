@@ -12,12 +12,12 @@ import {EasyCpu, NormalCpu} from './Cpu';
 /**
  * 試合結果の定数オブジェクト
  */
-export const RESULT = Object.freeze({DRAW: 0, WIN: 1, LOSE: 2});
+export const Result = Object.freeze({DRAW: Symbol(0), WIN: Symbol(1), LOSE: Symbol(2)});
 
 /**
  * CPUの強さの定数オブジェクト
  */
-export const CPU_LEVEL = Object.freeze({EASY: 'Easy', NORMAL: 'Normal'});
+export const CpuLevel = Object.freeze({EASY: 'Easy', NORMAL: 'Normal'});
 
 export const board = new Board(3, 3);
 
@@ -32,11 +32,11 @@ export let cpu = new EasyCpu(2);
  */
 export const setCpu = (cpuLevel) => {
     switch (cpuLevel) {
-        case CPU_LEVEL.EASY:
+        case CpuLevel.EASY:
             cpu = new EasyCpu(2);
             break;
 
-        case CPU_LEVEL.NORMAL:
+        case CpuLevel.NORMAL:
             cpu = new NormalCpu(2);
             break;
     }

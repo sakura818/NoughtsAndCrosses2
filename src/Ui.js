@@ -1,14 +1,16 @@
-import {board, ui, humanPlayer, RESULT, CPU_LEVEL, setCpu} from './app.js';
+import {board, ui, humanPlayer, Result, CpuLevel, setCpu} from './app.js';
 
 /**
  * UIクラス
  *
  * @author asada
  */
+const State = {0: '_', 1: '○', 2: '×'};
+
 export default class Ui {
     /**
      * コンストラクタ
-     * タイトル、ゲームボード、リセットボタンを作成して、表示する。
+     * タイトル、CPUのセレクトボックス、ゲームボード、リセットボタンを作成し、表示する。
      */
     constructor() {
         const createTitle = () => {
@@ -19,23 +21,28 @@ export default class Ui {
 
         const createCpuLevelSelectBox = () => {
             const form = document.createElement('form');
-            form.action = '#';
+
+            let pTag = document.createElement('p');
+            pTag.innerHTML = 'CPUの難易度:';
 
             const select = document.createElement('select');
-            select.name = 'CpuLevel';
+            select.id = 'CpuLevel';
             select.addEventListener('change', () => {
                 board.init();
                 ui.printBoard();
+                setCpu(document.getElementById('CpuLevel').value);
             });
 
-            for (let value of Object.keys(CPU_LEVEL)) {
+            for (let value of Object.keys(CpuLevel)) {
                 let option = document.createElement('option');
-                option.value = CPU_LEVEL[value];
-                option.innerHTML = CPU_LEVEL[value];
+                option.value = CpuLevel[value];
+                option.innerHTML = CpuLevel[value];
                 select.appendChild(option);
             }
 
-            form.appendChild(select);
+            pTag.appendChild(select);
+
+            form.appendChild(pTag);
             return form;
         };
 
@@ -43,15 +50,15 @@ export default class Ui {
             const fragment = document.createDocumentFragment();
 
             let pTag = document.createElement('p');
-            for (let i = 0; i < 9; i++) {
-                if (i % 3 === 0) {
+            for (let i = 0; i < board.oneSideLength * board.oneSideLength; i++) {
+                if (i % board.oneSideLength === 0) {
                     pTag = document.createElement('p');
                 }
 
                 let button = document.createElement('button');
                 //TODO ここでIDを消すと、'innerHTML' of nul　となる原因について調べる。
                 button.id = `${i}`;
-                button.innerHTML = '_';
+                button.innerHTML = State[board.DEFAULT];
                 button.addEventListener('click', () => {
                     humanPlayer.selectByUser(i);
                 });
@@ -65,8 +72,6 @@ export default class Ui {
 
         const createResetButton = () => {
             const resetButton = document.createElement('button');
-            //IDを付与しているが、
-            resetButton.id = 'reset';
             resetButton.innerHTML = 'リセット';
             resetButton.addEventListener('click', () => {
                 board.init();
@@ -99,48 +104,30 @@ export default class Ui {
      * 現在のボードの状況を表示する。
      */
     printBoard() {
-        for (let i = 0; i < 9; i++) {
-            let el;
-            switch (board.gameBoardArray[Math.floor(i / board.oneSideLength)][i % board.oneSideLength]) {
-                case board.DEFAULT:
-                    el = '_';
-                    break;
-
-                case 1:
-                    el = '○';
-                    break;
-
-                case 2:
-                    el = '×';
-                    break;
-
-                default:
-
-            }
-            document.getElementById(`${i}`).innerHTML = el;
+        for (let i = 0; i < board.oneSideLength * board.oneSideLength; i++) {
+            document.getElementById(`${i}`).innerHTML = State[board.copyGameBoardArray()[Math.floor(i / board.oneSideLength)][i % board.oneSideLength]];
         }
     }
 
     /**
      * 結果を表示する
-     * TODO alertでいいのか疑問
      *
-     * @param result DRAW,WIN,LOSE のいずれかを渡すこと。
+     * @param result Resultオブジェクトの項目を渡すこと。
      */
     printResultMessage(result) {
 
         this.printBoard();
 
         switch (result) {
-            case RESULT.DRAW:
+            case Result.DRAW:
                 window.alert('引き分けです。');
                 break;
 
-            case RESULT.WIN:
+            case Result.WIN:
                 window.alert('あなたの勝ちです。');
                 break;
 
-            case RESULT.LOSE:
+            case Result.LOSE:
                 window.alert('あなたの負けです。');
                 break;
 

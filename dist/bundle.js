@@ -91,83 +91,8 @@ class OXGame {
         this.humanPlayer = new __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__["a" /* default */](1);
         this.cpu = new __WEBPACK_IMPORTED_MODULE_3__cpu_js__["a" /* EasyCpu */](2);
 
-        const el = this.createDOM();
+        const el = createDOM(this.board, this.ui, this.setCpu, this.humanPlayer);
         document.getElementById('root').appendChild(el);
-    }
-
-    createDOM() {
-        const divClassContent = document.createElement('div');
-        divClassContent.className = 'content';
-        divClassContent.appendChild(createTitle());
-        divClassContent.appendChild(createCpuLevelSelectBox(this.board, this.ui, this.setCpu));
-        divClassContent.appendChild(createGameBoard(this.board, this.humanPlayer, this.ui));
-        divClassContent.appendChild(createResetButton(this.board, this.ui));
-        return divClassContent;
-
-        function createTitle() {
-            const title = document.createElement('h1');
-            title.innerHTML = '○×ゲーム';
-            return title;
-        }
-
-        function createCpuLevelSelectBox(board, ui, setCpu) {
-            const pTag = document.createElement('p');
-            pTag.innerHTML = 'CPUの難易度:';
-
-            //セレクトボックスを作る
-            const select = document.createElement('select');
-            select.id = 'CpuLevel';
-            select.addEventListener('change', () => {
-                board.init();
-                ui.printBoard(board);
-                setCpu(document.getElementById('CpuLevel').value);
-            });
-
-            //オプションを作る
-            for (let value of Object.keys(__WEBPACK_IMPORTED_MODULE_4__cpuLevel_js__["a" /* CpuLevel */])) {
-                let option = document.createElement('option');
-                option.value = __WEBPACK_IMPORTED_MODULE_4__cpuLevel_js__["a" /* CpuLevel */][value];
-                option.innerHTML = __WEBPACK_IMPORTED_MODULE_4__cpuLevel_js__["a" /* CpuLevel */][value];
-                select.appendChild(option);
-            }
-
-            pTag.appendChild(select);
-            return pTag;
-        }
-
-        function createGameBoard(board, humanPlayer, ui) {
-            const fragment = document.createDocumentFragment();
-
-            //pタグで段落をつける
-            let pTag = document.createElement('p');
-            for (let i = 0; i < board.oneSideLength * board.oneSideLength; i++) {
-                if (i % board.oneSideLength === 0) {
-                    pTag = document.createElement('p');
-                }
-
-                let button = document.createElement('button');
-                //TODO ここでIDを消すと、'innerHTML' of nul　となる原因について調べる。
-                button.id = `${i}`;
-                button.innerHTML = __WEBPACK_IMPORTED_MODULE_1__ui_js__["b" /* PlayerChar */][0];
-                button.addEventListener('click', () => {
-                    humanPlayer.selectByUser(board, ui, Math.floor(i / board.oneSideLength), i % board.oneSideLength);
-                });
-
-                pTag.appendChild(button);
-                fragment.appendChild(pTag);
-            }
-            return fragment;
-        }
-
-        function createResetButton(board, ui) {
-            const resetButton = document.createElement('button');
-            resetButton.innerHTML = 'リセット';
-            resetButton.addEventListener('click', () => {
-                board.init();
-                ui.printBoard(board);
-            });
-            return resetButton;
-        }
     }
 
     /**
@@ -205,6 +130,81 @@ class OXGame {
 
 //ゲームクラスを作成してゲームを開始する。
 let gameMatch = new OXGame();
+
+function createDOM(board, ui, setCpu, humanPlayer) {
+    const divClassContent = document.createElement('div');
+    divClassContent.className = 'content';
+    divClassContent.appendChild(createTitle());
+    divClassContent.appendChild(createCpuLevelSelectBox(board, ui, setCpu));
+    divClassContent.appendChild(createGameBoard(board, humanPlayer, ui));
+    divClassContent.appendChild(createResetButton(board, ui));
+    return divClassContent;
+
+    function createTitle() {
+        const title = document.createElement('h1');
+        title.innerHTML = '○×ゲーム';
+        return title;
+    }
+
+    function createCpuLevelSelectBox(board, ui, setCpu) {
+        const pTag = document.createElement('p');
+        pTag.innerHTML = 'CPUの難易度:';
+
+        //セレクトボックスを作る
+        const select = document.createElement('select');
+        select.id = 'CpuLevel';
+        select.addEventListener('change', () => {
+            board.init();
+            ui.printBoard(board);
+            setCpu(document.getElementById('CpuLevel').value);
+        });
+
+        //オプションを作る
+        for (let value of Object.keys(__WEBPACK_IMPORTED_MODULE_4__cpuLevel_js__["a" /* CpuLevel */])) {
+            let option = document.createElement('option');
+            option.value = __WEBPACK_IMPORTED_MODULE_4__cpuLevel_js__["a" /* CpuLevel */][value];
+            option.innerHTML = __WEBPACK_IMPORTED_MODULE_4__cpuLevel_js__["a" /* CpuLevel */][value];
+            select.appendChild(option);
+        }
+
+        pTag.appendChild(select);
+        return pTag;
+    }
+
+    function createGameBoard(board, humanPlayer, ui) {
+        const fragment = document.createDocumentFragment();
+
+        //pタグで段落をつける
+        let pTag = document.createElement('p');
+        for (let i = 0; i < board.oneSideLength * board.oneSideLength; i++) {
+            if (i % board.oneSideLength === 0) {
+                pTag = document.createElement('p');
+            }
+
+            let button = document.createElement('button');
+            //TODO ここでIDを消すと、'innerHTML' of nul　となる原因について調べる。
+            button.id = `${i}`;
+            button.innerHTML = __WEBPACK_IMPORTED_MODULE_1__ui_js__["b" /* PlayerChar */][0];
+            button.addEventListener('click', () => {
+                humanPlayer.selectByUser(board, ui, Math.floor(i / board.oneSideLength), i % board.oneSideLength);
+            });
+
+            pTag.appendChild(button);
+            fragment.appendChild(pTag);
+        }
+        return fragment;
+    }
+
+    function createResetButton(board, ui) {
+        const resetButton = document.createElement('button');
+        resetButton.innerHTML = 'リセット';
+        resetButton.addEventListener('click', () => {
+            board.init();
+            ui.printBoard(board);
+        });
+        return resetButton;
+    }
+}
 
 /***/ }),
 /* 1 */

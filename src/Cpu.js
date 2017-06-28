@@ -3,9 +3,6 @@
  *
  * @author asada
  */
-
-const DEFAULT_SCORE = -1;
-
 class Cpu {
     constructor(playerId) {
         this.playerId = playerId;
@@ -16,7 +13,7 @@ class Cpu {
      *
      * @throws {Error} CPUを継承してselectByCpuメソッドを実装しない場合にスローする
      */
-    selectByCpu() {
+    selectByCpu(board, ui) {
         throw Error('不正なCPUが呼ばれました。');
     }
 }
@@ -31,13 +28,13 @@ export class EasyCpu extends Cpu {
         super(playerId);
     }
 
-    selectByCpu() {
+    selectByCpu(board) {
         let x, y;
         do {
-            let random = Math.floor(Math.random() * gameMatch.board.getOneSideLength() * gameMatch.board.getOneSideLength());
-            x = Math.floor(random / board.oneSideLength);
-            y = random % gameMatch.board.oneSideLength;
-        } while (gameMatch.board.isAlreadyPut(x, y));
-        gameMatch.board.put(x, y, this.playerId);
+            let random = Math.floor(Math.random() * board.verticalLength * board.horizontalLength);
+            x = Math.floor(random / board.verticalLength);
+            y = random % board.horizontalLength;
+        } while (board.isAlreadyPut(x, y));
+        board.put(x, y, this.playerId);
     }
 }

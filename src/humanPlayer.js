@@ -1,3 +1,5 @@
+import {gameMatch} from './app.js';
+
 /**
  * 人間のプレイヤー
  *
@@ -11,16 +13,17 @@ export default class HumanPlayer {
     /**
      * ユーザーが選択した場合に呼び出される関数
      */
-    selectByUser(x, y) {
-        if (gameMatch.board.endFlag) {
+    selectByUser(board, ui, x, y) {
+        if (board.endFlag) {
             return;
         }
 
-        if (gameMatch.board.isAlreadyPut(x, y)) {
-            gameMatch.ui.printIsAlreadyPutMessage();
+        if (board.isAlreadyPut(x, y)) {
+            ui.printIsAlreadyPutMessage();
             return;
         }
-        gameMatch.board.put(x, y, this.playerId);
+
+        board.put(x, y, this.playerId);
 
         gameMatch.judge();
     }

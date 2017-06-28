@@ -6,41 +6,22 @@ export const GAME_BOARD_DEFAULT_VALUE = 0;
 /**
  * 試合結果の定数オブジェクト
  */
-export const Result = Object.freeze({ DRAW: '引き分けです。', WIN: 'あなたの勝ちです。', LOSE: 'あなたの負けです。' });
+export const Result = Object.freeze({DRAW: '引き分けです。', WIN: 'あなたの勝ちです。', LOSE: 'あなたの負けです。'});
 
-/**
- * Boardクラス
- *
- * @author asada
- */
-export class SquareBoard {
-    constructor(ui, oneSideLength, terminationCondition) {
-        this.oneSideLength = oneSideLength;
+class Board {
+    constructor(ui, verticalLength, horizontalLength, terminationCondition) {
+        this.ui = ui;
+        this.verticalLength = verticalLength;
+        this.horizontalLength = horizontalLength;
         this.terminationCondition = terminationCondition;
         this.endFlag = false;
 
         this.init();
     }
 
-    getOneSideLength() {
-        return this.oneSideLength;
-    }
-
-    /**
-     * ボードを初期化する
-     */
-    init() {
-        this.gameBoardArray = new Array(this.oneSideLength);
-        for (let i = 0; i < this.oneSideLength; i++) {
-            this.gameBoardArray[i] = new Array(this.oneSideLength).fill(GAME_BOARD_DEFAULT_VALUE);
-        }
-
-        this.endFlag = false;
-    }
-
     /**
      * ボード上で選択した場所が埋まっている確認する
-     * 
+     *
      * @return {boolean} 埋まっている場合はtrue、埋まっていない場合はfalse
      */
     isAlreadyPut(x, y) {
@@ -52,35 +33,21 @@ export class SquareBoard {
     }
 
     /**
-     * ゲームの終了条件を満たしたか確認する
-     * 
-     * @param playerId 最後にプレイしたプレイヤーのIDを渡す
+     * ボードを初期化する
      */
-    checkGameEnd(playerId) {
-        if (this._checkHorizontal(playerId) || this._checkVertical(playerId) || this._checkUpperLeftToLowerRight(playerId) || this._checkUpperRightToLowerLeft(playerId)) {
-            this.endFlag = true;
+    init() {
+        this.gameBoardArray = new Array(this.verticalLength);
+        for (let i = 0; i < this.verticalLength; i++) {
+            this.gameBoardArray[i] = new Array(this.horizontalLength).fill(GAME_BOARD_DEFAULT_VALUE);
         }
 
-        if (this.endFlag) {
-            if (playerId === 1) {
-                gameMatch.ui.printResultMessage(Result.WIN);
-
-            } else if (playerId === 2) {
-                gameMatch.ui.printResultMessage(Result.LOSE);
-            }
-            return;
-        }
-
-        if (this._checkDraw()) {
-            this.endFlag = true;
-            gameMatch.ui.printResultMessage(Result.DRAW);
-        }
+        this.endFlag = false;
     }
 
     _checkHorizontal(playerId) {
-        for (let x = 0; x < this.oneSideLength; x++) {
+        for (let x = 0; x < this.verticalLength; x++) {
             let score = 0;
-            for (let y = 0; y < this.oneSideLength; y++) {
+            for (let y = 0; y < this.horizontalLength; y++) {
                 if (this.gameBoardArray[x][y] !== playerId) {
                     score = 0;
                     continue;
@@ -95,9 +62,9 @@ export class SquareBoard {
     }
 
     _checkVertical(playerId) {
-        for (let y = 0; y < this.oneSideLength; y++) {
+        for (let y = 0; y < this.verticalLength; y++) {
             let score = 0;
-            for (let x = 0; x < this.oneSideLength; x++) {
+            for (let x = 0; x < this.horizontalLength; x++) {
                 if (this.gameBoardArray[x][y] !== playerId) {
                     score = 0;
                     continue;
@@ -109,6 +76,55 @@ export class SquareBoard {
             }
         }
         return false;
+    }
+
+    _checkDraw() {
+        for (let x = 0; x < this.gameBoardArray.length; x++) {
+            for (let y = 0; y < this.gameBoardArray[x].length; y++) {
+                if (this.gameBoardArray[x][y] === GAME_BOARD_DEFAULT_VALUE) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}
+
+/**
+ * Boardクラス
+ *
+ * @author asada
+ */
+export class SquareBoard extends Board {
+    constructor(ui, oneSideLength) {
+        super(ui, oneSideLength, oneSideLength, oneSideLength);
+        this.oneSideLength = oneSideLength;
+    }
+
+    /**
+     * ゲームの終了条件を満たしたか確認する
+     *
+     * @param playerId 最後にプレイしたプレイヤーのIDを渡す
+     */
+    checkGameEnd(playerId) {
+        if (this._checkHorizontal(playerId) || this._checkVertical(playerId) || this._checkUpperLeftToLowerRight(playerId) || this._checkUpperRightToLowerLeft(playerId)) {
+            this.endFlag = true;
+        }
+
+        if (this.endFlag) {
+            if (playerId === 1) {
+                this.ui.printResultMessage(this, Result.WIN);
+
+            } else if (playerId === 2) {
+                this.ui.printResultMessage(this, Result.LOSE);
+            }
+            return;
+        }
+
+        if (this._checkDraw()) {
+            this.endFlag = true;
+            this.ui.printResultMessage(this, Result.DRAW);
+        }
     }
 
     _checkUpperLeftToLowerRight(playerId) {
@@ -133,16 +149,5 @@ export class SquareBoard {
             }
         }
         return false;
-    }
-
-    _checkDraw() {
-        for (let x = 0; x < this.gameBoardArray.length; x++) {
-            for (let y = 0; y < this.gameBoardArray[x].length; y++) {
-                if (this.gameBoardArray[x][y] === GAME_BOARD_DEFAULT_VALUE) {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 }

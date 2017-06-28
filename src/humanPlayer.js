@@ -1,5 +1,3 @@
-import {gameMatch} from './app.js';
-
 /**
  * 人間のプレイヤー
  *
@@ -24,7 +22,5 @@ export default class HumanPlayer {
         }
 
         board.put(x, y, this.playerId);
-
-        gameMatch.judge();
     }
 }

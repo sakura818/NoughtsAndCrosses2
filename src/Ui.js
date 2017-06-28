@@ -7,8 +7,9 @@ export const Ui = {
      * 現在のボードの状況を表示する。
      */
     printBoard: function (board) {
-        for (let i = 0; i < board.oneSideLength * board.oneSideLength; i++) {
-            document.getElementById(`${i}`).innerHTML = PlayerChar[board.gameBoardArray[Math.floor(i / board.oneSideLength)][i % board.oneSideLength]];
+        for (let i = 0; i < board.verticalLength * board.horizontalLength; i++) {
+            let oneSquare = board.gameBoardArray[Math.floor(i / board.verticalLength)][i % board.verticalLength];
+            document.getElementById(`${i}`).innerHTML = PlayerChar[oneSquare];
         }
     },
     /**

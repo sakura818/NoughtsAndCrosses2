@@ -5,9 +5,9 @@ import {EasyCpu} from './cpu.js';
 import {CpuLevel} from './cpuLevel.js';
 
 //ゲームクラスを作成してゲームを開始する。
-new OXGame();
+new OXGame3by3HumanVsCpu();
 
-function OXGame() {
+function OXGame3by3HumanVsCpu() {
     this.ui = Ui;
     this.board = new SquareBoard(this.ui, 3);
     this.humanPlayer = new HumanPlayer(1);
@@ -114,6 +114,7 @@ function createDOM(oxGame) {
             button.innerHTML = PlayerChar[0];
             button.addEventListener('click', () => {
                 oxGame.humanPlayer.selectByUser(oxGame.board, oxGame.ui, Math.floor(i / oxGame.board.verticalLength), i % oxGame.board.verticalLength);
+                oxGame.judge();
             });
 
             pTag.appendChild(button);

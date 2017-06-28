@@ -84,9 +84,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 //ゲームクラスを作成してゲームを開始する。
-new OXGame();
+new OXGame3by3HumanVsCpu();
 
-function OXGame() {
+function OXGame3by3HumanVsCpu() {
     this.ui = __WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */];
     this.board = new __WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* SquareBoard */](this.ui, 3);
     this.humanPlayer = new __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__["a" /* default */](1);
@@ -193,6 +193,7 @@ function createDOM(oxGame) {
             button.innerHTML = __WEBPACK_IMPORTED_MODULE_1__ui_js__["b" /* PlayerChar */][0];
             button.addEventListener('click', () => {
                 oxGame.humanPlayer.selectByUser(oxGame.board, oxGame.ui, Math.floor(i / oxGame.board.verticalLength), i % oxGame.board.verticalLength);
+                oxGame.judge();
             });
 
             pTag.appendChild(button);
@@ -443,9 +444,6 @@ const CpuLevel = Object.freeze({ EASY: 'Easy' });
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_js__ = __webpack_require__(0);
-
-
 /**
  * 人間のプレイヤー
  *
@@ -470,8 +468,6 @@ class HumanPlayer {
         }
 
         board.put(x, y, this.playerId);
-
-        __WEBPACK_IMPORTED_MODULE_0__app_js__["gameMatch"].judge();
     }
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = HumanPlayer;
@@ -493,8 +489,9 @@ const Ui = {
      * 現在のボードの状況を表示する。
      */
     printBoard: function (board) {
-        for (let i = 0; i < board.oneSideLength * board.oneSideLength; i++) {
-            document.getElementById(`${i}`).innerHTML = PlayerChar[board.gameBoardArray[Math.floor(i / board.oneSideLength)][i % board.oneSideLength]];
+        for (let i = 0; i < board.verticalLength * board.horizontalLength; i++) {
+            let oneSquare = board.gameBoardArray[Math.floor(i / board.verticalLength)][i % board.verticalLength];
+            document.getElementById(`${i}`).innerHTML = PlayerChar[oneSquare];
         }
     },
     /**

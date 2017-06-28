@@ -1,20 +1,26 @@
-/**
- * BoardのgameBoardArrayの初期値
- */
-export const GAME_BOARD_DEFAULT_VALUE = 0;
+const GAME_BOARD_DEFAULT_VALUE = 0;
 
 /**
  * 試合結果の定数オブジェクト
  */
-export const Result = Object.freeze({DRAW: '引き分けです。', WIN: 'あなたの勝ちです。', LOSE: 'あなたの負けです。'});
+const Result = Object.freeze({DRAW: '引き分けです。', WIN: 'あなたの勝ちです。', LOSE: 'あなたの負けです。'});
 
+/**
+ * ボードの抽象クラス
+ *
+ * @author asada
+ */
 class Board {
     constructor(ui, verticalLength, horizontalLength, terminationCondition) {
+        /**
+         * ゲームが終了条件を満たしている場合はtrue、まだ終了しない場合はfalse
+         */
+        this.endFlag = false;
+
         this.ui = ui;
         this.verticalLength = verticalLength;
         this.horizontalLength = horizontalLength;
         this.terminationCondition = terminationCondition;
-        this.endFlag = false;
 
         this.init();
     }
@@ -91,7 +97,7 @@ class Board {
 }
 
 /**
- * Boardクラス
+ * 正方形のボードで、一辺の長さ = 終了条件のクラス
  *
  * @author asada
  */

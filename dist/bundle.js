@@ -72,79 +72,48 @@
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "cpu", function() { return cpu; });
-/* harmony export (immutable) */ __webpack_exports__["setCpu"] = setCpu;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__board__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ui__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__humanPlayer__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__humanPlayer___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__humanPlayer__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "game", function() { return game; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__board_js__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ui_js__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__cpu__ = __webpack_require__(2);
 
 
 
 
 
+let game = new Game3by3HumanVsCpu();
+
 /**
  * 各クラスをインスタンス化する
  *
  * @author asada
  */
-
-/**
- * 試合結果の定数オブジェクト
- */
-const Result = Object.freeze({ DRAW: '引き分けです。', WIN: 'あなたの勝ちです。', LOSE: 'あなたの負けです。' });
-/* harmony export (immutable) */ __webpack_exports__["Result"] = Result;
-
-
-/**
- * CPUの強さの定数オブジェクト
- */
-const CpuLevel = Object.freeze({ EASY: 'Easy' });
-/* harmony export (immutable) */ __webpack_exports__["CpuLevel"] = CpuLevel;
-
-
-const board = new __WEBPACK_IMPORTED_MODULE_0__board__["a" /* SquareBoard */](3, 3);
-/* harmony export (immutable) */ __webpack_exports__["board"] = board;
-
-
-const ui = new __WEBPACK_IMPORTED_MODULE_1__ui__["a" /* default */]();
-/* harmony export (immutable) */ __webpack_exports__["ui"] = ui;
-
-const humanPlayer = new __WEBPACK_IMPORTED_MODULE_2__humanPlayer__["default"](1);
-/* harmony export (immutable) */ __webpack_exports__["humanPlayer"] = humanPlayer;
-
-let cpu = new __WEBPACK_IMPORTED_MODULE_3__cpu__["a" /* EasyCpu */](2);
-
-/**
- * CPUの強さを変更する
- *
- * @param cpuLevel
- */
-function setCpu(cpuLevel) {
-    switch (cpuLevel) {
-        case CpuLevel.EASY:
-            cpu = new __WEBPACK_IMPORTED_MODULE_3__cpu__["a" /* EasyCpu */](2);
-            break;
-
-        default:
-            window.alert('存在しないCPUが選択されました。');
+class Game3by3HumanVsCpu {
+    constructor() {
+        this.board = new __WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* SquareBoard */](3, 3);
+        this.ui = new __WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* default */]();
+        this.humanPlayer = new __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__["a" /* default */](1);
+        this.cpu = new __WEBPACK_IMPORTED_MODULE_3__cpu__["a" /* EasyCpu */](2);
     }
 }
+
 
 /***/ }),
 /* 1 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_js__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__result_js__ = __webpack_require__(5);
+
 
 
 /**
  * BoardのgameBoardArrayの初期値
  */
 const GAME_BOARD_DEFAULT_VALUE = 0;
-/* harmony export (immutable) */ __webpack_exports__["b"] = GAME_BOARD_DEFAULT_VALUE;
+/* unused harmony export GAME_BOARD_DEFAULT_VALUE */
 
 
 /**
@@ -202,17 +171,17 @@ class SquareBoard {
 
         if (this.endFlag) {
             if (playerId === 1) {
-                __WEBPACK_IMPORTED_MODULE_0__app__["ui"].printResultMessage(__WEBPACK_IMPORTED_MODULE_0__app__["Result"].WIN);
+                __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].ui.printResultMessage(__WEBPACK_IMPORTED_MODULE_1__result_js__["a" /* default */].WIN);
 
             } else if (playerId === 2) {
-                __WEBPACK_IMPORTED_MODULE_0__app__["ui"].printResultMessage(__WEBPACK_IMPORTED_MODULE_0__app__["Result"].LOSE);
+                __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].ui.printResultMessage(__WEBPACK_IMPORTED_MODULE_1__result_js__["a" /* default */].LOSE);
             }
             return;
         }
 
         if (this._checkDraw()) {
             this.endFlag = true;
-            __WEBPACK_IMPORTED_MODULE_0__app__["ui"].printResultMessage(__WEBPACK_IMPORTED_MODULE_0__app__["Result"].DRAW);
+            __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].ui.printResultMessage(__WEBPACK_IMPORTED_MODULE_1__result_js__["a" /* default */].DRAW);
         }
     }
 
@@ -333,11 +302,11 @@ class EasyCpu extends Cpu {
     selectByCpu() {
         let x, y;
         do {
-            let random = Math.floor(Math.random() * __WEBPACK_IMPORTED_MODULE_0__app__["board"].getOneSideLength() * __WEBPACK_IMPORTED_MODULE_0__app__["board"].getOneSideLength());
-            x = Math.floor(random / __WEBPACK_IMPORTED_MODULE_0__app__["board"].oneSideLength);
-            y = random % __WEBPACK_IMPORTED_MODULE_0__app__["board"].oneSideLength;
-        } while (__WEBPACK_IMPORTED_MODULE_0__app__["board"].isAlreadyPut(x, y));
-        __WEBPACK_IMPORTED_MODULE_0__app__["board"].put(x, y, this.playerId);
+            let random = Math.floor(Math.random() * __WEBPACK_IMPORTED_MODULE_0__app__["game"].board.getOneSideLength() * __WEBPACK_IMPORTED_MODULE_0__app__["game"].board.getOneSideLength());
+            x = Math.floor(random / board.oneSideLength);
+            y = random % __WEBPACK_IMPORTED_MODULE_0__app__["game"].board.oneSideLength;
+        } while (__WEBPACK_IMPORTED_MODULE_0__app__["game"].board.isAlreadyPut(x, y));
+        __WEBPACK_IMPORTED_MODULE_0__app__["game"].board.put(x, y, this.playerId);
     }
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = EasyCpu;
@@ -345,10 +314,53 @@ class EasyCpu extends Cpu {
 
 /***/ }),
 /* 3 */
-/***/ (function(module, __webpack_exports__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-throw new Error("Module build failed: Error: ENOENT: no such file or directory, open '/Users/yusuke-pc/WebstormProjects/NoughtsAndCrosses2/src/humanPlayer.js'");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_js__ = __webpack_require__(0);
+
+
+/**
+ * 人間のプレイヤー
+ *
+ * @author asada
+ */
+class HumanPlayer {
+    constructor(playerId) {
+        this.playerId = playerId;
+    }
+
+    /**
+     * ユーザーが選択した場合に呼び出される関数
+     */
+    selectByUser(x, y) {
+        if (__WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.endFlag) {
+            return;
+        }
+
+        if (__WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.isAlreadyPut(x, y)) {
+            __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].ui.printIsAlreadyPutMessage();
+            return;
+        }
+        __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.put(x, y, this.playerId);
+        __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.checkGameEnd(this.playerId);
+
+        if (__WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.endFlag) {
+            return;
+        }
+        try {
+            cpu.selectByCpu();
+        } catch (e) {
+            console.log(e);
+            window.alert('選択されたCPUは未実装です。');
+        }
+        __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.checkGameEnd(cpu.playerId);
+
+        __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].ui.printBoard();
+    }
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = HumanPlayer;
+
 
 /***/ }),
 /* 4 */
@@ -356,18 +368,19 @@ throw new Error("Module build failed: Error: ENOENT: no such file or directory, 
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_js__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__board_js__ = __webpack_require__(1);
+throw new Error("Cannot find module \"./game.board.js\"");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__cpuLevel_js__ = __webpack_require__(6);
 
 
 
-/**
- * UIクラス
- *
- * @author asada
- */
 
 const State = Object.freeze({ 0: '_', 1: '○', 2: '×' });
 
+/**
+ * UIクラス
+ * TODO game.boardをthis.boardとかにした方がわかりやすいかもしれない。
+ * @author asada
+ */
 class Ui {
     /**
      * コンストラクタ
@@ -388,16 +401,16 @@ class Ui {
             const select = document.createElement('select');
             select.id = 'CpuLevel';
             select.addEventListener('change', () => {
-                __WEBPACK_IMPORTED_MODULE_0__app_js__["board"].init();
-                __WEBPACK_IMPORTED_MODULE_0__app_js__["ui"].printBoard();
-                __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__app_js__["setCpu"])(document.getElementById('CpuLevel').value);
+                __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.init();
+                __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].ui.printBoard();
+                setCpu(document.getElementById('CpuLevel').value);
             });
 
             //オプションを作る
-            for (let value of Object.keys(__WEBPACK_IMPORTED_MODULE_0__app_js__["CpuLevel"])) {
+            for (let value of Object.keys(__WEBPACK_IMPORTED_MODULE_2__cpuLevel_js__["a" /* default */])) {
                 let option = document.createElement('option');
-                option.value = __WEBPACK_IMPORTED_MODULE_0__app_js__["CpuLevel"][value];
-                option.innerHTML = __WEBPACK_IMPORTED_MODULE_0__app_js__["CpuLevel"][value];
+                option.value = __WEBPACK_IMPORTED_MODULE_2__cpuLevel_js__["a" /* default */][value];
+                option.innerHTML = __WEBPACK_IMPORTED_MODULE_2__cpuLevel_js__["a" /* default */][value];
                 select.appendChild(option);
             }
 
@@ -405,22 +418,38 @@ class Ui {
             return pTag;
         };
 
+        /**
+         * CPUの強さを変更する
+         *
+         * @param cpuLevel
+         */
+        const setCpu = function (cpuLevel) {
+            switch (cpuLevel) {
+                case __WEBPACK_IMPORTED_MODULE_2__cpuLevel_js__["a" /* default */].EASY:
+                    cpu = new EasyCpu(2);
+                    break;
+
+                default:
+                    window.alert('存在しないCPUが選択されました。');
+            }
+        }
+
         const createGameBoard = () => {
             const fragment = document.createDocumentFragment();
 
             //pタグで段落をつける
             let pTag = document.createElement('p');
-            for (let i = 0; i < __WEBPACK_IMPORTED_MODULE_0__app_js__["board"].oneSideLength * __WEBPACK_IMPORTED_MODULE_0__app_js__["board"].oneSideLength; i++) {
-                if (i % __WEBPACK_IMPORTED_MODULE_0__app_js__["board"].oneSideLength === 0) {
+            for (let i = 0; i < __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.oneSideLength * __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.oneSideLength; i++) {
+                if (i % __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.oneSideLength === 0) {
                     pTag = document.createElement('p');
                 }
 
                 let button = document.createElement('button');
                 //TODO ここでIDを消すと、'innerHTML' of nul　となる原因について調べる。
                 button.id = `${i}`;
-                button.innerHTML = State[__WEBPACK_IMPORTED_MODULE_1__board_js__["b" /* GAME_BOARD_DEFAULT_VALUE */]];
+                button.innerHTML = State[__WEBPACK_IMPORTED_MODULE_1__game_board_js__["GAME_BOARD_DEFAULT_VALUE"]];
                 button.addEventListener('click', () => {
-                    __WEBPACK_IMPORTED_MODULE_0__app_js__["humanPlayer"].selectByUser(Math.floor(i / __WEBPACK_IMPORTED_MODULE_0__app_js__["board"].oneSideLength), i % __WEBPACK_IMPORTED_MODULE_0__app_js__["board"].oneSideLength);
+                    humanPlayer.selectByUser(Math.floor(i / __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.oneSideLength), i % __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.oneSideLength);
                 });
 
                 pTag.appendChild(button);
@@ -433,8 +462,8 @@ class Ui {
             const resetButton = document.createElement('button');
             resetButton.innerHTML = 'リセット';
             resetButton.addEventListener('click', () => {
-                __WEBPACK_IMPORTED_MODULE_0__app_js__["board"].init();
-                __WEBPACK_IMPORTED_MODULE_0__app_js__["ui"].printBoard();
+                __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.init();
+                __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].ui.printBoard();
             });
             return resetButton;
         };
@@ -462,8 +491,8 @@ class Ui {
      * 現在のボードの状況を表示する。
      */
     printBoard() {
-        for (let i = 0; i < __WEBPACK_IMPORTED_MODULE_0__app_js__["board"].oneSideLength * __WEBPACK_IMPORTED_MODULE_0__app_js__["board"].oneSideLength; i++) {
-            document.getElementById(`${i}`).innerHTML = State[__WEBPACK_IMPORTED_MODULE_0__app_js__["board"].gameBoardArray[Math.floor(i / __WEBPACK_IMPORTED_MODULE_0__app_js__["board"].oneSideLength)][i % __WEBPACK_IMPORTED_MODULE_0__app_js__["board"].oneSideLength]];
+        for (let i = 0; i < __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.oneSideLength * __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.oneSideLength; i++) {
+            document.getElementById(`${i}`).innerHTML = State[__WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.gameBoardArray[Math.floor(i / __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.oneSideLength)][i % __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.oneSideLength]];
         }
     }
 
@@ -482,6 +511,28 @@ class Ui {
     }
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = Ui;
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/**
+ * 試合結果の定数オブジェクト
+ */
+/* harmony default export */ __webpack_exports__["a"] = (Result = Object.freeze({ DRAW: '引き分けです。', WIN: 'あなたの勝ちです。', LOSE: 'あなたの負けです。' }));
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/**
+ * CPUの強さの定数オブジェクト
+ */
+/* harmony default export */ __webpack_exports__["a"] = (CpuLevel = Object.freeze({ EASY: 'Easy' }));
 
 
 /***/ })

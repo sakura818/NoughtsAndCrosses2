@@ -1,14 +1,14 @@
-import { board, ui, humanPlayer, Result, CpuLevel, setCpu, } from './app.js';
-import { GAME_BOARD_DEFAULT_VALUE } from './board.js';
-
-/**
- * UIクラス
- *
- * @author asada
- */
+import { game } from './app.js';
+import { GAME_BOARD_DEFAULT_VALUE } from './game.board.js';
+import CpuLevel from './cpuLevel.js';
 
 const State = Object.freeze({ 0: '_', 1: '○', 2: '×' });
 
+/**
+ * UIクラス
+ * TODO game.boardをthis.boardとかにした方がわかりやすいかもしれない。
+ * @author asada
+ */
 export default class Ui {
     /**
      * コンストラクタ
@@ -29,8 +29,8 @@ export default class Ui {
             const select = document.createElement('select');
             select.id = 'CpuLevel';
             select.addEventListener('change', () => {
-                board.init();
-                ui.printBoard();
+                game.board.init();
+                game.ui.printBoard();
                 setCpu(document.getElementById('CpuLevel').value);
             });
 
@@ -46,13 +46,29 @@ export default class Ui {
             return pTag;
         };
 
+        /**
+         * CPUの強さを変更する
+         *
+         * @param cpuLevel
+         */
+        const setCpu = function (cpuLevel) {
+            switch (cpuLevel) {
+                case CpuLevel.EASY:
+                    cpu = new EasyCpu(2);
+                    break;
+
+                default:
+                    window.alert('存在しないCPUが選択されました。');
+            }
+        }
+
         const createGameBoard = () => {
             const fragment = document.createDocumentFragment();
 
             //pタグで段落をつける
             let pTag = document.createElement('p');
-            for (let i = 0; i < board.oneSideLength * board.oneSideLength; i++) {
-                if (i % board.oneSideLength === 0) {
+            for (let i = 0; i < game.board.oneSideLength * game.board.oneSideLength; i++) {
+                if (i % game.board.oneSideLength === 0) {
                     pTag = document.createElement('p');
                 }
 
@@ -61,7 +77,7 @@ export default class Ui {
                 button.id = `${i}`;
                 button.innerHTML = State[GAME_BOARD_DEFAULT_VALUE];
                 button.addEventListener('click', () => {
-                    humanPlayer.selectByUser(Math.floor(i / board.oneSideLength), i % board.oneSideLength);
+                    humanPlayer.selectByUser(Math.floor(i / game.board.oneSideLength), i % game.board.oneSideLength);
                 });
 
                 pTag.appendChild(button);
@@ -74,8 +90,8 @@ export default class Ui {
             const resetButton = document.createElement('button');
             resetButton.innerHTML = 'リセット';
             resetButton.addEventListener('click', () => {
-                board.init();
-                ui.printBoard();
+                game.board.init();
+                game.ui.printBoard();
             });
             return resetButton;
         };
@@ -103,8 +119,8 @@ export default class Ui {
      * 現在のボードの状況を表示する。
      */
     printBoard() {
-        for (let i = 0; i < board.oneSideLength * board.oneSideLength; i++) {
-            document.getElementById(`${i}`).innerHTML = State[board.gameBoardArray[Math.floor(i / board.oneSideLength)][i % board.oneSideLength]];
+        for (let i = 0; i < game.board.oneSideLength * game.board.oneSideLength; i++) {
+            document.getElementById(`${i}`).innerHTML = State[game.board.gameBoardArray[Math.floor(i / game.board.oneSideLength)][i % game.board.oneSideLength]];
         }
     }
 

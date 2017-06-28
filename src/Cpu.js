@@ -1,4 +1,4 @@
-import { board } from './app';
+import { game } from './app';
 
 /**
  * コンピュータのプレイヤー
@@ -36,10 +36,10 @@ export class EasyCpu extends Cpu {
     selectByCpu() {
         let x, y;
         do {
-            let random = Math.floor(Math.random() * board.getOneSideLength() * board.getOneSideLength());
+            let random = Math.floor(Math.random() * game.board.getOneSideLength() * game.board.getOneSideLength());
             x = Math.floor(random / board.oneSideLength);
-            y = random % board.oneSideLength;
-        } while (board.isAlreadyPut(x, y));
-        board.put(x, y, this.playerId);
+            y = random % game.board.oneSideLength;
+        } while (game.board.isAlreadyPut(x, y));
+        game.board.put(x, y, this.playerId);
     }
 }

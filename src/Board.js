@@ -1,4 +1,5 @@
-import { ui, Result } from './app';
+import { game } from './app.js';
+import Result from './result.js';
 
 /**
  * BoardのgameBoardArrayの初期値
@@ -60,17 +61,17 @@ export class SquareBoard {
 
         if (this.endFlag) {
             if (playerId === 1) {
-                ui.printResultMessage(Result.WIN);
+                game.ui.printResultMessage(Result.WIN);
 
             } else if (playerId === 2) {
-                ui.printResultMessage(Result.LOSE);
+                game.ui.printResultMessage(Result.LOSE);
             }
             return;
         }
 
         if (this._checkDraw()) {
             this.endFlag = true;
-            ui.printResultMessage(Result.DRAW);
+            game.ui.printResultMessage(Result.DRAW);
         }
     }
 

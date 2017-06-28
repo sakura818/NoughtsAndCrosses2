@@ -1,42 +1,20 @@
-import { SquareBoard } from './board';
-import Ui from './ui';
-import HumanPlayer from './humanPlayer';
+import { SquareBoard } from './board.js';
+import Ui from './ui.js';
+import HumanPlayer from './humanPlayer.js';
 import { EasyCpu } from './cpu';
+
+export let game = new Game3by3HumanVsCpu();
 
 /**
  * 各クラスをインスタンス化する
  *
  * @author asada
  */
-
-/**
- * 試合結果の定数オブジェクト
- */
-export const Result = Object.freeze({ DRAW: '引き分けです。', WIN: 'あなたの勝ちです。', LOSE: 'あなたの負けです。' });
-
-/**
- * CPUの強さの定数オブジェクト
- */
-export const CpuLevel = Object.freeze({ EASY: 'Easy' });
-
-export const board = new SquareBoard(3, 3);
-
-export const ui = new Ui();
-export const humanPlayer = new HumanPlayer(1);
-export let cpu = new EasyCpu(2);
-
-/**
- * CPUの強さを変更する
- *
- * @param cpuLevel
- */
-export function setCpu(cpuLevel) {
-    switch (cpuLevel) {
-        case CpuLevel.EASY:
-            cpu = new EasyCpu(2);
-            break;
-
-        default:
-            window.alert('存在しないCPUが選択されました。');
+class Game3by3HumanVsCpu {
+    constructor() {
+        this.board = new SquareBoard(3, 3);
+        this.ui = new Ui();
+        this.humanPlayer = new HumanPlayer(1);
+        this.cpu = new EasyCpu(2);
     }
 }

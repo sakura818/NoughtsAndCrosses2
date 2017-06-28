@@ -74,10 +74,11 @@
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "cpu", function() { return cpu; });
 /* harmony export (immutable) */ __webpack_exports__["setCpu"] = setCpu;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__board__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ui__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__humanPlayer__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__cpu__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__board__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ui__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__humanPlayer__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__humanPlayer___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__humanPlayer__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__cpu__ = __webpack_require__(2);
 
 
 
@@ -110,7 +111,7 @@ const board = new __WEBPACK_IMPORTED_MODULE_0__board__["a" /* SquareBoard */](3,
 const ui = new __WEBPACK_IMPORTED_MODULE_1__ui__["a" /* default */]();
 /* harmony export (immutable) */ __webpack_exports__["ui"] = ui;
 
-const humanPlayer = new __WEBPACK_IMPORTED_MODULE_2__humanPlayer__["a" /* default */](1);
+const humanPlayer = new __WEBPACK_IMPORTED_MODULE_2__humanPlayer__["default"](1);
 /* harmony export (immutable) */ __webpack_exports__["humanPlayer"] = humanPlayer;
 
 let cpu = new __WEBPACK_IMPORTED_MODULE_3__cpu__["a" /* EasyCpu */](2);
@@ -132,11 +133,7 @@ function setCpu(cpuLevel) {
 }
 
 /***/ }),
-/* 1 */,
-/* 2 */,
-/* 3 */,
-/* 4 */,
-/* 5 */
+/* 1 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -293,7 +290,7 @@ class SquareBoard {
 
 
 /***/ }),
-/* 6 */
+/* 2 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -347,63 +344,19 @@ class EasyCpu extends Cpu {
 
 
 /***/ }),
-/* 7 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/* 3 */
+/***/ (function(module, __webpack_exports__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app__ = __webpack_require__(0);
-
-
-/**
- * 人間のプレイヤー
- *
- * @author asada
- */
-
-class HumanPlayer {
-    constructor(playerId) {
-        this.playerId = playerId;
-    }
-
-    /**
-     * ユーザーが選択した場合に呼び出される関数
-     */
-    selectByUser(x, y) {
-        if (__WEBPACK_IMPORTED_MODULE_0__app__["board"].endFlag) {
-            return;
-        }
-
-        if (__WEBPACK_IMPORTED_MODULE_0__app__["board"].isAlreadyPut(x, y)) {
-            __WEBPACK_IMPORTED_MODULE_0__app__["ui"].printIsAlreadyPutMessage();
-            return;
-        }
-        __WEBPACK_IMPORTED_MODULE_0__app__["board"].put(x, y, this.playerId);
-        __WEBPACK_IMPORTED_MODULE_0__app__["board"].checkGameEnd(this.playerId);
-
-        if (__WEBPACK_IMPORTED_MODULE_0__app__["board"].endFlag) {
-            return;
-        }
-        try {
-            __WEBPACK_IMPORTED_MODULE_0__app__["cpu"].selectByCpu();
-        } catch (e) {
-            console.log(e);
-            window.alert('選択されたCPUは未実装です。');
-        }
-        __WEBPACK_IMPORTED_MODULE_0__app__["board"].checkGameEnd(__WEBPACK_IMPORTED_MODULE_0__app__["cpu"].playerId);
-
-        __WEBPACK_IMPORTED_MODULE_0__app__["ui"].printBoard();
-    }
-}
-/* harmony export (immutable) */ __webpack_exports__["a"] = HumanPlayer;
-
+throw new Error("Module build failed: Error: ENOENT: no such file or directory, open '/Users/yusuke-pc/WebstormProjects/NoughtsAndCrosses2/src/humanPlayer.js'");
 
 /***/ }),
-/* 8 */
+/* 4 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_js__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__board_js__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__board_js__ = __webpack_require__(1);
 
 
 

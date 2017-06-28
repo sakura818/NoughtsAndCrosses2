@@ -1,5 +1,6 @@
 //ボードの駒とIDの連想配列。
-export const PlayerChar = Object.freeze(['_', '○', '×']);
+//画像を使用する場合も考えて、freezeの中止
+export const PlayerChar = ['_', '○', '×', '△', '□'];
 
 export const Ui = {
     /**

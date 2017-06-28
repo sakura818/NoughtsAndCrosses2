@@ -4,33 +4,30 @@ import HumanPlayer from './humanPlayer.js';
 import {EasyCpu} from './cpu.js';
 import {CpuLevel} from './cpuLevel.js';
 
-class OXGame {
-    constructor() {
-        this.ui = Ui;
-        this.board = new SquareBoard(this.ui, 3);
-        this.humanPlayer = new HumanPlayer(1);
-        this.cpu = new EasyCpu(2);
+//ゲームクラスを作成してゲームを開始する。
+new OXGame();
 
-        const el = createDOM(this.board, this.ui, this.setCpu, this.humanPlayer);
-        document.getElementById('root').appendChild(el);
-    }
+function OXGame() {
+    this.ui = Ui;
+    this.board = new SquareBoard(this.ui, 3);
+    this.humanPlayer = new HumanPlayer(1);
+    this.cpu = new EasyCpu(2);
+
+    const el = createDOM(this);
+    document.getElementById('root').appendChild(el);
 
     /**
-     * CPUの強さを変更する
-     * @param cpuLevel
+     * ゲームの初期化を行う。
      */
-    setCpu(cpuLevel) {
-        switch (cpuLevel) {
-            case CpuLevel.EASY:
-                this.cpu = new EasyCpu(2);
-                break;
+    this.init = function () {
+        this.board.init();
+        this.ui.printBoard(this.board);
+    };
 
-            default:
-                window.alert('存在しないCPUが選択されました。');
-        }
-    }
-
-    judge() {
+    /**
+     * 試合の判定を行う。
+     */
+    this.judge = function () {
         this.board.checkGameEnd(this.humanPlayer.playerId);
 
         if (this.board.endFlag) {
@@ -48,16 +45,21 @@ class OXGame {
     }
 }
 
-//ゲームクラスを作成してゲームを開始する。
-export let gameMatch = new OXGame();
-
-function createDOM(board, ui, setCpu, humanPlayer) {
+/**
+ * index.htmlを作る。
+ *
+ * @param oxGame OXGameのオブジェクトを渡す。
+ * @returns {Element} index.htmlの要素を返す。
+ */
+function createDOM(oxGame) {
     const divClassContent = document.createElement('div');
+
     divClassContent.className = 'content';
     divClassContent.appendChild(createTitle());
-    divClassContent.appendChild(createCpuLevelSelectBox(board, ui, setCpu));
-    divClassContent.appendChild(createGameBoard(board, humanPlayer, ui));
-    divClassContent.appendChild(createResetButton(board, ui));
+    divClassContent.appendChild(createCpuLevelSelectBox(oxGame));
+    divClassContent.appendChild(createGameBoard(oxGame));
+    divClassContent.appendChild(createResetButton(oxGame));
+
     return divClassContent;
 
     function createTitle() {
@@ -66,7 +68,7 @@ function createDOM(board, ui, setCpu, humanPlayer) {
         return title;
     }
 
-    function createCpuLevelSelectBox(board, ui, setCpu) {
+    function createCpuLevelSelectBox(oxGame) {
         const pTag = document.createElement('p');
         pTag.innerHTML = 'CPUの難易度:';
 
@@ -74,9 +76,15 @@ function createDOM(board, ui, setCpu, humanPlayer) {
         const select = document.createElement('select');
         select.id = 'CpuLevel';
         select.addEventListener('change', () => {
-            board.init();
-            ui.printBoard(board);
-            setCpu(document.getElementById('CpuLevel').value);
+            switch (document.getElementById('CpuLevel').value) {
+                case CpuLevel.EASY:
+                    oxGame.cpu = new EasyCpu(2);
+                    break;
+
+                default:
+                    window.alert('存在しないCPUが選択されました。');
+            }
+            oxGame.init();
         });
 
         //オプションを作る
@@ -91,22 +99,21 @@ function createDOM(board, ui, setCpu, humanPlayer) {
         return pTag;
     }
 
-    function createGameBoard(board, humanPlayer, ui) {
+    function createGameBoard(oxGame) {
         const fragment = document.createDocumentFragment();
 
         //pタグで段落をつける
         let pTag = document.createElement('p');
-        for (let i = 0; i < board.oneSideLength * board.oneSideLength; i++) {
-            if (i % board.oneSideLength === 0) {
+        for (let i = 0; i < oxGame.board.verticalLength * oxGame.board.horizontalLength; i++) {
+            if (i % oxGame.board.horizontalLength === 0) {
                 pTag = document.createElement('p');
             }
 
             let button = document.createElement('button');
-            //TODO ここでIDを消すと、'innerHTML' of nul　となる原因について調べる。
             button.id = `${i}`;
             button.innerHTML = PlayerChar[0];
             button.addEventListener('click', () => {
-                humanPlayer.selectByUser(board, ui, Math.floor(i / board.oneSideLength), i % board.oneSideLength);
+                oxGame.humanPlayer.selectByUser(oxGame.board, oxGame.ui, Math.floor(i / oxGame.board.verticalLength), i % oxGame.board.verticalLength);
             });
 
             pTag.appendChild(button);
@@ -115,12 +122,11 @@ function createDOM(board, ui, setCpu, humanPlayer) {
         return fragment;
     }
 
-    function createResetButton(board, ui) {
+    function createResetButton(oxGame) {
         const resetButton = document.createElement('button');
         resetButton.innerHTML = 'リセット';
         resetButton.addEventListener('click', () => {
-            board.init();
-            ui.printBoard(board);
+            oxGame.init();
         });
         return resetButton;
     }

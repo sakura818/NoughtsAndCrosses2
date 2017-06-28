@@ -13,7 +13,7 @@ class Cpu {
      *
      * @throws {Error} CPUを継承してselectByCpuメソッドを実装しない場合にスローする
      */
-    selectByCpu(board, ui) {
+    selectByCpu() {
         throw Error('不正なCPUが呼ばれました。');
     }
 }

@@ -1,5 +1,3 @@
-import { game } from './app.js';
-
 /**
  * 人間のプレイヤー
  *
@@ -14,28 +12,16 @@ export default class HumanPlayer {
      * ユーザーが選択した場合に呼び出される関数
      */
     selectByUser(x, y) {
-        if (game.board.endFlag) {
+        if (gameMatch.board.endFlag) {
             return;
         }
 
-        if (game.board.isAlreadyPut(x, y)) {
-            game.ui.printIsAlreadyPutMessage();
+        if (gameMatch.board.isAlreadyPut(x, y)) {
+            gameMatch.ui.printIsAlreadyPutMessage();
             return;
         }
-        game.board.put(x, y, this.playerId);
-        game.board.checkGameEnd(this.playerId);
+        gameMatch.board.put(x, y, this.playerId);
 
-        if (game.board.endFlag) {
-            return;
-        }
-        try {
-            cpu.selectByCpu();
-        } catch (e) {
-            console.log(e);
-            window.alert('選択されたCPUは未実装です。');
-        }
-        game.board.checkGameEnd(cpu.playerId);
-
-        game.ui.printBoard();
+        gameMatch.judge();
     }
 }

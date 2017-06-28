@@ -72,17 +72,15 @@
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "game", function() { return game; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "gameMatch", function() { return gameMatch; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__board_js__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ui_js__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__cpu__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__cpu_js__ = __webpack_require__(2);
 
 
 
 
-
-let game = new Game3by3HumanVsCpu();
 
 /**
  * 各クラスをインスタンス化する
@@ -94,9 +92,27 @@ class Game3by3HumanVsCpu {
         this.board = new __WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* SquareBoard */](3, 3);
         this.ui = new __WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* default */]();
         this.humanPlayer = new __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__["a" /* default */](1);
-        this.cpu = new __WEBPACK_IMPORTED_MODULE_3__cpu__["a" /* EasyCpu */](2);
+        this.cpu = new __WEBPACK_IMPORTED_MODULE_3__cpu_js__["a" /* EasyCpu */](2);
+    }
+    judge() {
+        this.board.checkGameEnd(this.playerId);
+
+        if (this.board.endFlag) {
+            return;
+        }
+        try {
+            cpu.selectByCpu();
+        } catch (e) {
+            console.log(e);
+            window.alert('選択されたCPUは未実装です。');
+        }
+        this.board.checkGameEnd(cpu.playerId);
+
+        this.ui.printBoard();
     }
 }
+
+let gameMatch = new Game3by3HumanVsCpu();
 
 
 /***/ }),
@@ -105,7 +121,7 @@ class Game3by3HumanVsCpu {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_js__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__result_js__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__result_js__ = __webpack_require__(6);
 
 
 
@@ -171,17 +187,17 @@ class SquareBoard {
 
         if (this.endFlag) {
             if (playerId === 1) {
-                __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].ui.printResultMessage(__WEBPACK_IMPORTED_MODULE_1__result_js__["a" /* default */].WIN);
+                __WEBPACK_IMPORTED_MODULE_0__app_js__["gameMatch"].ui.printResultMessage(__WEBPACK_IMPORTED_MODULE_1__result_js__["a" /* Result */].WIN);
 
             } else if (playerId === 2) {
-                __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].ui.printResultMessage(__WEBPACK_IMPORTED_MODULE_1__result_js__["a" /* default */].LOSE);
+                __WEBPACK_IMPORTED_MODULE_0__app_js__["gameMatch"].ui.printResultMessage(__WEBPACK_IMPORTED_MODULE_1__result_js__["a" /* Result */].LOSE);
             }
             return;
         }
 
         if (this._checkDraw()) {
             this.endFlag = true;
-            __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].ui.printResultMessage(__WEBPACK_IMPORTED_MODULE_1__result_js__["a" /* default */].DRAW);
+            __WEBPACK_IMPORTED_MODULE_0__app_js__["gameMatch"].ui.printResultMessage(__WEBPACK_IMPORTED_MODULE_1__result_js__["a" /* Result */].DRAW);
         }
     }
 
@@ -263,7 +279,7 @@ class SquareBoard {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_js__ = __webpack_require__(0);
 
 
 /**
@@ -302,11 +318,11 @@ class EasyCpu extends Cpu {
     selectByCpu() {
         let x, y;
         do {
-            let random = Math.floor(Math.random() * __WEBPACK_IMPORTED_MODULE_0__app__["game"].board.getOneSideLength() * __WEBPACK_IMPORTED_MODULE_0__app__["game"].board.getOneSideLength());
+            let random = Math.floor(Math.random() * __WEBPACK_IMPORTED_MODULE_0__app_js__["gameMatch"].board.getOneSideLength() * __WEBPACK_IMPORTED_MODULE_0__app_js__["gameMatch"].board.getOneSideLength());
             x = Math.floor(random / board.oneSideLength);
-            y = random % __WEBPACK_IMPORTED_MODULE_0__app__["game"].board.oneSideLength;
-        } while (__WEBPACK_IMPORTED_MODULE_0__app__["game"].board.isAlreadyPut(x, y));
-        __WEBPACK_IMPORTED_MODULE_0__app__["game"].board.put(x, y, this.playerId);
+            y = random % __WEBPACK_IMPORTED_MODULE_0__app_js__["gameMatch"].board.oneSideLength;
+        } while (__WEBPACK_IMPORTED_MODULE_0__app_js__["gameMatch"].board.isAlreadyPut(x, y));
+        __WEBPACK_IMPORTED_MODULE_0__app_js__["gameMatch"].board.put(x, y, this.playerId);
     }
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = EasyCpu;
@@ -334,29 +350,17 @@ class HumanPlayer {
      * ユーザーが選択した場合に呼び出される関数
      */
     selectByUser(x, y) {
-        if (__WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.endFlag) {
+        if (__WEBPACK_IMPORTED_MODULE_0__app_js__["gameMatch"].board.endFlag) {
             return;
         }
 
-        if (__WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.isAlreadyPut(x, y)) {
-            __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].ui.printIsAlreadyPutMessage();
+        if (__WEBPACK_IMPORTED_MODULE_0__app_js__["gameMatch"].board.isAlreadyPut(x, y)) {
+            __WEBPACK_IMPORTED_MODULE_0__app_js__["gameMatch"].ui.printIsAlreadyPutMessage();
             return;
         }
-        __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.put(x, y, this.playerId);
-        __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.checkGameEnd(this.playerId);
+        __WEBPACK_IMPORTED_MODULE_0__app_js__["gameMatch"].board.put(x, y, this.playerId);
 
-        if (__WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.endFlag) {
-            return;
-        }
-        try {
-            cpu.selectByCpu();
-        } catch (e) {
-            console.log(e);
-            window.alert('選択されたCPUは未実装です。');
-        }
-        __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.checkGameEnd(cpu.playerId);
-
-        __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].ui.printBoard();
+        __WEBPACK_IMPORTED_MODULE_0__app_js__["gameMatch"].judge();
     }
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = HumanPlayer;
@@ -368,9 +372,7 @@ class HumanPlayer {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__app_js__ = __webpack_require__(0);
-throw new Error("Cannot find module \"./game.board.js\"");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__cpuLevel_js__ = __webpack_require__(6);
-
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cpuLevel_js__ = __webpack_require__(5);
 
 
 
@@ -378,7 +380,7 @@ const State = Object.freeze({ 0: '_', 1: '○', 2: '×' });
 
 /**
  * UIクラス
- * TODO game.boardをthis.boardとかにした方がわかりやすいかもしれない。
+ * TODO gameMatch.boardをthis.boardとかにした方がわかりやすいかもしれない。
  * @author asada
  */
 class Ui {
@@ -401,16 +403,16 @@ class Ui {
             const select = document.createElement('select');
             select.id = 'CpuLevel';
             select.addEventListener('change', () => {
-                __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.init();
-                __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].ui.printBoard();
+                gameMatch.board.init();
+                gameMatch.ui.printBoard();
                 setCpu(document.getElementById('CpuLevel').value);
             });
 
             //オプションを作る
-            for (let value of Object.keys(__WEBPACK_IMPORTED_MODULE_2__cpuLevel_js__["a" /* default */])) {
+            for (let value of Object.keys(__WEBPACK_IMPORTED_MODULE_1__cpuLevel_js__["a" /* CpuLevel */])) {
                 let option = document.createElement('option');
-                option.value = __WEBPACK_IMPORTED_MODULE_2__cpuLevel_js__["a" /* default */][value];
-                option.innerHTML = __WEBPACK_IMPORTED_MODULE_2__cpuLevel_js__["a" /* default */][value];
+                option.value = __WEBPACK_IMPORTED_MODULE_1__cpuLevel_js__["a" /* CpuLevel */][value];
+                option.innerHTML = __WEBPACK_IMPORTED_MODULE_1__cpuLevel_js__["a" /* CpuLevel */][value];
                 select.appendChild(option);
             }
 
@@ -425,7 +427,7 @@ class Ui {
          */
         const setCpu = function (cpuLevel) {
             switch (cpuLevel) {
-                case __WEBPACK_IMPORTED_MODULE_2__cpuLevel_js__["a" /* default */].EASY:
+                case __WEBPACK_IMPORTED_MODULE_1__cpuLevel_js__["a" /* CpuLevel */].EASY:
                     cpu = new EasyCpu(2);
                     break;
 
@@ -439,17 +441,17 @@ class Ui {
 
             //pタグで段落をつける
             let pTag = document.createElement('p');
-            for (let i = 0; i < __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.oneSideLength * __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.oneSideLength; i++) {
-                if (i % __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.oneSideLength === 0) {
+            for (let i = 0; i < gameMatch.board.oneSideLength * gameMatch.board.oneSideLength; i++) {
+                if (i % gameMatch.board.oneSideLength === 0) {
                     pTag = document.createElement('p');
                 }
 
                 let button = document.createElement('button');
                 //TODO ここでIDを消すと、'innerHTML' of nul　となる原因について調べる。
                 button.id = `${i}`;
-                button.innerHTML = State[__WEBPACK_IMPORTED_MODULE_1__game_board_js__["GAME_BOARD_DEFAULT_VALUE"]];
+                button.innerHTML = State[gameMatch.board.GAME_BOARD_DEFAULT_VALUE];
                 button.addEventListener('click', () => {
-                    humanPlayer.selectByUser(Math.floor(i / __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.oneSideLength), i % __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.oneSideLength);
+                    humanPlayer.selectByUser(Math.floor(i / gameMatch.board.oneSideLength), i % gameMatch.board.oneSideLength);
                 });
 
                 pTag.appendChild(button);
@@ -462,8 +464,8 @@ class Ui {
             const resetButton = document.createElement('button');
             resetButton.innerHTML = 'リセット';
             resetButton.addEventListener('click', () => {
-                __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.init();
-                __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].ui.printBoard();
+                gameMatch.board.init();
+                gameMatch.ui.printBoard();
             });
             return resetButton;
         };
@@ -491,8 +493,8 @@ class Ui {
      * 現在のボードの状況を表示する。
      */
     printBoard() {
-        for (let i = 0; i < __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.oneSideLength * __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.oneSideLength; i++) {
-            document.getElementById(`${i}`).innerHTML = State[__WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.gameBoardArray[Math.floor(i / __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.oneSideLength)][i % __WEBPACK_IMPORTED_MODULE_0__app_js__["game"].board.oneSideLength]];
+        for (let i = 0; i < gameMatch.board.oneSideLength * gameMatch.board.oneSideLength; i++) {
+            document.getElementById(`${i}`).innerHTML = State[gameMatch.board.gameBoardArray[Math.floor(i / gameMatch.board.oneSideLength)][i % gameMatch.board.oneSideLength]];
         }
     }
 
@@ -519,9 +521,11 @@ class Ui {
 
 "use strict";
 /**
- * 試合結果の定数オブジェクト
+ * CPUの強さの定数オブジェクト
  */
-/* harmony default export */ __webpack_exports__["a"] = (Result = Object.freeze({ DRAW: '引き分けです。', WIN: 'あなたの勝ちです。', LOSE: 'あなたの負けです。' }));
+const CpuLevel = Object.freeze({ EASY: 'Easy' });
+/* harmony export (immutable) */ __webpack_exports__["a"] = CpuLevel;
+
 
 
 /***/ }),
@@ -530,9 +534,11 @@ class Ui {
 
 "use strict";
 /**
- * CPUの強さの定数オブジェクト
+ * 試合結果の定数オブジェクト
  */
-/* harmony default export */ __webpack_exports__["a"] = (CpuLevel = Object.freeze({ EASY: 'Easy' }));
+const Result = Object.freeze({ DRAW: '引き分けです。', WIN: 'あなたの勝ちです。', LOSE: 'あなたの負けです。' });
+/* harmony export (immutable) */ __webpack_exports__["a"] = Result;
+
 
 
 /***/ })

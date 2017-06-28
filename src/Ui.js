@@ -1,12 +1,10 @@
-import { game } from './app.js';
-import { GAME_BOARD_DEFAULT_VALUE } from './game.board.js';
-import CpuLevel from './cpuLevel.js';
+import { CpuLevel } from './cpuLevel.js';
 
 const State = Object.freeze({ 0: '_', 1: '○', 2: '×' });
 
 /**
  * UIクラス
- * TODO game.boardをthis.boardとかにした方がわかりやすいかもしれない。
+ * TODO gameMatch.boardをthis.boardとかにした方がわかりやすいかもしれない。
  * @author asada
  */
 export default class Ui {
@@ -29,8 +27,8 @@ export default class Ui {
             const select = document.createElement('select');
             select.id = 'CpuLevel';
             select.addEventListener('change', () => {
-                game.board.init();
-                game.ui.printBoard();
+                gameMatch.board.init();
+                gameMatch.ui.printBoard();
                 setCpu(document.getElementById('CpuLevel').value);
             });
 
@@ -67,17 +65,17 @@ export default class Ui {
 
             //pタグで段落をつける
             let pTag = document.createElement('p');
-            for (let i = 0; i < game.board.oneSideLength * game.board.oneSideLength; i++) {
-                if (i % game.board.oneSideLength === 0) {
+            for (let i = 0; i < gameMatch.board.oneSideLength * gameMatch.board.oneSideLength; i++) {
+                if (i % gameMatch.board.oneSideLength === 0) {
                     pTag = document.createElement('p');
                 }
 
                 let button = document.createElement('button');
                 //TODO ここでIDを消すと、'innerHTML' of nul　となる原因について調べる。
                 button.id = `${i}`;
-                button.innerHTML = State[GAME_BOARD_DEFAULT_VALUE];
+                button.innerHTML = State[gameMatch.board.GAME_BOARD_DEFAULT_VALUE];
                 button.addEventListener('click', () => {
-                    humanPlayer.selectByUser(Math.floor(i / game.board.oneSideLength), i % game.board.oneSideLength);
+                    humanPlayer.selectByUser(Math.floor(i / gameMatch.board.oneSideLength), i % gameMatch.board.oneSideLength);
                 });
 
                 pTag.appendChild(button);
@@ -90,8 +88,8 @@ export default class Ui {
             const resetButton = document.createElement('button');
             resetButton.innerHTML = 'リセット';
             resetButton.addEventListener('click', () => {
-                game.board.init();
-                game.ui.printBoard();
+                gameMatch.board.init();
+                gameMatch.ui.printBoard();
             });
             return resetButton;
         };
@@ -119,8 +117,8 @@ export default class Ui {
      * 現在のボードの状況を表示する。
      */
     printBoard() {
-        for (let i = 0; i < game.board.oneSideLength * game.board.oneSideLength; i++) {
-            document.getElementById(`${i}`).innerHTML = State[game.board.gameBoardArray[Math.floor(i / game.board.oneSideLength)][i % game.board.oneSideLength]];
+        for (let i = 0; i < gameMatch.board.oneSideLength * gameMatch.board.oneSideLength; i++) {
+            document.getElementById(`${i}`).innerHTML = State[gameMatch.board.gameBoardArray[Math.floor(i / gameMatch.board.oneSideLength)][i % gameMatch.board.oneSideLength]];
         }
     }
 

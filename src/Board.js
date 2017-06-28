@@ -1,10 +1,12 @@
-import { game } from './app.js';
-import Result from './result.js';
-
 /**
  * BoardのgameBoardArrayの初期値
  */
 export const GAME_BOARD_DEFAULT_VALUE = 0;
+
+/**
+ * 試合結果の定数オブジェクト
+ */
+export const Result = Object.freeze({ DRAW: '引き分けです。', WIN: 'あなたの勝ちです。', LOSE: 'あなたの負けです。' });
 
 /**
  * Boardクラス
@@ -12,7 +14,7 @@ export const GAME_BOARD_DEFAULT_VALUE = 0;
  * @author asada
  */
 export class SquareBoard {
-    constructor(oneSideLength, terminationCondition) {
+    constructor(ui, oneSideLength, terminationCondition) {
         this.oneSideLength = oneSideLength;
         this.terminationCondition = terminationCondition;
         this.endFlag = false;
@@ -61,17 +63,17 @@ export class SquareBoard {
 
         if (this.endFlag) {
             if (playerId === 1) {
-                game.ui.printResultMessage(Result.WIN);
+                gameMatch.ui.printResultMessage(Result.WIN);
 
             } else if (playerId === 2) {
-                game.ui.printResultMessage(Result.LOSE);
+                gameMatch.ui.printResultMessage(Result.LOSE);
             }
             return;
         }
 
         if (this._checkDraw()) {
             this.endFlag = true;
-            game.ui.printResultMessage(Result.DRAW);
+            gameMatch.ui.printResultMessage(Result.DRAW);
         }
     }
 

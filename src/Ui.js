@@ -1,4 +1,4 @@
-import { Result } from './board.js';
+import { GameState } from './oxGame.js';
 
 //ボードの駒とIDの連想配列。
 //画像を使用する場合も考えて、freezeの中止     _ _
@@ -27,11 +27,11 @@ export const Ui = {
      */
     printResultMessage: function (result, playerId) {
         switch (result) {
-            case Result.END:
+            case GameState.END:
                 window.alert(`${PlayerChar[playerId]}の勝ちです。`)
                 break;
 
-            case Result.DRAW:
+            case GameState.DRAW:
                 window.alert('引き分けです。');
                 break;
 

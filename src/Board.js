@@ -1,7 +1,6 @@
-const GAME_BOARD_SQUARE_DEFAULT_VALUE = 0;
+import { GameState } from './oxGame.js';
 
-//Resultのプロパティの値は使用していない(javaのEnumのような使い方をしているため。)
-export const Result = Object.freeze({ END: '', NOT_END: '', DRAW: '' });
+const GAME_BOARD_SQUARE_DEFAULT_VALUE = 0;
 
 /**
  * ボードの抽象クラス
@@ -54,11 +53,11 @@ class Board {
                 }
                 score++;
                 if (score === this.terminationCondition) {
-                    return Result.END;
+                    return GameState.END;
                 }
             }
         }
-        return Result.NOT_END;
+        return GameState.NOT_END;
     }
 
     _checkVertical(playerId) {
@@ -71,22 +70,22 @@ class Board {
                 }
                 score++;
                 if (score === this.terminationCondition) {
-                    return Result.END;
+                    return GameState.END;
                 }
             }
         }
-        return Result.NOT_END;
+        return GameState.NOT_END;
     }
 
     _checkDraw() {
         for (let x = 0; x < this.gameBoardArray.length; x++) {
             for (let y = 0; y < this.gameBoardArray[x].length; y++) {
                 if (this.gameBoardArray[x][y] === GAME_BOARD_SQUARE_DEFAULT_VALUE) {
-                    return Result.NOT_END;
+                    return GameState.NOT_END;
                 }
             }
         }
-        return Result.DRAW;
+        return GameState.DRAW;
     }
 }
 
@@ -107,17 +106,17 @@ export class SquareBoard extends Board {
      * @param playerId 最後にプレイしたプレイヤーのIDを渡す
      */
     checkGameEnd(playerId) {
-        if (this._checkHorizontal(playerId) === Result.END) {
-            return Result.END;
+        if (this._checkHorizontal(playerId) === GameState.END) {
+            return GameState.END;
         }
-        if (this._checkVertical(playerId) === Result.END) {
-            return Result.END;
+        if (this._checkVertical(playerId) === GameState.END) {
+            return GameState.END;
         }
-        if (this._checkUpperLeftToLowerRight(playerId) === Result.END) {
-            return Result.END;
+        if (this._checkUpperLeftToLowerRight(playerId) === GameState.END) {
+            return GameState.END;
         }
-        if (this._checkUpperRightToLowerLeft(playerId) === Result.END) {
-            return Result.END;
+        if (this._checkUpperRightToLowerLeft(playerId) === GameState.END) {
+            return GameState.END;
         }
         return this._checkDraw();
     }
@@ -128,10 +127,10 @@ export class SquareBoard extends Board {
                 break;
             }
             if (i === this.terminationCondition - 1) {
-                return Result.END;
+                return GameState.END;
             }
         }
-        return Result.NOT_END;
+        return GameState.NOT_END;
     }
 
     _checkUpperRightToLowerLeft(playerId) {
@@ -143,6 +142,6 @@ export class SquareBoard extends Board {
                 return Result.END;
             }
         }
-        return Result.NOT_END;
+        return GameState.NOT_END;
     }
 }

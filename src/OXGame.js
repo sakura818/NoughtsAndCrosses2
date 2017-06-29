@@ -1,8 +1,11 @@
-import { Result, SquareBoard } from './board.js';
+import { SquareBoard } from './board.js';
 import { PlayerChar, Ui } from './ui.js';
 import HumanPlayer from './humanPlayer.js';
 import { EasyCpu, TestCpu } from './cpu.js';
 import { CpuLevel } from './cpuLevel.js';
+
+//GameStateのプロパティの値は使用していない(javaのEnumのような使い方をしているため。)
+export const GameState = Object.freeze({ END: '', NOT_END: '', DRAW: '' });
 
 /**
  * OXGameクラス
@@ -20,6 +23,9 @@ class OXGame {
         this.init();
     }
 
+    /**
+     * ゲームの初期化を行う
+     */
     init() {
         this.board.init();
 
@@ -33,59 +39,60 @@ class OXGame {
         }
         Ui.printBoard(this.board);
 
-        this.state = Result.NOT_END;
+        //ゲームの状態
+        this.state = GameState.NOT_END;
     }
 
+    /**
+     * 勝負の結果がついたか判定する
+     */
     judge() {
+        //TODO ここの処理は二回書いてあるので、一回にしたい。
         this.state = this.board.checkGameEnd(this.nowPlayer.playerId);
+        Ui.printBoard(this.board);
         switch (this.state) {
-            case Result.END: {
-                Ui.printBoard(this.board);
-                Ui.printResultMessage(Result.END, this.nowPlayer.playerId);
+            case GameState.END: {
+                Ui.printResultMessage(GameState.END, this.nowPlayer.playerId);
                 return;
             }
-            case Result.NOT_END: {
+            case GameState.NOT_END: {
                 break;
             }
-            case Result.DRAW: {
-                Ui.printBoard(this.board);
-                Ui.printResultMessage(Result.DRAW);
+            case GameState.DRAW: {
+                Ui.printResultMessage(GameState.DRAW);
                 return;
             }
             default:
                 throw new Error('checkGameEndの戻り値が予期されないものでした。');
         }
-
         this.nowPlayer = this.getNextPlayer();
 
+        //TODO while文にしないとHumanVsCpuVsCpuの場合に処理がストップすることになる。
         if (!(this.nowPlayer instanceof HumanPlayer)) {
             this.nowPlayer.select(this.board);
             this.board.checkGameEnd(this.nowPlayer.playerId);
             Ui.printBoard(this.board);
         }
 
+        //TODO ここの処理は二回書いてあるので、一回にしたい。
         this.state = this.board.checkGameEnd(this.nowPlayer.playerId);
+        Ui.printBoard(this.board);
         switch (this.state) {
-            case Result.END: {
-                Ui.printBoard(this.board);
-                Ui.printResultMessage(Result.END, this.nowPlayer.playerId);
+            case GameState.END: {
+                Ui.printResultMessage(GameState.END, this.nowPlayer.playerId);
                 return;
             }
-            case Result.NOT_END: {
+            case GameState.NOT_END: {
                 break;
             }
-            case Result.DRAW: {
-                Ui.printBoard(this.board);
-                Ui.printResultMessage(Result.DRAW);
+            case GameState.DRAW: {
+                Ui.printResultMessage(GameState.DRAW);
                 return;
             }
             default:
                 throw new Error('checkGameEndの戻り値が予期されないものでした。');
         }
-
         this.nowPlayer = this.getNextPlayer();
-
-        Ui.printBoard(this.board);
     }
 
     getNextPlayer() {
@@ -93,12 +100,22 @@ class OXGame {
     }
 }
 
+/**
+ * 三目並べ
+ * 先行:Human
+ * 後攻:Cpu
+ */
 export function OXGame3by3HumanVsCpu() {
     const board = new SquareBoard(3);
     const players = [new HumanPlayer(1), new EasyCpu(2)];
     return new OXGame(board, players);
 }
 
+/**
+ * 三目並べ
+ * 先行:Cpu
+ * 後攻:Human
+ */
 export function OXGame3by3CpuVsHuman() {
     const board = new SquareBoard(3);
     const players = [new EasyCpu(1), new HumanPlayer(2)];
@@ -109,7 +126,7 @@ export function OXGame3by3CpuVsHuman() {
  * index.htmlのコンテンツを作る。
  *
  * @param oxGame OXGameのオブジェクトを渡す。
- * @returns {Element} index.htmlの要素を返す。
+ * @returns {Element} index.htmlのコンテンツを返す。
  */
 function createDOM(oxGame) {
     const divClassContent = document.createElement('div');
@@ -140,7 +157,7 @@ function createCpuLevelSelectBox(oxGame) {
     const select = document.createElement('select');
     select.id = 'CpuLevel';
     select.addEventListener('change', () => {
-        //CpuをoxGame.playersから見つけてきて、中身を変更する。
+        //TODO CPUが複数いたとして、全部を一度に変更してしまうので注意
         for (let i = 0; i < oxGame.players.length; i++) {
             if (!(oxGame.players[i] instanceof HumanPlayer)) {
                 switch (document.getElementById('CpuLevel').value) {
@@ -187,7 +204,7 @@ function createGameBoard(oxGame) {
         //buttonの表示でプレイヤーキャラを使うので注意。
         button.innerHTML = PlayerChar[0];
         button.addEventListener('click', () => {
-            if (oxGame.state === Result.NOT_END) {
+            if (oxGame.state === GameState.NOT_END) {
                 oxGame.nowPlayer.select(oxGame.board, Ui, Math.floor(i / oxGame.board.verticalLength), i % oxGame.board.verticalLength);
                 oxGame.judge();
             }

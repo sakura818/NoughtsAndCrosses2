@@ -1,103 +1,22 @@
-import { SquareBoard } from './board.js';
-import { PlayerChar, Ui } from './ui.js';
-import HumanPlayer from './humanPlayer.js';
-import { EasyCpu } from './cpu.js';
-import { CpuLevel } from './cpuLevel.js';
-
 /**
- * OXゲームのクラス
- * TODO 引数が具象であるために、人間VS人間ができなくなっている。引数は配列で取れば問題が解消できる。
+ * OXGameクラスの改善版。
  */
-class OXGame {
-    constructor(board, humanPlayer, cpu) {
+class OXGame2 {
+    constructor(board, players) {
         this.ui = Ui;
         this.board = board;
-        this.humanPlayer = humanPlayer;
-        this.cpu = cpu;
+        this.players = players;
 
         const el = createDOM(this);
-        document.getElementById('root').appendChild(el);
     }
 
-    /**
-     * ゲームの初期化を行う。
-     */
     init() {
         this.board.init();
         this.ui.printBoard(this.board);
     }
 
-    /**
-     * 試合の判定を行う。
-     * BoardのendFlagがtrueになると試合終了。
-     */
     judge() {
-        if (this.board.endFlag) {
-            return;
-        }
 
-        this.board.checkGameEnd(this.humanPlayer.playerId);
-
-        if (this.board.endFlag) {
-            return;
-        }
-        try {
-            this.cpu.selectByCpu(this.board);
-        } catch (e) {
-            console.log(e);
-            window.alert('選択されたCPUは未実装です。');
-        }
-        this.board.checkGameEnd(this.cpu.playerId);
-
-        this.ui.printBoard(this.board);
-    }
-}
-
-/**
- * 三目並べ。
- * 人間先行。
- * CPU後攻。
- */
-export class OXGame3by3HumanVsCpu extends OXGame {
-    constructor() {
-        super(new SquareBoard(Ui, 3), new HumanPlayer(1), new EasyCpu(2));
-    }
-}
-
-/**
- * 三目並べ。
- * CPU先行。
- * 人間後攻。
- */
-export class OXGame3by3CpuVsHuman extends OXGame {
-    constructor() {
-        super(new SquareBoard(Ui, 3), new HumanPlayer(2), new EasyCpu(1));
-        try {
-            this.cpu.selectByCpu(this.board);
-        } catch (e) {
-            console.log(e);
-            window.alert('選択されたCPUは未実装です。');
-        }
-        this.board.checkGameEnd(this.cpu.playerId);
-
-        this.ui.printBoard(this.board);
-    }
-
-    /**
-     * ゲームの初期化を行う。
-     */
-    init() {
-        this.board.init();
-
-        try {
-            this.cpu.selectByCpu(this.board);
-        } catch (e) {
-            console.log(e);
-            window.alert('選択されたCPUは未実装です。');
-        }
-        this.board.checkGameEnd(this.cpu.playerId);
-
-        this.ui.printBoard(this.board);
     }
 }
 

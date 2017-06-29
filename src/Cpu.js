@@ -33,3 +33,20 @@ export class EasyCpu extends Cpu {
         board.put(x, y, this.playerId);
     }
 }
+
+export class TestCpu extends Cpu {
+    constructor(playerId) {
+        super(playerId);
+        console.log('TestCpuが呼ばれました。');
+    }
+
+    select(board) {
+        console.log('TestCpuのselectメソッドが呼ばれました。');
+        let x, y;
+        do {
+            x = Math.floor(Math.random() * board.verticalLength);
+            y = Math.floor(Math.random() * board.horizontalLength);
+        } while (board.isAlreadyPut(x, y));
+        board.put(x, y, this.playerId);
+    }
+}

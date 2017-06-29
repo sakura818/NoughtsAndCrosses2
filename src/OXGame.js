@@ -1,7 +1,7 @@
 import { SquareBoard } from './board.js';
 import { PlayerChar, Ui } from './ui.js';
 import HumanPlayer from './humanPlayer.js';
-import { EasyCpu } from './cpu.js';
+import { EasyCpu, TestCpu } from './cpu.js';
 import { CpuLevel } from './cpuLevel.js';
 
 /**
@@ -67,20 +67,16 @@ class OXGame {
     }
 }
 
-export class OXGame3by3HumanVsCpu extends OXGame {
-    constructor() {
-        const board = new SquareBoard(Ui, 3);
-        const players = [new HumanPlayer(1), new EasyCpu(2)];
-        super(board, players);
-    }
+export function OXGame3by3HumanVsCpu() {
+    const board = new SquareBoard(Ui, 3);
+    const players = [new HumanPlayer(1), new EasyCpu(2)];
+    return new OXGame(board, players);
 }
 
-export class OXGame3by3CpuVsHuman extends OXGame {
-    constructor() {
-        const board = new SquareBoard(Ui, 3);
-        const players = [new EasyCpu(1), new HumanPlayer(2)];
-        super(new SquareBoard(Ui, 3), players);
-    }
+export function OXGame3by3CpuVsHuman() {
+    const board = new SquareBoard(Ui, 3);
+    const players = [new EasyCpu(1), new HumanPlayer(2)];
+    return new OXGame(board, players);
 }
 
 /**
@@ -118,13 +114,25 @@ function createCpuLevelSelectBox(oxGame) {
     const select = document.createElement('select');
     select.id = 'CpuLevel';
     select.addEventListener('change', () => {
-        switch (document.getElementById('CpuLevel').value) {
-            case CpuLevel.EASY:
-                oxGame.cpu = new EasyCpu(2);
-                break;
+        console.log('呼ばれたぞ');
+        //CpuをoxGame.playersから見つけてきて、中身を変更する。
+        for (let i = 0; i < oxGame.players.length; i++) {
+            if (!(oxGame.players[i] instanceof HumanPlayer)) {
+                switch (document.getElementById('CpuLevel').value) {
+                    case CpuLevel.EASY:
+                        console.log(i);
+                        oxGame.players[i] = new EasyCpu(2);
+                        break;
 
-            default:
-                window.alert('存在しないCPUが選択されました。');
+                    case CpuLevel.TEST:
+                        console.log(i);
+                        oxGame.players[i] = new TestCpu(2);
+                        break;
+
+                    default:
+                        window.alert('存在しないCPUが選択されました。');
+                }
+            }
         }
         oxGame.init();
     });

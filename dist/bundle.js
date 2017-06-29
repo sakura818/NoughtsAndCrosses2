@@ -270,6 +270,25 @@ class EasyCpu extends Cpu {
 /* harmony export (immutable) */ __webpack_exports__["a"] = EasyCpu;
 
 
+class TestCpu extends Cpu {
+    constructor(playerId) {
+        super(playerId);
+        console.log('TestCpuが呼ばれました。');
+    }
+
+    select(board) {
+        console.log('TestCpuのselectメソッドが呼ばれました。');
+        let x, y;
+        do {
+            x = Math.floor(Math.random() * board.verticalLength);
+            y = Math.floor(Math.random() * board.horizontalLength);
+        } while (board.isAlreadyPut(x, y));
+        board.put(x, y, this.playerId);
+    }
+}
+/* harmony export (immutable) */ __webpack_exports__["b"] = TestCpu;
+
+
 /***/ }),
 /* 2 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -279,7 +298,8 @@ class EasyCpu extends Cpu {
  * CPUの強さの定数オブジェクト
  */
 const CpuLevel = Object.freeze({
-    EASY: 'Easy'
+    EASY: 'Easy',
+    TEST: 'Test'
 });
 /* harmony export (immutable) */ __webpack_exports__["a"] = CpuLevel;
 
@@ -373,6 +393,8 @@ const Ui = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = OXGame3by3HumanVsCpu;
+/* unused harmony export OXGame3by3CpuVsHuman */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__board_js__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ui_js__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__ = __webpack_require__(3);
@@ -447,25 +469,17 @@ class OXGame {
     }
 }
 
-class OXGame3by3HumanVsCpu extends OXGame {
-    constructor() {
-        const board = new __WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* SquareBoard */](__WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */], 3);
-        const players = [new __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__["a" /* default */](1), new __WEBPACK_IMPORTED_MODULE_3__cpu_js__["a" /* EasyCpu */](2)];
-        super(board, players);
-    }
+function OXGame3by3HumanVsCpu() {
+    const board = new __WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* SquareBoard */](__WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */], 3);
+    const players = [new __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__["a" /* default */](1), new __WEBPACK_IMPORTED_MODULE_3__cpu_js__["a" /* EasyCpu */](2)];
+    return new OXGame(board, players);
 }
-/* harmony export (immutable) */ __webpack_exports__["a"] = OXGame3by3HumanVsCpu;
 
-
-class OXGame3by3CpuVsHuman extends OXGame {
-    constructor() {
-        const board = new __WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* SquareBoard */](__WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */], 3);
-        const players = [new __WEBPACK_IMPORTED_MODULE_3__cpu_js__["a" /* EasyCpu */](1), new __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__["a" /* default */](2)];
-        super(new __WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* SquareBoard */](__WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */], 3), players);
-    }
+function OXGame3by3CpuVsHuman() {
+    const board = new __WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* SquareBoard */](__WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */], 3);
+    const players = [new __WEBPACK_IMPORTED_MODULE_3__cpu_js__["a" /* EasyCpu */](1), new __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__["a" /* default */](2)];
+    return new OXGame(board, players);
 }
-/* unused harmony export OXGame3by3CpuVsHuman */
-
 
 /**
  * index.htmlのコンテンツを作る。
@@ -502,13 +516,25 @@ function createCpuLevelSelectBox(oxGame) {
     const select = document.createElement('select');
     select.id = 'CpuLevel';
     select.addEventListener('change', () => {
-        switch (document.getElementById('CpuLevel').value) {
-            case __WEBPACK_IMPORTED_MODULE_4__cpuLevel_js__["a" /* CpuLevel */].EASY:
-                oxGame.cpu = new __WEBPACK_IMPORTED_MODULE_3__cpu_js__["a" /* EasyCpu */](2);
-                break;
+        console.log('呼ばれたぞ');
+        //CpuをoxGame.playersから見つけてきて、中身を変更する。
+        for (let i = 0; i < oxGame.players.length; i++) {
+            if (!(oxGame.players[i] instanceof __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__["a" /* default */])) {
+                switch (document.getElementById('CpuLevel').value) {
+                    case __WEBPACK_IMPORTED_MODULE_4__cpuLevel_js__["a" /* CpuLevel */].EASY:
+                        console.log(i);
+                        oxGame.players[i] = new __WEBPACK_IMPORTED_MODULE_3__cpu_js__["a" /* EasyCpu */](2);
+                        break;
 
-            default:
-                window.alert('存在しないCPUが選択されました。');
+                    case __WEBPACK_IMPORTED_MODULE_4__cpuLevel_js__["a" /* CpuLevel */].TEST:
+                        console.log(i);
+                        oxGame.players[i] = new __WEBPACK_IMPORTED_MODULE_3__cpu_js__["b" /* TestCpu */](2);
+                        break;
+
+                    default:
+                        window.alert('存在しないCPUが選択されました。');
+                }
+            }
         }
         oxGame.init();
     });

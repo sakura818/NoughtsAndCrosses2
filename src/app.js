@@ -10,7 +10,7 @@ OXGame3by3HumanVsCpu();
  * 先行:Human
  * 後攻:Cpu
  */
-export function OXGame3by3HumanVsCpu() {
+function OXGame3by3HumanVsCpu() {
     const board = new SquareBoard(3);
     const players = [new HumanPlayer(1), new EasyCpu(2)];
     return new OXGame(board, players);
@@ -21,7 +21,7 @@ export function OXGame3by3HumanVsCpu() {
  * 先行:Cpu
  * 後攻:Human
  */
-export function OXGame3by3CpuVsHuman() {
+function OXGame3by3CpuVsHuman() {
     const board = new SquareBoard(3);
     const players = [new EasyCpu(1), new HumanPlayer(2)];
     return new OXGame(board, players);

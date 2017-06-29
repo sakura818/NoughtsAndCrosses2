@@ -17,6 +17,8 @@ class Board {
         this.horizontalLength = horizontalLength;
         this.terminationCondition = terminationCondition;
 
+        this.times = 0;
+
         this.init();
     }
 
@@ -31,6 +33,7 @@ class Board {
 
     put(x, y, playerID) {
         this.gameBoardArray[x][y] = playerID;
+        this.times++;
     }
 
     /**
@@ -43,6 +46,7 @@ class Board {
         }
 
         this.endFlag = false;
+        this.times = 0;
     }
 
     _checkHorizontal(playerId) {

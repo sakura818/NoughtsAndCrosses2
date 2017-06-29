@@ -42,7 +42,7 @@ class OXGame {
             return;
         }
         try {
-            this.cpu.selectByCpu(this.board);
+            this.cpu.select(this.board);
         } catch (e) {
             console.log(e);
             window.alert('選択されたCPUは未実装です。');
@@ -73,7 +73,7 @@ export class OXGame3by3CpuVsHuman extends OXGame {
     constructor() {
         super(new SquareBoard(Ui, 3), new HumanPlayer(2), new EasyCpu(1));
         try {
-            this.cpu.selectByCpu(this.board);
+            this.cpu.select(this.board);
         } catch (e) {
             console.log(e);
             window.alert('選択されたCPUは未実装です。');
@@ -90,7 +90,7 @@ export class OXGame3by3CpuVsHuman extends OXGame {
         this.board.init();
 
         try {
-            this.cpu.selectByCpu(this.board);
+            this.cpu.select(this.board);
         } catch (e) {
             console.log(e);
             window.alert('選択されたCPUは未実装です。');
@@ -174,7 +174,7 @@ function createGameBoard(oxGame) {
         //buttonの表示でプレイヤーキャラを使うので注意。
         button.innerHTML = PlayerChar[0];
         button.addEventListener('click', () => {
-            oxGame.humanPlayer.selectByUser(oxGame.board, oxGame.ui, Math.floor(i / oxGame.board.verticalLength), i % oxGame.board.verticalLength);
+            oxGame.humanPlayer.select(oxGame.board, oxGame.ui, Math.floor(i / oxGame.board.verticalLength), i % oxGame.board.verticalLength);
             oxGame.judge();
         });
 

@@ -13,7 +13,8 @@ class Cpu {
      *
      * @throws {Error} CPUを継承してselectByCpuメソッドを実装しない場合にスローする
      */
-    selectByCpu() {
+    select() {
+        //呼ばれない限り例外発生しないのでcatchしなくても良い
         throw Error('不正なCPUが呼ばれました。');
     }
 }
@@ -28,7 +29,7 @@ export class EasyCpu extends Cpu {
         super(playerId);
     }
 
-    selectByCpu(board) {
+    select(board) {
         let x, y;
         do {
             x = Math.floor(Math.random() * board.verticalLength);

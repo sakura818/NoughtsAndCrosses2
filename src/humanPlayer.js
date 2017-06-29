@@ -11,7 +11,7 @@ export default class HumanPlayer {
     /**
      * ユーザーが選択した場合に呼び出される関数
      */
-    selectByUser(board, ui, x, y) {
+    select(board, ui, x, y) {
         if (board.endFlag) {
             return;
         }

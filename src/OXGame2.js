@@ -1,3 +1,9 @@
+import { SquareBoard } from './board.js';
+import { PlayerChar, Ui } from './ui.js';
+import HumanPlayer from './humanPlayer.js';
+import { EasyCpu } from './cpu.js';
+import { CpuLevel } from './cpuLevel.js';
+
 /**
  * OXGameクラスの改善版。
  */
@@ -7,16 +13,68 @@ class OXGame2 {
         this.board = board;
         this.players = players;
 
+        this.nowPlayer = players[0];
+
         const el = createDOM(this);
+        document.getElementById('root').appendChild(el);
+
+        try {
+            if (!(this.nowPlayer instanceof HumanPlayer)) {
+                //CPUが先行の場合。
+                this.nowPlayer.select();
+                this.board.checkGameEnd(this.nowPlayer.playerId);
+                this.ui.printBoard(this.board);
+
+                this.nowPlayer = this.players[board.times];
+            }
+        } catch (e) {
+            console.log(e);
+            window.alert('選択されたCPUは未実装です。');
+        }
     }
 
     init() {
         this.board.init();
         this.ui.printBoard(this.board);
+
+        this.nowPlayer = players[0];
     }
 
     judge() {
+        if (this.board.endFlag) {
+            return;
+        }
 
+        this.board.checkGameEnd(this.nowPlayer.playerId);
+
+        if (!(this.nowPlayer instanceof HumanPlayer)) {
+            //CPUが先行の場合。
+            this.nowPlayer.select();
+            this.board.checkGameEnd(this.nowPlayer.playerId);
+            this.ui.printBoard(this.board);
+
+            this.nowPlayer = this.players[board.times];
+        }
+
+        if (this.board.endFlag) {
+            return;
+        }
+        try {
+            this.cpu.select(this.board);
+        } catch (e) {
+            console.log(e);
+            window.alert('選択されたCPUは未実装です。');
+        }
+        this.board.checkGameEnd(this.cpu.playerId);
+
+        this.ui.printBoard(this.board);
+    }
+}
+
+export class OXGame2_3by3HumanVsCpu extends OXGame2 {
+    constructor() {
+        const players = [new HumanPlayer(1), new EasyCpu(2)];
+        super(new SquareBoard(Ui, 3), players);
     }
 }
 
@@ -93,7 +151,7 @@ function createGameBoard(oxGame) {
         //buttonの表示でプレイヤーキャラを使うので注意。
         button.innerHTML = PlayerChar[0];
         button.addEventListener('click', () => {
-            oxGame.humanPlayer.selectByUser(oxGame.board, oxGame.ui, Math.floor(i / oxGame.board.verticalLength), i % oxGame.board.verticalLength);
+            oxGame.nowPlayer.select(oxGame.board, oxGame.ui, Math.floor(i / oxGame.board.verticalLength), i % oxGame.board.verticalLength);
             oxGame.judge();
         });
 

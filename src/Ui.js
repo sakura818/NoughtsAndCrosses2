@@ -1,5 +1,5 @@
 //ボードの駒とIDの連想配列。
-//画像を使用する場合も考えて、freezeの中止
+//画像を使用する場合も考えて、freezeの中止     _ _
 export const PlayerChar = ['_', '○', '×', '△', '□'];
 
 export const Ui = {
@@ -14,10 +14,14 @@ export const Ui = {
     },
     /**
      * 結果を表示する。
+     * 引数に数字が渡された場合は
      */
-    printResultMessage: function (board, result) {
-        this.printBoard(board);
-        window.alert(result);
+    printResultMessage: function (result) {
+        if (result === undefined) {
+            window.alert('引き分けです。');
+        } else {
+            window.alert(`${PlayerChar[result]}の勝ちです。`)
+        }
     },
     /**
      * プレイヤーに置けないことを説明する。

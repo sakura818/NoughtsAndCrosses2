@@ -31,9 +31,8 @@ export class EasyCpu extends Cpu {
     selectByCpu(board) {
         let x, y;
         do {
-            let random = Math.floor(Math.random() * board.verticalLength * board.horizontalLength);
-            x = Math.floor(random / board.verticalLength);
-            y = random % board.horizontalLength;
+            x = Math.floor(Math.random() * board.verticalLength);
+            y = Math.floor(Math.random() * board.horizontalLength);
         } while (board.isAlreadyPut(x, y));
         board.put(x, y, this.playerId);
     }

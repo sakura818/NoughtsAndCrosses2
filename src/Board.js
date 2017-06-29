@@ -1,9 +1,4 @@
-const GAME_BOARD_DEFAULT_VALUE = 0;
-
-/**
- * 試合結果の定数オブジェクト
- */
-const Result = Object.freeze({DRAW: '引き分けです。', WIN: 'あなたの勝ちです。', LOSE: 'あなたの負けです。'});
+const GAME_BOARD_SQUARE_DEFAULT_VALUE = 0;
 
 /**
  * ボードの抽象クラス
@@ -31,7 +26,7 @@ class Board {
      * @return {boolean} 埋まっている場合はtrue、埋まっていない場合はfalse
      */
     isAlreadyPut(x, y) {
-        return this.gameBoardArray[x][y] !== GAME_BOARD_DEFAULT_VALUE;
+        return this.gameBoardArray[x][y] !== GAME_BOARD_SQUARE_DEFAULT_VALUE;
     }
 
     put(x, y, playerID) {
@@ -44,7 +39,7 @@ class Board {
     init() {
         this.gameBoardArray = new Array(this.verticalLength);
         for (let i = 0; i < this.verticalLength; i++) {
-            this.gameBoardArray[i] = new Array(this.horizontalLength).fill(GAME_BOARD_DEFAULT_VALUE);
+            this.gameBoardArray[i] = new Array(this.horizontalLength).fill(GAME_BOARD_SQUARE_DEFAULT_VALUE);
         }
 
         this.endFlag = false;
@@ -87,7 +82,7 @@ class Board {
     _checkDraw() {
         for (let x = 0; x < this.gameBoardArray.length; x++) {
             for (let y = 0; y < this.gameBoardArray[x].length; y++) {
-                if (this.gameBoardArray[x][y] === GAME_BOARD_DEFAULT_VALUE) {
+                if (this.gameBoardArray[x][y] === GAME_BOARD_SQUARE_DEFAULT_VALUE) {
                     return false;
                 }
             }
@@ -118,18 +113,15 @@ export class SquareBoard extends Board {
         }
 
         if (this.endFlag) {
-            if (playerId === 1) {
-                this.ui.printResultMessage(this, Result.WIN);
-
-            } else if (playerId === 2) {
-                this.ui.printResultMessage(this, Result.LOSE);
-            }
+            this.ui.printBoard(this);
+            this.ui.printResultMessage(playerId);
             return;
         }
 
         if (this._checkDraw()) {
             this.endFlag = true;
-            this.ui.printResultMessage(this, Result.DRAW);
+            this.ui.printBoard(this);
+            this.ui.printResultMessage();
         }
     }
 

@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -71,24 +71,218 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__OXGame_js__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__board_js__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ui_js__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__cpu_js__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__cpuLevel_js__ = __webpack_require__(4);
 
 
-//ゲームクラスを作成してゲームを開始する。
-new __WEBPACK_IMPORTED_MODULE_0__OXGame_js__["a" /* OXGame3by3HumanVsCpu */]();
+
+
+
+
+/**
+ * OXゲームのクラス
+ */
+class OXGame {
+    constructor(board, humanPlayer, cpu) {
+        this.ui = __WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */];
+        this.board = board;
+        this.humanPlayer = humanPlayer;
+        this.cpu = cpu;
+
+        const el = createDOM(this);
+        document.getElementById('root').appendChild(el);
+    }
+
+    /**
+     * ゲームの初期化を行う。
+     */
+    init() {
+        this.board.init();
+        this.ui.printBoard(this.board);
+    }
+
+    /**
+     * 試合の判定を行う。
+     * BoardのendFlagがtrueになると試合終了。
+     */
+    judge() {
+        if (this.board.endFlag) {
+            return;
+        }
+
+        this.board.checkGameEnd(this.humanPlayer.playerId);
+
+        if (this.board.endFlag) {
+            return;
+        }
+        try {
+            this.cpu.selectByCpu(this.board);
+        } catch (e) {
+            console.log(e);
+            window.alert('選択されたCPUは未実装です。');
+        }
+        this.board.checkGameEnd(this.cpu.playerId);
+
+        this.ui.printBoard(this.board);
+    }
+}
+
+class OXGame3by3HumanVsCpu extends OXGame {
+    constructor() {
+        super(new __WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* SquareBoard */](__WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */], 3), new __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__["a" /* default */](1), new __WEBPACK_IMPORTED_MODULE_3__cpu_js__["a" /* EasyCpu */](2));
+    }
+}
+/* unused harmony export OXGame3by3HumanVsCpu */
+
+
+class OXGame3by3CpuVsHuman extends OXGame {
+    constructor() {
+        super(new __WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* SquareBoard */](__WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */], 3), new __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__["a" /* default */](2), new __WEBPACK_IMPORTED_MODULE_3__cpu_js__["a" /* EasyCpu */](1));
+        try {
+            this.cpu.selectByCpu(this.board);
+        } catch (e) {
+            console.log(e);
+            window.alert('選択されたCPUは未実装です。');
+        }
+        this.board.checkGameEnd(this.cpu.playerId);
+
+        this.ui.printBoard(this.board);
+    }
+
+    /**
+     * ゲームの初期化を行う。
+     */
+    init() {
+        this.board.init();
+
+        try {
+            this.cpu.selectByCpu(this.board);
+        } catch (e) {
+            console.log(e);
+            window.alert('選択されたCPUは未実装です。');
+        }
+        this.board.checkGameEnd(this.cpu.playerId);
+        
+        this.ui.printBoard(this.board);
+    }
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = OXGame3by3CpuVsHuman;
+
+
+/**
+ * index.htmlのコンテンツを作る。
+ *
+ * @param oxGame OXGameのオブジェクトを渡す。
+ * @returns {Element} index.htmlの要素を返す。
+ */
+function createDOM(oxGame) {
+    const divClassContent = document.createElement('div');
+    divClassContent.className = 'content';
+
+    divClassContent.appendChild(createTitle());
+
+    divClassContent.appendChild(createCpuLevelSelectBox(oxGame));
+
+    divClassContent.appendChild(createGameBoard(oxGame));
+
+    divClassContent.appendChild(createResetButton(oxGame));
+
+    return divClassContent;
+}
+
+function createTitle() {
+    const title = document.createElement('h1');
+    title.innerHTML = '○×ゲーム';
+    return title;
+}
+
+function createCpuLevelSelectBox(oxGame) {
+    const pTag = document.createElement('p');
+    pTag.innerHTML = 'CPUの難易度:';
+
+    //セレクトボックスを作る
+    const select = document.createElement('select');
+    select.id = 'CpuLevel';
+    select.addEventListener('change', () => {
+        switch (document.getElementById('CpuLevel').value) {
+            case __WEBPACK_IMPORTED_MODULE_4__cpuLevel_js__["a" /* CpuLevel */].EASY:
+                oxGame.cpu = new __WEBPACK_IMPORTED_MODULE_3__cpu_js__["a" /* EasyCpu */](2);
+                break;
+
+            default:
+                window.alert('存在しないCPUが選択されました。');
+        }
+        oxGame.init();
+    });
+
+    //オプションを作る
+    for (let value of Object.keys(__WEBPACK_IMPORTED_MODULE_4__cpuLevel_js__["a" /* CpuLevel */])) {
+        let option = document.createElement('option');
+        option.value = __WEBPACK_IMPORTED_MODULE_4__cpuLevel_js__["a" /* CpuLevel */][value];
+        option.innerHTML = __WEBPACK_IMPORTED_MODULE_4__cpuLevel_js__["a" /* CpuLevel */][value];
+        select.appendChild(option);
+    }
+
+    pTag.appendChild(select);
+    return pTag;
+}
+
+function createGameBoard(oxGame) {
+    const fragment = document.createDocumentFragment();
+
+    //pタグで段落をつける
+    let pTag = document.createElement('p');
+    for (let i = 0; i < oxGame.board.verticalLength * oxGame.board.horizontalLength; i++) {
+        if (i % oxGame.board.horizontalLength === 0) {
+            pTag = document.createElement('p');
+        }
+
+        let button = document.createElement('button');
+        button.id = `${i}`;
+        //buttonの表示でプレイヤーキャラを使うので注意。
+        button.innerHTML = __WEBPACK_IMPORTED_MODULE_1__ui_js__["b" /* PlayerChar */][0];
+        button.addEventListener('click', () => {
+            oxGame.humanPlayer.selectByUser(oxGame.board, oxGame.ui, Math.floor(i / oxGame.board.verticalLength), i % oxGame.board.verticalLength);
+            oxGame.judge();
+        });
+
+        pTag.appendChild(button);
+        fragment.appendChild(pTag);
+    }
+    return fragment;
+}
+
+function createResetButton(oxGame) {
+    const resetButton = document.createElement('button');
+    resetButton.innerHTML = 'リセット';
+    resetButton.addEventListener('click', () => {
+        oxGame.init();
+    });
+    return resetButton;
+}
 
 /***/ }),
 /* 1 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-const GAME_BOARD_DEFAULT_VALUE = 0;
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__OXGame_js__ = __webpack_require__(0);
 
-/**
- * 試合結果の定数オブジェクト
- */
-const Result = Object.freeze({DRAW: '引き分けです。', WIN: 'あなたの勝ちです。', LOSE: 'あなたの負けです。'});
+
+//ゲームクラスを作成してゲームを開始する。
+//new OXGame3by3HumanVsCpu();
+new __WEBPACK_IMPORTED_MODULE_0__OXGame_js__["a" /* OXGame3by3CpuVsHuman */]();
+
+/***/ }),
+/* 2 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+const GAME_BOARD_SQUARE_DEFAULT_VALUE = 0;
 
 /**
  * ボードの抽象クラス
@@ -116,7 +310,7 @@ class Board {
      * @return {boolean} 埋まっている場合はtrue、埋まっていない場合はfalse
      */
     isAlreadyPut(x, y) {
-        return this.gameBoardArray[x][y] !== GAME_BOARD_DEFAULT_VALUE;
+        return this.gameBoardArray[x][y] !== GAME_BOARD_SQUARE_DEFAULT_VALUE;
     }
 
     put(x, y, playerID) {
@@ -129,7 +323,7 @@ class Board {
     init() {
         this.gameBoardArray = new Array(this.verticalLength);
         for (let i = 0; i < this.verticalLength; i++) {
-            this.gameBoardArray[i] = new Array(this.horizontalLength).fill(GAME_BOARD_DEFAULT_VALUE);
+            this.gameBoardArray[i] = new Array(this.horizontalLength).fill(GAME_BOARD_SQUARE_DEFAULT_VALUE);
         }
 
         this.endFlag = false;
@@ -172,7 +366,7 @@ class Board {
     _checkDraw() {
         for (let x = 0; x < this.gameBoardArray.length; x++) {
             for (let y = 0; y < this.gameBoardArray[x].length; y++) {
-                if (this.gameBoardArray[x][y] === GAME_BOARD_DEFAULT_VALUE) {
+                if (this.gameBoardArray[x][y] === GAME_BOARD_SQUARE_DEFAULT_VALUE) {
                     return false;
                 }
             }
@@ -203,18 +397,15 @@ class SquareBoard extends Board {
         }
 
         if (this.endFlag) {
-            if (playerId === 1) {
-                this.ui.printResultMessage(this, Result.WIN);
-
-            } else if (playerId === 2) {
-                this.ui.printResultMessage(this, Result.LOSE);
-            }
+            this.ui.printBoard(this);
+            this.ui.printResultMessage(playerId);
             return;
         }
 
         if (this._checkDraw()) {
             this.endFlag = true;
-            this.ui.printResultMessage(this, Result.DRAW);
+            this.ui.printBoard(this);
+            this.ui.printResultMessage();
         }
     }
 
@@ -247,7 +438,7 @@ class SquareBoard extends Board {
 
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -284,9 +475,8 @@ class EasyCpu extends Cpu {
     selectByCpu(board) {
         let x, y;
         do {
-            let random = Math.floor(Math.random() * board.verticalLength * board.horizontalLength);
-            x = Math.floor(random / board.verticalLength);
-            y = random % board.horizontalLength;
+            x = Math.floor(Math.random() * board.verticalLength);
+            y = Math.floor(Math.random() * board.horizontalLength);
         } while (board.isAlreadyPut(x, y));
         board.put(x, y, this.playerId);
     }
@@ -295,7 +485,7 @@ class EasyCpu extends Cpu {
 
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -308,7 +498,7 @@ const CpuLevel = Object.freeze({ EASY: 'Easy' });
 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -342,12 +532,12 @@ class HumanPlayer {
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 //ボードの駒とIDの連想配列。
-//画像を使用する場合も考えて、freezeの中止
+//画像を使用する場合も考えて、freezeの中止     _ _
 const PlayerChar = ['_', '○', '×', '△', '□'];
 /* harmony export (immutable) */ __webpack_exports__["b"] = PlayerChar;
 
@@ -364,10 +554,14 @@ const Ui = {
     },
     /**
      * 結果を表示する。
+     * 引数に数字が渡された場合は
      */
-    printResultMessage: function (board, result) {
-        this.printBoard(board);
-        window.alert(result);
+    printResultMessage: function (result) {
+        if (result === undefined) {
+            window.alert('引き分けです。');
+        } else {
+            window.alert(`${PlayerChar[result]}の勝ちです。`)
+        }
     },
     /**
      * プレイヤーに置けないことを説明する。
@@ -378,159 +572,6 @@ const Ui = {
 };
 /* harmony export (immutable) */ __webpack_exports__["a"] = Ui;
 
-
-/***/ }),
-/* 6 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__board_js__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ui_js__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__cpu_js__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__cpuLevel_js__ = __webpack_require__(3);
-
-
-
-
-
-
-/**
- * OXゲームのクラス
- */
-class OXGame3by3HumanVsCpu {
-    constructor() {
-        this.ui = __WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */];
-        this.board = new __WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* SquareBoard */](this.ui, 3);
-        this.humanPlayer = new __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__["a" /* default */](1);
-        this.cpu = new __WEBPACK_IMPORTED_MODULE_3__cpu_js__["a" /* EasyCpu */](2);
-        const el = createDOM(this);
-        document.getElementById('root').appendChild(el);
-    }
-
-    /**
-     * ゲームの初期化を行う。
-     */
-    init() {
-        this.board.init();
-        this.ui.printBoard(this.board);
-    }
-
-    /**
-     * 試合の判定を行う。
-     * BoardのendFlagがtrueになると試合終了。
-     */
-    judge() {
-        if (this.board.endFlag) {
-            return;
-        }
-
-        this.board.checkGameEnd(this.humanPlayer.playerId);
-
-        if (this.board.endFlag) {
-            return;
-        }
-        try {
-            this.cpu.selectByCpu(this.board);
-        } catch (e) {
-            console.log(e);
-            window.alert('選択されたCPUは未実装です。');
-        }
-        this.board.checkGameEnd(this.cpu.playerId);
-
-        this.ui.printBoard(this.board);
-    }
-}
-/* harmony export (immutable) */ __webpack_exports__["a"] = OXGame3by3HumanVsCpu;
-
-/**
- * index.htmlを作る。
- *
- * @param oxGame OXGameのオブジェクトを渡す。
- * @returns {Element} index.htmlの要素を返す。
- */
-function createDOM(oxGame) {
-    const divClassContent = document.createElement('div');
-
-    divClassContent.className = 'content';
-    divClassContent.appendChild(createTitle());
-    divClassContent.appendChild(createCpuLevelSelectBox(oxGame));
-    divClassContent.appendChild(createGameBoard(oxGame));
-    divClassContent.appendChild(createResetButton(oxGame));
-
-    return divClassContent;
-
-    function createTitle() {
-        const title = document.createElement('h1');
-        title.innerHTML = '○×ゲーム';
-        return title;
-    }
-
-    function createCpuLevelSelectBox(oxGame) {
-        const pTag = document.createElement('p');
-        pTag.innerHTML = 'CPUの難易度:';
-
-        //セレクトボックスを作る
-        const select = document.createElement('select');
-        select.id = 'CpuLevel';
-        select.addEventListener('change', () => {
-            switch (document.getElementById('CpuLevel').value) {
-                case __WEBPACK_IMPORTED_MODULE_4__cpuLevel_js__["a" /* CpuLevel */].EASY:
-                    oxGame.cpu = new __WEBPACK_IMPORTED_MODULE_3__cpu_js__["a" /* EasyCpu */](2);
-                    break;
-
-                default:
-                    window.alert('存在しないCPUが選択されました。');
-            }
-            oxGame.init();
-        });
-
-        //オプションを作る
-        for (let value of Object.keys(__WEBPACK_IMPORTED_MODULE_4__cpuLevel_js__["a" /* CpuLevel */])) {
-            let option = document.createElement('option');
-            option.value = __WEBPACK_IMPORTED_MODULE_4__cpuLevel_js__["a" /* CpuLevel */][value];
-            option.innerHTML = __WEBPACK_IMPORTED_MODULE_4__cpuLevel_js__["a" /* CpuLevel */][value];
-            select.appendChild(option);
-        }
-
-        pTag.appendChild(select);
-        return pTag;
-    }
-
-    function createGameBoard(oxGame) {
-        const fragment = document.createDocumentFragment();
-
-        //pタグで段落をつける
-        let pTag = document.createElement('p');
-        for (let i = 0; i < oxGame.board.verticalLength * oxGame.board.horizontalLength; i++) {
-            if (i % oxGame.board.horizontalLength === 0) {
-                pTag = document.createElement('p');
-            }
-
-            let button = document.createElement('button');
-            button.id = `${i}`;
-            //buttonの表示でプレイヤーキャラを使うので注意。
-            button.innerHTML = __WEBPACK_IMPORTED_MODULE_1__ui_js__["b" /* PlayerChar */][0];
-            button.addEventListener('click', () => {
-                oxGame.humanPlayer.selectByUser(oxGame.board, oxGame.ui, Math.floor(i / oxGame.board.verticalLength), i % oxGame.board.verticalLength);
-                oxGame.judge();
-            });
-
-            pTag.appendChild(button);
-            fragment.appendChild(pTag);
-        }
-        return fragment;
-    }
-
-    function createResetButton(oxGame) {
-        const resetButton = document.createElement('button');
-        resetButton.innerHTML = 'リセット';
-        resetButton.addEventListener('click', () => {
-            oxGame.init();
-        });
-        return resetButton;
-    }
-}
 
 /***/ })
 /******/ ]);

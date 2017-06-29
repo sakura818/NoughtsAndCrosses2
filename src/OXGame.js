@@ -29,7 +29,7 @@ export class OXGame {
 
         this.nowPlayer = this.players[0];
 
-        //TODO while文にしないとCpuVsCpuの場合に処理がストップすることになる。
+        //TODO while文にしないと Cpu Vs Cpu の場合に処理がストップすることになる。
         if (!(this.nowPlayer instanceof HumanPlayer)) {
             //CPUが先行の場合。
             this.nowPlayer.select(this.board);
@@ -47,7 +47,6 @@ export class OXGame {
     judge() {
         //TODO ここの処理は二回書いてあるので、一回にしたい。
         this.state = this.board.checkGameEnd(this.nowPlayer.playerId);
-
         Ui.printBoard(this.board);
         switch (this.state) {
             case GameState.END: {
@@ -143,7 +142,7 @@ function createCpuLevelSelectBox(oxGame) {
                         break;
 
                     default:
-                        window.alert('存在しないCPUが選択されました。');
+                        throw new Error('存在しないCPUが選択されました。');
                 }
             }
         }

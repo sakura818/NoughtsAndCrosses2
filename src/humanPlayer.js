@@ -11,9 +11,9 @@ export default class HumanPlayer {
     /**
      * ユーザーが選択した場合に呼び出される関数
      */
-    select(board, ui, x, y) {
+    select(board, Ui, x, y) {
         if (board.isAlreadyPut(x, y)) {
-            ui.printIsAlreadyPutMessage();
+            Ui.printIsAlreadyPutMessage();
             return;
         }
         board.put(x, y, this.playerId);

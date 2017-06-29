@@ -32,11 +32,15 @@ class OXGame {
             this.nowPlayer = this.getNextPlayer();
         }
         Ui.printBoard(this.board);
+
+        this.state = Result.NOT_END;
     }
 
     judge() {
-        switch (this.board.checkGameEnd(this.nowPlayer.playerId)) {
+        this.state = this.board.checkGameEnd(this.nowPlayer.playerId);
+        switch (this.state) {
             case Result.END: {
+                Ui.printBoard(this.board);
                 Ui.printResultMessage(Result.END, this.nowPlayer.playerId);
                 return;
             }
@@ -44,9 +48,12 @@ class OXGame {
                 break;
             }
             case Result.DRAW: {
+                Ui.printBoard(this.board);
                 Ui.printResultMessage(Result.DRAW);
                 return;
             }
+            default:
+                throw new Error('checkGameEndの戻り値が予期されないものでした。');
         }
 
         this.nowPlayer = this.getNextPlayer();
@@ -57,8 +64,10 @@ class OXGame {
             Ui.printBoard(this.board);
         }
 
-        switch (this.board.checkGameEnd(this.nowPlayer.playerId)) {
+        this.state = this.board.checkGameEnd(this.nowPlayer.playerId);
+        switch (this.state) {
             case Result.END: {
+                Ui.printBoard(this.board);
                 Ui.printResultMessage(Result.END, this.nowPlayer.playerId);
                 return;
             }
@@ -66,9 +75,12 @@ class OXGame {
                 break;
             }
             case Result.DRAW: {
+                Ui.printBoard(this.board);
                 Ui.printResultMessage(Result.DRAW);
                 return;
             }
+            default:
+                throw new Error('checkGameEndの戻り値が予期されないものでした。');
         }
 
         this.nowPlayer = this.getNextPlayer();
@@ -175,8 +187,10 @@ function createGameBoard(oxGame) {
         //buttonの表示でプレイヤーキャラを使うので注意。
         button.innerHTML = PlayerChar[0];
         button.addEventListener('click', () => {
-            oxGame.nowPlayer.select(oxGame.board, oxGame.ui, Math.floor(i / oxGame.board.verticalLength), i % oxGame.board.verticalLength);
-            oxGame.judge();
+            if (oxGame.state === Result.NOT_END) {
+                oxGame.nowPlayer.select(oxGame.board, Ui, Math.floor(i / oxGame.board.verticalLength), i % oxGame.board.verticalLength);
+                oxGame.judge();
+            }
         });
 
         pTag.appendChild(button);

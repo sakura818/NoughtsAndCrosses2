@@ -1,10 +1,10 @@
 const GAME_BOARD_SQUARE_DEFAULT_VALUE = 0;
 
-export const Result = Object.freeze({ END: 'End', NOT_END: 'Not End', DRAW: 'Draw' });
+//Resultのプロパティの値は使用していない(javaのEnumのような使い方をしているため。)
+export const Result = Object.freeze({ END: '', NOT_END: '', DRAW: '' });
 
 /**
  * ボードの抽象クラス
- * TODO 
  *
  * @author asada
  */
@@ -107,16 +107,16 @@ export class SquareBoard extends Board {
      * @param playerId 最後にプレイしたプレイヤーのIDを渡す
      */
     checkGameEnd(playerId) {
-        if (this._checkHorizontal() === Result.END) {
+        if (this._checkHorizontal(playerId) === Result.END) {
             return Result.END;
         }
-        if (this._checkVertical() === Result.END) {
+        if (this._checkVertical(playerId) === Result.END) {
             return Result.END;
         }
-        if (this._checkUpperLeftToLowerRight() === Result.END) {
+        if (this._checkUpperLeftToLowerRight(playerId) === Result.END) {
             return Result.END;
         }
-        if (this._checkUpperRightToLowerLeft() === Result.END) {
+        if (this._checkUpperRightToLowerLeft(playerId) === Result.END) {
             return Result.END;
         }
         return this._checkDraw();

@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 7);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -73,13 +73,13 @@
 "use strict";
 const GAME_BOARD_SQUARE_DEFAULT_VALUE = 0;
 
-const Result = Object.freeze({ END: 'End', NOT_END: 'Not End', DRAW: 'Draw' });
+//Resultのプロパティの値は使用していない(javaのEnumのような使い方をしているため。)
+const Result = Object.freeze({ END: '', NOT_END: '', DRAW: '' });
 /* harmony export (immutable) */ __webpack_exports__["a"] = Result;
 
 
 /**
  * ボードの抽象クラス
- * TODO 
  *
  * @author asada
  */
@@ -182,16 +182,16 @@ class SquareBoard extends Board {
      * @param playerId 最後にプレイしたプレイヤーのIDを渡す
      */
     checkGameEnd(playerId) {
-        if (this._checkHorizontal() === Result.END) {
+        if (this._checkHorizontal(playerId) === Result.END) {
             return Result.END;
         }
-        if (this._checkVertical() === Result.END) {
+        if (this._checkVertical(playerId) === Result.END) {
             return Result.END;
         }
-        if (this._checkUpperLeftToLowerRight() === Result.END) {
+        if (this._checkUpperLeftToLowerRight(playerId) === Result.END) {
             return Result.END;
         }
-        if (this._checkUpperRightToLowerLeft() === Result.END) {
+        if (this._checkUpperRightToLowerLeft(playerId) === Result.END) {
             return Result.END;
         }
         return this._checkDraw();
@@ -230,179 +230,13 @@ class SquareBoard extends Board {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/**
- * コンピュータのプレイヤー
- *
- * @author asada
- */
-class Cpu {
-    constructor(playerId) {
-        this.playerId = playerId;
-    }
-
-    /**
-     * CPUがボードに何を置くか決めるメソッド
-     *
-     * @throws {Error} Cpuを継承してselectメソッドを実装しない場合にスローする
-     */
-    select() {
-        //呼ばれない限り例外発生しないのでcatchしなくても良い
-        throw Error('不正なCPUが呼ばれました。');
-    }
-}
-
-class EasyCpu extends Cpu {
-    constructor(playerId) {
-        super(playerId);
-    }
-
-    select(board) {
-        let x, y;
-        do {
-            x = Math.floor(Math.random() * board.verticalLength);
-            y = Math.floor(Math.random() * board.horizontalLength);
-        } while (board.isAlreadyPut(x, y));
-        board.put(x, y, this.playerId);
-    }
-}
-/* harmony export (immutable) */ __webpack_exports__["a"] = EasyCpu;
-
-
-class TestCpu extends Cpu {
-    constructor(playerId) {
-        super(playerId);
-        console.log('TestCpuが呼ばれました。');
-    }
-
-    select(board) {
-        console.log('TestCpuのselectメソッドが呼ばれました。');
-        let x, y;
-        do {
-            x = Math.floor(Math.random() * board.verticalLength);
-            y = Math.floor(Math.random() * board.horizontalLength);
-        } while (board.isAlreadyPut(x, y));
-        board.put(x, y, this.playerId);
-    }
-}
-/* harmony export (immutable) */ __webpack_exports__["b"] = TestCpu;
-
-
-/***/ }),
-/* 2 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/**
- * CPUの強さの定数オブジェクト
- */
-const CpuLevel = Object.freeze({
-    EASY: 'Easy',
-    TEST: 'Test'
-});
-/* harmony export (immutable) */ __webpack_exports__["a"] = CpuLevel;
-
-
-
-/***/ }),
-/* 3 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/**
- * 人間のプレイヤー
- *
- * @author asada
- */
-class HumanPlayer {
-    constructor(playerId) {
-        this.playerId = playerId;
-    }
-
-    /**
-     * ユーザーが選択した場合に呼び出される関数
-     */
-    select(board, ui, x, y) {
-        if (board.isAlreadyPut(x, y)) {
-            ui.printIsAlreadyPutMessage();
-            return;
-        }
-        board.put(x, y, this.playerId);
-    }
-}
-/* harmony export (immutable) */ __webpack_exports__["a"] = HumanPlayer;
-
-
-/***/ }),
-/* 4 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__board_js__ = __webpack_require__(0);
-
-
-//ボードの駒とIDの連想配列。
-//画像を使用する場合も考えて、freezeの中止     _ _
-const PlayerChar = ['_', '○', '×', '△', '□'];
-/* harmony export (immutable) */ __webpack_exports__["b"] = PlayerChar;
-
-
-/**
- * Uiオブジェクト
- * 
- * @author asada
- */
-const Ui = {
-    /**
-     * 現在のボードの状況を表示する。
-     */
-    printBoard: function (board) {
-        for (let x = 0; x < board.verticalLength; x++) {
-            for (let y = 0; y < board.horizontalLength; y++) {
-                let oneSquare = board.gameBoardArray[x][y];
-                document.getElementById(`${(x * board.horizontalLength) + y}`).innerHTML = PlayerChar[oneSquare];
-            }
-        }
-    },
-    /**
-     * 結果を表示する。
-     * TODO Resultをオブジェクトにして、WINとDRAWにしたい。
-     */
-    printResultMessage: function (result, playerId) {
-        switch (result) {
-            case __WEBPACK_IMPORTED_MODULE_0__board_js__["default"].END:
-                window.alert(`${PlayerChar[playerId]}の勝ちです。`)
-                break;
-
-            case __WEBPACK_IMPORTED_MODULE_0__board_js__["default"].DRAW:
-                window.alert('引き分けです。');
-                break;
-
-            default:
-                throw new Error('printResultMessageの引数が予期されないものでした。');
-        }
-    },
-    /**
-     * プレイヤーに置けないことを説明する。
-     */
-    printIsAlreadyPutMessage: function () {
-        window.alert('そこはすでに埋まっています。');
-    }
-};
-/* harmony export (immutable) */ __webpack_exports__["a"] = Ui;
-
-
-/***/ }),
-/* 5 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = OXGame3by3HumanVsCpu;
 /* unused harmony export OXGame3by3CpuVsHuman */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__board_js__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ui_js__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__cpu_js__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__cpuLevel_js__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ui_js__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__cpu_js__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__cpuLevel_js__ = __webpack_require__(4);
 
 
 
@@ -437,11 +271,15 @@ class OXGame {
             this.nowPlayer = this.getNextPlayer();
         }
         __WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */].printBoard(this.board);
+
+        this.state = __WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* Result */].NOT_END;
     }
 
     judge() {
-        switch (this.board.checkGameEnd(this.nowPlayer.playerId)) {
+        this.state = this.board.checkGameEnd(this.nowPlayer.playerId);
+        switch (this.state) {
             case __WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* Result */].END: {
+                __WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */].printBoard(this.board);
                 __WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */].printResultMessage(__WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* Result */].END, this.nowPlayer.playerId);
                 return;
             }
@@ -449,9 +287,12 @@ class OXGame {
                 break;
             }
             case __WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* Result */].DRAW: {
+                __WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */].printBoard(this.board);
                 __WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */].printResultMessage(__WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* Result */].DRAW);
                 return;
             }
+            default:
+                throw new Error('checkGameEndの戻り値が予期されないものでした。');
         }
 
         this.nowPlayer = this.getNextPlayer();
@@ -462,8 +303,10 @@ class OXGame {
             __WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */].printBoard(this.board);
         }
 
-        switch (this.board.checkGameEnd(this.nowPlayer.playerId)) {
+        this.state = this.board.checkGameEnd(this.nowPlayer.playerId);
+        switch (this.state) {
             case __WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* Result */].END: {
+                __WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */].printBoard(this.board);
                 __WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */].printResultMessage(__WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* Result */].END, this.nowPlayer.playerId);
                 return;
             }
@@ -471,9 +314,12 @@ class OXGame {
                 break;
             }
             case __WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* Result */].DRAW: {
+                __WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */].printBoard(this.board);
                 __WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */].printResultMessage(__WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* Result */].DRAW);
                 return;
             }
+            default:
+                throw new Error('checkGameEndの戻り値が予期されないものでした。');
         }
 
         this.nowPlayer = this.getNextPlayer();
@@ -580,8 +426,10 @@ function createGameBoard(oxGame) {
         //buttonの表示でプレイヤーキャラを使うので注意。
         button.innerHTML = __WEBPACK_IMPORTED_MODULE_1__ui_js__["b" /* PlayerChar */][0];
         button.addEventListener('click', () => {
-            oxGame.nowPlayer.select(oxGame.board, oxGame.ui, Math.floor(i / oxGame.board.verticalLength), i % oxGame.board.verticalLength);
-            oxGame.judge();
+            if (oxGame.state === __WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* Result */].NOT_END) {
+                oxGame.nowPlayer.select(oxGame.board, __WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */], Math.floor(i / oxGame.board.verticalLength), i % oxGame.board.verticalLength);
+                oxGame.judge();
+            }
         });
 
         pTag.appendChild(button);
@@ -600,17 +448,182 @@ function createResetButton(oxGame) {
 }
 
 /***/ }),
-/* 6 */,
-/* 7 */
+/* 2 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__OXGame_js__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__OXGame_js__ = __webpack_require__(1);
 
 
 //ゲームクラスを作成してゲームを開始する。
 new __WEBPACK_IMPORTED_MODULE_0__OXGame_js__["a" /* OXGame3by3HumanVsCpu */]();
+
+/***/ }),
+/* 3 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/**
+ * コンピュータのプレイヤー
+ *
+ * @author asada
+ */
+class Cpu {
+    constructor(playerId) {
+        this.playerId = playerId;
+    }
+
+    /**
+     * CPUがボードに何を置くか決めるメソッド
+     *
+     * @throws {Error} Cpuを継承してselectメソッドを実装しない場合にスローする
+     */
+    select() {
+        //呼ばれない限り例外発生しないのでcatchしなくても良い
+        throw Error('不正なCPUが呼ばれました。');
+    }
+}
+
+class EasyCpu extends Cpu {
+    constructor(playerId) {
+        super(playerId);
+    }
+
+    select(board) {
+        let x, y;
+        do {
+            x = Math.floor(Math.random() * board.verticalLength);
+            y = Math.floor(Math.random() * board.horizontalLength);
+        } while (board.isAlreadyPut(x, y));
+        board.put(x, y, this.playerId);
+    }
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = EasyCpu;
+
+
+class TestCpu extends Cpu {
+    constructor(playerId) {
+        super(playerId);
+        console.log('TestCpuが呼ばれました。');
+    }
+
+    select(board) {
+        console.log('TestCpuのselectメソッドが呼ばれました。');
+        let x, y;
+        do {
+            x = Math.floor(Math.random() * board.verticalLength);
+            y = Math.floor(Math.random() * board.horizontalLength);
+        } while (board.isAlreadyPut(x, y));
+        board.put(x, y, this.playerId);
+    }
+}
+/* harmony export (immutable) */ __webpack_exports__["b"] = TestCpu;
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/**
+ * CPUの強さの定数オブジェクト
+ */
+const CpuLevel = Object.freeze({
+    EASY: 'Easy',
+    TEST: 'Test'
+});
+/* harmony export (immutable) */ __webpack_exports__["a"] = CpuLevel;
+
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/**
+ * 人間のプレイヤー
+ *
+ * @author asada
+ */
+class HumanPlayer {
+    constructor(playerId) {
+        this.playerId = playerId;
+    }
+
+    /**
+     * ユーザーが選択した場合に呼び出される関数
+     */
+    select(board, Ui, x, y) {
+        if (board.isAlreadyPut(x, y)) {
+            Ui.printIsAlreadyPutMessage();
+            return;
+        }
+        board.put(x, y, this.playerId);
+    }
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = HumanPlayer;
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__board_js__ = __webpack_require__(0);
+
+
+//ボードの駒とIDの連想配列。
+//画像を使用する場合も考えて、freezeの中止     _ _
+const PlayerChar = ['_', '○', '×', '△', '□'];
+/* harmony export (immutable) */ __webpack_exports__["b"] = PlayerChar;
+
+
+/**
+ * Uiオブジェクト
+ * 
+ * @author asada
+ */
+const Ui = {
+    /**
+     * 現在のボードの状況を表示する。
+     */
+    printBoard: function (board) {
+        for (let x = 0; x < board.verticalLength; x++) {
+            for (let y = 0; y < board.horizontalLength; y++) {
+                let oneSquare = board.gameBoardArray[x][y];
+                document.getElementById(`${(x * board.horizontalLength) + y}`).innerHTML = PlayerChar[oneSquare];
+            }
+        }
+    },
+    /**
+     * 結果を表示する。
+     * TODO Resultをオブジェクトにして、WINとDRAWにしたい。
+     */
+    printResultMessage: function (result, playerId) {
+        switch (result) {
+            case __WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* Result */].END:
+                window.alert(`${PlayerChar[playerId]}の勝ちです。`)
+                break;
+
+            case __WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* Result */].DRAW:
+                window.alert('引き分けです。');
+                break;
+
+            default:
+                throw new Error('printResultMessageの引数が予期されないものでした。');
+        }
+    },
+    /**
+     * プレイヤーに置けないことを説明する。
+     */
+    printIsAlreadyPutMessage: function () {
+        window.alert('そこはすでに埋まっています。');
+    }
+};
+/* harmony export (immutable) */ __webpack_exports__["a"] = Ui;
+
 
 /***/ })
 /******/ ]);

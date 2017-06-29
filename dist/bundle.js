@@ -403,18 +403,17 @@ class OXGame {
 
     init() {
         this.board.init();
-        this.ui.printBoard(this.board);
 
         this.nowPlayer = this.players[0];
 
+        //TODO while文にしないとCpuVsCpuの場合に処理がストップすることになる。
         if (!(this.nowPlayer instanceof __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__["a" /* default */])) {
             //CPUが先行の場合。
             this.nowPlayer.select(this.board);
-            this.board.checkGameEnd(this.nowPlayer.playerId);
-            this.ui.printBoard(this.board);
-
             this.nowPlayer = this.getNextPlayer();
         }
+
+        this.ui.printBoard(this.board);
     }
 
     judge() {

@@ -3,7 +3,6 @@ import HumanPlayer from './humanPlayer.js';
 import { EasyCpu } from './cpu.js';
 import { CpuLevel } from './cpuLevel.js';
 
-//GameStateのプロパティの値は使用していない(javaのEnumのような使い方をしているため。)
 export const GameState = Object.freeze({ END: 'end', NOT_END: 'notEnd', DRAW: 'draw' });
 
 /**

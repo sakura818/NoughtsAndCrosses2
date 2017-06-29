@@ -80,7 +80,6 @@
 
 
 
-//GameStateのプロパティの値は使用していない(javaのEnumのような使い方をしているため。)
 const GameState = Object.freeze({ END: 'end', NOT_END: 'notEnd', DRAW: 'draw' });
 /* harmony export (immutable) */ __webpack_exports__["b"] = GameState;
 

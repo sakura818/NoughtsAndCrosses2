@@ -1,18 +1,18 @@
 import { SquareBoard } from './board.js';
 import { PlayerChar, Ui } from './ui.js';
 import HumanPlayer from './humanPlayer.js';
-import { EasyCpu, TestCpu } from './cpu.js';
+import { EasyCpu } from './cpu.js';
 import { CpuLevel } from './cpuLevel.js';
 
 //GameStateのプロパティの値は使用していない(javaのEnumのような使い方をしているため。)
-export const GameState = Object.freeze({ END: '', NOT_END: '', DRAW: '' });
+export const GameState = Object.freeze({ END: 'end', NOT_END: 'notEnd', DRAW: 'draw' });
 
 /**
  * OXGameクラス
  * 
  * @author asada
  */
-class OXGame {
+export class OXGame {
     constructor(board, players) {
         this.board = board;
         this.players = players;
@@ -49,6 +49,7 @@ class OXGame {
     judge() {
         //TODO ここの処理は二回書いてあるので、一回にしたい。
         this.state = this.board.checkGameEnd(this.nowPlayer.playerId);
+
         Ui.printBoard(this.board);
         switch (this.state) {
             case GameState.END: {
@@ -101,28 +102,6 @@ class OXGame {
 }
 
 /**
- * 三目並べ
- * 先行:Human
- * 後攻:Cpu
- */
-export function OXGame3by3HumanVsCpu() {
-    const board = new SquareBoard(3);
-    const players = [new HumanPlayer(1), new EasyCpu(2)];
-    return new OXGame(board, players);
-}
-
-/**
- * 三目並べ
- * 先行:Cpu
- * 後攻:Human
- */
-export function OXGame3by3CpuVsHuman() {
-    const board = new SquareBoard(3);
-    const players = [new EasyCpu(1), new HumanPlayer(2)];
-    return new OXGame(board, players);
-}
-
-/**
  * index.htmlのコンテンツを作る。
  *
  * @param oxGame OXGameのオブジェクトを渡す。
@@ -163,10 +142,6 @@ function createCpuLevelSelectBox(oxGame) {
                 switch (document.getElementById('CpuLevel').value) {
                     case CpuLevel.EASY:
                         oxGame.players[i] = new EasyCpu(2);
-                        break;
-
-                    case CpuLevel.TEST:
-                        oxGame.players[i] = new TestCpu(2);
                         break;
 
                     default:

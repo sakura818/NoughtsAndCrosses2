@@ -1,7 +1,6 @@
 import { GameState } from './oxGame.js';
 
 //ボードの駒とIDの連想配列。
-//画像を使用する場合も考えて、freezeの中止     _ _
 export const PlayerChar = ['_', '○', '×', '△', '□'];
 
 /**
@@ -23,7 +22,6 @@ export const Ui = {
     },
     /**
      * 結果を表示する。
-     * TODO Resultをオブジェクトにして、WINとDRAWにしたい。
      */
     printResultMessage: function (result, playerId) {
         switch (result) {

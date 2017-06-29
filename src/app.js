@@ -1,4 +1,26 @@
-import { OXGame3by3HumanVsCpu, OXGame3by3CpuVsHuman } from './oxGame.js';
+import { OXGame } from './oxGame.js';
 
 //ゲームクラスを作成してゲームを開始する。
-new OXGame3by3HumanVsCpu();
+OXGame3by3HumanVsCpu();
+
+/**
+ * 三目並べ
+ * 先行:Human
+ * 後攻:Cpu
+ */
+export function OXGame3by3HumanVsCpu() {
+    const board = new SquareBoard(3);
+    const players = [new HumanPlayer(1), new EasyCpu(2)];
+    return new OXGame(board, players);
+}
+
+/**
+ * 三目並べ
+ * 先行:Cpu
+ * 後攻:Human
+ */
+export function OXGame3by3CpuVsHuman() {
+    const board = new SquareBoard(3);
+    const players = [new EasyCpu(1), new HumanPlayer(2)];
+    return new OXGame(board, players);
+}

@@ -139,7 +139,7 @@ export class SquareBoard extends Board {
                 break;
             }
             if (i === this.terminationCondition - 1) {
-                return Result.END;
+                return GameState.END;
             }
         }
         return GameState.NOT_END;

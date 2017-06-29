@@ -6,7 +6,24 @@ import {CpuLevel} from './cpuLevel.js';
 
 /**
  * OXゲームのクラス
+ * TODO 引数が具象であるために、人間VS人間ができなくなっている。引数は配列で取れば問題が解消できる。
  */
+class OXGame2 {
+    constructor(board, players) {
+        this.ui = Ui;
+        this.board = board;
+        this.players = players;
+    }
+
+    init(){
+        this.board.init();
+        this.ui.printBoard(this.board);
+    }
+
+    judge(){
+        
+    }
+}
 class OXGame {
     constructor(board, humanPlayer, cpu) {
         this.ui = Ui;
@@ -52,12 +69,22 @@ class OXGame {
     }
 }
 
+/**
+ * 三目並べ。
+ * 人間先行。
+ * CPU後攻。
+ */
 export class OXGame3by3HumanVsCpu extends OXGame {
     constructor() {
         super(new SquareBoard(Ui, 3), new HumanPlayer(1), new EasyCpu(2));
     }
 }
 
+/**
+ * 三目並べ。
+ * CPU先行。
+ * 人間後攻。
+ */
 export class OXGame3by3CpuVsHuman extends OXGame {
     constructor() {
         super(new SquareBoard(Ui, 3), new HumanPlayer(2), new EasyCpu(1));
@@ -85,7 +112,7 @@ export class OXGame3by3CpuVsHuman extends OXGame {
             window.alert('選択されたCPUは未実装です。');
         }
         this.board.checkGameEnd(this.cpu.playerId);
-        
+
         this.ui.printBoard(this.board);
     }
 }

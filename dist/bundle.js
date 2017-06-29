@@ -84,6 +84,7 @@
 
 /**
  * OXゲームのクラス
+ * TODO 引数が具象であるために、人間VS人間ができなくなっている。引数は配列で取れば問題が解消できる。
  */
 class OXGame {
     constructor(board, humanPlayer, cpu) {
@@ -130,6 +131,11 @@ class OXGame {
     }
 }
 
+/**
+ * 三目並べ。
+ * 人間先行。
+ * CPU後攻。
+ */
 class OXGame3by3HumanVsCpu extends OXGame {
     constructor() {
         super(new __WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* SquareBoard */](__WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */], 3), new __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__["a" /* default */](1), new __WEBPACK_IMPORTED_MODULE_3__cpu_js__["a" /* EasyCpu */](2));
@@ -138,6 +144,11 @@ class OXGame3by3HumanVsCpu extends OXGame {
 /* unused harmony export OXGame3by3HumanVsCpu */
 
 
+/**
+ * 三目並べ。
+ * CPU先行。
+ * 人間後攻。
+ */
 class OXGame3by3CpuVsHuman extends OXGame {
     constructor() {
         super(new __WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* SquareBoard */](__WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */], 3), new __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__["a" /* default */](2), new __WEBPACK_IMPORTED_MODULE_3__cpu_js__["a" /* EasyCpu */](1));
@@ -165,11 +176,11 @@ class OXGame3by3CpuVsHuman extends OXGame {
             window.alert('選択されたCPUは未実装です。');
         }
         this.board.checkGameEnd(this.cpu.playerId);
-        
+
         this.ui.printBoard(this.board);
     }
 }
-/* harmony export (immutable) */ __webpack_exports__["a"] = OXGame3by3CpuVsHuman;
+/* unused harmony export OXGame3by3CpuVsHuman */
 
 
 /**
@@ -275,7 +286,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 //ゲームクラスを作成してゲームを開始する。
 //new OXGame3by3HumanVsCpu();
-new __WEBPACK_IMPORTED_MODULE_0__OXGame_js__["a" /* OXGame3by3CpuVsHuman */]();
+//new OXGame3by3CpuVsHuman();
+new __WEBPACK_IMPORTED_MODULE_0__OXGame_js__["OXGame3by3HumanVsHuman"]();
 
 /***/ }),
 /* 2 */

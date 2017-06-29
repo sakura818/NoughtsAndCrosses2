@@ -2,6 +2,7 @@ const GAME_BOARD_SQUARE_DEFAULT_VALUE = 0;
 
 /**
  * ボードの抽象クラス
+ * TODO 
  *
  * @author asada
  */

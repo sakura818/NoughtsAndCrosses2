@@ -75,6 +75,7 @@ const GAME_BOARD_SQUARE_DEFAULT_VALUE = 0;
 
 /**
  * ボードの抽象クラス
+ * TODO 
  *
  * @author asada
  */
@@ -286,7 +287,9 @@ class EasyCpu extends Cpu {
 /**
  * CPUの強さの定数オブジェクト
  */
-const CpuLevel = Object.freeze({ EASY: 'Easy' });
+const CpuLevel = Object.freeze({
+    EASY: 'Easy'
+});
 /* harmony export (immutable) */ __webpack_exports__["a"] = CpuLevel;
 
 
@@ -336,19 +339,26 @@ const PlayerChar = ['_', '○', '×', '△', '□'];
 /* harmony export (immutable) */ __webpack_exports__["b"] = PlayerChar;
 
 
+/**
+ * Uiオブジェクト
+ * 
+ * @author asada
+ */
 const Ui = {
     /**
      * 現在のボードの状況を表示する。
      */
     printBoard: function (board) {
-        for (let i = 0; i < board.verticalLength * board.horizontalLength; i++) {
-            let oneSquare = board.gameBoardArray[Math.floor(i / board.verticalLength)][i % board.verticalLength];
-            document.getElementById(`${i}`).innerHTML = PlayerChar[oneSquare];
+        for (let x = 0; x < board.verticalLength; x++) {
+            for (let y = 0; y < board.horizontalLength; y++) {
+                let oneSquare = board.gameBoardArray[x][y];
+                document.getElementById(`${i}`).innerHTML = PlayerChar[oneSquare];
+            }
         }
     },
     /**
      * 結果を表示する。
-     * 引数に数字が渡された場合は
+     * TODO Resultをオブジェクトにして、WINとDRAWにしたい。
      */
     printResultMessage: function (result) {
         if (result === undefined) {
@@ -368,8 +378,7 @@ const Ui = {
 
 
 /***/ }),
-/* 5 */,
-/* 6 */
+/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -385,39 +394,36 @@ const Ui = {
 
 
 /**
- * OXGameクラスの改善版。
+ * OXGameクラス
+ * 
+ * @author asada
  */
-class OXGame2 {
+class OXGame {
     constructor(board, players) {
         this.ui = __WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */];
         this.board = board;
         this.players = players;
 
-        this.nowPlayer = players[0];
-
         const el = createDOM(this);
         document.getElementById('root').appendChild(el);
 
-        try {
-            if (!(this.nowPlayer instanceof __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__["a" /* default */])) {
-                //CPUが先行の場合。
-                this.nowPlayer.select();
-                this.board.checkGameEnd(this.nowPlayer.playerId);
-                this.ui.printBoard(this.board);
-
-                this.nowPlayer = this.players[board.times];
-            }
-        } catch (e) {
-            console.log(e);
-            window.alert('選択されたCPUは未実装です。');
-        }
+        this.init();
     }
 
     init() {
         this.board.init();
         this.ui.printBoard(this.board);
 
-        this.nowPlayer = players[0];
+        this.nowPlayer = this.players[0];
+
+        if (!(this.nowPlayer instanceof __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__["a" /* default */])) {
+            //CPUが先行の場合。
+            this.nowPlayer.select(this.board);
+            this.board.checkGameEnd(this.nowPlayer.playerId);
+            this.ui.printBoard(this.board);
+
+            this.nowPlayer = this.getNextPlayer();
+        }
     }
 
     judge() {
@@ -427,37 +433,48 @@ class OXGame2 {
 
         this.board.checkGameEnd(this.nowPlayer.playerId);
 
-        if (!(this.nowPlayer instanceof __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__["a" /* default */])) {
-            //CPUが先行の場合。
-            this.nowPlayer.select();
-            this.board.checkGameEnd(this.nowPlayer.playerId);
-            this.ui.printBoard(this.board);
-
-            this.nowPlayer = this.players[board.times];
-        }
+        this.nowPlayer = this.getNextPlayer();
 
         if (this.board.endFlag) {
             return;
         }
-        try {
-            this.cpu.select(this.board);
-        } catch (e) {
-            console.log(e);
-            window.alert('選択されたCPUは未実装です。');
+
+        if (!(this.nowPlayer instanceof __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__["a" /* default */])) {
+            this.nowPlayer.select(this.board);
+            this.board.checkGameEnd(this.nowPlayer.playerId);
+            this.ui.printBoard(this.board);
         }
-        this.board.checkGameEnd(this.cpu.playerId);
+
+        this.board.checkGameEnd(this.players.playerId);
+
+        this.nowPlayer = this.getNextPlayer();
 
         this.ui.printBoard(this.board);
     }
+
+    getNextPlayer() {
+        return this.players[this.board.times % this.players.length];
+    }
 }
 
-class OXGame2_3by3HumanVsCpu extends OXGame2 {
+class OXGame3by3HumanVsCpu extends OXGame {
     constructor() {
+        const board = new __WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* SquareBoard */](__WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */], 3);
         const players = [new __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__["a" /* default */](1), new __WEBPACK_IMPORTED_MODULE_3__cpu_js__["a" /* EasyCpu */](2)];
+        super(board, players);
+    }
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = OXGame3by3HumanVsCpu;
+
+
+class OXGame3by3CpuVsHuman extends OXGame {
+    constructor() {
+        const board = new __WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* SquareBoard */](__WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */], 3);
+        const players = [new __WEBPACK_IMPORTED_MODULE_3__cpu_js__["a" /* EasyCpu */](1), new __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__["a" /* default */](2)];
         super(new __WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* SquareBoard */](__WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */], 3), players);
     }
 }
-/* harmony export (immutable) */ __webpack_exports__["a"] = OXGame2_3by3HumanVsCpu;
+/* unused harmony export OXGame3by3CpuVsHuman */
 
 
 /**
@@ -553,16 +570,17 @@ function createResetButton(oxGame) {
 }
 
 /***/ }),
+/* 6 */,
 /* 7 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__OXGame2_js__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__OXGame_js__ = __webpack_require__(5);
 
 
 //ゲームクラスを作成してゲームを開始する。
-new __WEBPACK_IMPORTED_MODULE_0__OXGame2_js__["a" /* OXGame2_3by3HumanVsCpu */]();
+new __WEBPACK_IMPORTED_MODULE_0__OXGame_js__["a" /* OXGame3by3HumanVsCpu */]();
 
 /***/ })
 /******/ ]);

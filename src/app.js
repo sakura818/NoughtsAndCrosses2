@@ -1,4 +1,4 @@
-import { OXGame2_3by3HumanVsCpu } from './OXGame2.js';
+import { OXGame3by3HumanVsCpu } from './OXGame.js';
 
 //ゲームクラスを作成してゲームを開始する。
-new OXGame2_3by3HumanVsCpu();
+new OXGame3by3HumanVsCpu();

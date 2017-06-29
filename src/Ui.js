@@ -2,19 +2,26 @@
 //画像を使用する場合も考えて、freezeの中止     _ _
 export const PlayerChar = ['_', '○', '×', '△', '□'];
 
+/**
+ * Uiオブジェクト
+ * 
+ * @author asada
+ */
 export const Ui = {
     /**
      * 現在のボードの状況を表示する。
      */
     printBoard: function (board) {
-        for (let i = 0; i < board.verticalLength * board.horizontalLength; i++) {
-            let oneSquare = board.gameBoardArray[Math.floor(i / board.verticalLength)][i % board.verticalLength];
-            document.getElementById(`${i}`).innerHTML = PlayerChar[oneSquare];
+        for (let x = 0; x < board.verticalLength; x++) {
+            for (let y = 0; y < board.horizontalLength; y++) {
+                let oneSquare = board.gameBoardArray[x][y];
+                document.getElementById(`${i}`).innerHTML = PlayerChar[oneSquare];
+            }
         }
     },
     /**
      * 結果を表示する。
-     * 引数に数字が渡された場合は
+     * TODO Resultをオブジェクトにして、WINとDRAWにしたい。
      */
     printResultMessage: function (result) {
         if (result === undefined) {

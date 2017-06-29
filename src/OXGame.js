@@ -5,99 +5,82 @@ import { EasyCpu } from './cpu.js';
 import { CpuLevel } from './cpuLevel.js';
 
 /**
- * OXゲームのクラス
- * TODO 引数が具象であるために、人間VS人間ができなくなっている。引数は配列で取れば問題が解消できる。
+ * OXGameクラス
+ * 
+ * @author asada
  */
 class OXGame {
-    constructor(board, humanPlayer, cpu) {
+    constructor(board, players) {
         this.ui = Ui;
         this.board = board;
-        this.humanPlayer = humanPlayer;
-        this.cpu = cpu;
+        this.players = players;
 
         const el = createDOM(this);
         document.getElementById('root').appendChild(el);
+
+        this.init();
     }
 
-    /**
-     * ゲームの初期化を行う。
-     */
     init() {
         this.board.init();
         this.ui.printBoard(this.board);
+
+        this.nowPlayer = this.players[0];
+
+        if (!(this.nowPlayer instanceof HumanPlayer)) {
+            //CPUが先行の場合。
+            this.nowPlayer.select(this.board);
+            this.board.checkGameEnd(this.nowPlayer.playerId);
+            this.ui.printBoard(this.board);
+
+            this.nowPlayer = this.getNextPlayer();
+        }
     }
 
-    /**
-     * 試合の判定を行う。
-     * BoardのendFlagがtrueになると試合終了。
-     */
     judge() {
         if (this.board.endFlag) {
             return;
         }
 
-        this.board.checkGameEnd(this.humanPlayer.playerId);
+        this.board.checkGameEnd(this.nowPlayer.playerId);
+
+        this.nowPlayer = this.getNextPlayer();
 
         if (this.board.endFlag) {
             return;
         }
-        try {
-            this.cpu.select(this.board);
-        } catch (e) {
-            console.log(e);
-            window.alert('選択されたCPUは未実装です。');
+
+        if (!(this.nowPlayer instanceof HumanPlayer)) {
+            this.nowPlayer.select(this.board);
+            this.board.checkGameEnd(this.nowPlayer.playerId);
+            this.ui.printBoard(this.board);
         }
-        this.board.checkGameEnd(this.cpu.playerId);
+
+        this.board.checkGameEnd(this.players.playerId);
+
+        this.nowPlayer = this.getNextPlayer();
 
         this.ui.printBoard(this.board);
     }
+
+    getNextPlayer() {
+        return this.players[this.board.times % this.players.length];
+    }
 }
 
-/**
- * 三目並べ。
- * 人間先行。
- * CPU後攻。
- */
 export class OXGame3by3HumanVsCpu extends OXGame {
     constructor() {
-        super(new SquareBoard(Ui, 3), new HumanPlayer(1), new EasyCpu(2));
+        const board = new SquareBoard(Ui, 3);
+        const players = [new HumanPlayer(1), new EasyCpu(2)];
+        super(board, players);
     }
 }
 
-/**
- * 三目並べ。
- * CPU先行。
- * 人間後攻。
- */
 export class OXGame3by3CpuVsHuman extends OXGame {
     constructor() {
-        super(new SquareBoard(Ui, 3), new HumanPlayer(2), new EasyCpu(1));
-        try {
-            this.cpu.select(this.board);
-        } catch (e) {
-            console.log(e);
-            window.alert('選択されたCPUは未実装です。');
-        }
-        this.board.checkGameEnd(this.cpu.playerId);
-
-        this.ui.printBoard(this.board);
-    }
-
-    /**
-     * ゲームの初期化を行う。
-     */
-    init() {
-        this.board.init();
-
-        try {
-            this.cpu.select(this.board);
-        } catch (e) {
-            console.log(e);
-            window.alert('選択されたCPUは未実装です。');
-        }
-        this.board.checkGameEnd(this.cpu.playerId);
-
-        this.ui.printBoard(this.board);
+        const board = new SquareBoard(Ui, 3);
+        const players = [new EasyCpu(1), new HumanPlayer(2)];
+        super(new SquareBoard(Ui, 3), players);
     }
 }
 
@@ -174,7 +157,7 @@ function createGameBoard(oxGame) {
         //buttonの表示でプレイヤーキャラを使うので注意。
         button.innerHTML = PlayerChar[0];
         button.addEventListener('click', () => {
-            oxGame.humanPlayer.select(oxGame.board, oxGame.ui, Math.floor(i / oxGame.board.verticalLength), i % oxGame.board.verticalLength);
+            oxGame.nowPlayer.select(oxGame.board, oxGame.ui, Math.floor(i / oxGame.board.verticalLength), i % oxGame.board.verticalLength);
             oxGame.judge();
         });
 

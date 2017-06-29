@@ -11,7 +11,7 @@ class Cpu {
     /**
      * CPUがボードに何を置くか決めるメソッド
      *
-     * @throws {Error} CPUを継承してselectByCpuメソッドを実装しない場合にスローする
+     * @throws {Error} Cpuを継承してselectメソッドを実装しない場合にスローする
      */
     select() {
         //呼ばれない限り例外発生しないのでcatchしなくても良い
@@ -19,11 +19,6 @@ class Cpu {
     }
 }
 
-/**
- * 弱いCPU
- *
- * @author asada
- */
 export class EasyCpu extends Cpu {
     constructor(playerId) {
         super(playerId);

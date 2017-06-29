@@ -15,7 +15,7 @@ export const Ui = {
         for (let x = 0; x < board.verticalLength; x++) {
             for (let y = 0; y < board.horizontalLength; y++) {
                 let oneSquare = board.gameBoardArray[x][y];
-                document.getElementById(`${i}`).innerHTML = PlayerChar[oneSquare];
+                document.getElementById(`${(x * board.horizontalLength) + y}`).innerHTML = PlayerChar[oneSquare];
             }
         }
     },

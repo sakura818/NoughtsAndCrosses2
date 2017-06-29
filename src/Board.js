@@ -8,17 +8,10 @@ const GAME_BOARD_SQUARE_DEFAULT_VALUE = 0;
  */
 class Board {
     constructor(ui, verticalLength, horizontalLength, terminationCondition) {
-        /**
-         * ゲームが終了条件を満たしている場合はtrue、まだ終了しない場合はfalse
-         */
-        this.endFlag = false;
-
         this.ui = ui;
         this.verticalLength = verticalLength;
         this.horizontalLength = horizontalLength;
         this.terminationCondition = terminationCondition;
-
-        this.times = 0;
 
         this.init();
     }
@@ -46,7 +39,10 @@ class Board {
             this.gameBoardArray[i] = new Array(this.horizontalLength).fill(GAME_BOARD_SQUARE_DEFAULT_VALUE);
         }
 
+        //ゲームが終了条件を満たしている場合はtrue、まだ終了しない場合はfalse
         this.endFlag = false;
+
+        //プレイヤーが駒を置いた回数。
         this.times = 0;
     }
 

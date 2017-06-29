@@ -81,17 +81,10 @@ const GAME_BOARD_SQUARE_DEFAULT_VALUE = 0;
  */
 class Board {
     constructor(ui, verticalLength, horizontalLength, terminationCondition) {
-        /**
-         * ゲームが終了条件を満たしている場合はtrue、まだ終了しない場合はfalse
-         */
-        this.endFlag = false;
-
         this.ui = ui;
         this.verticalLength = verticalLength;
         this.horizontalLength = horizontalLength;
         this.terminationCondition = terminationCondition;
-
-        this.times = 0;
 
         this.init();
     }
@@ -119,7 +112,10 @@ class Board {
             this.gameBoardArray[i] = new Array(this.horizontalLength).fill(GAME_BOARD_SQUARE_DEFAULT_VALUE);
         }
 
+        //ゲームが終了条件を満たしている場合はtrue、まだ終了しない場合はfalse
         this.endFlag = false;
+
+        //プレイヤーが駒を置いた回数。
         this.times = 0;
     }
 
@@ -249,7 +245,7 @@ class Cpu {
     /**
      * CPUがボードに何を置くか決めるメソッド
      *
-     * @throws {Error} CPUを継承してselectByCpuメソッドを実装しない場合にスローする
+     * @throws {Error} Cpuを継承してselectメソッドを実装しない場合にスローする
      */
     select() {
         //呼ばれない限り例外発生しないのでcatchしなくても良い
@@ -257,11 +253,6 @@ class Cpu {
     }
 }
 
-/**
- * 弱いCPU
- *
- * @author asada
- */
 class EasyCpu extends Cpu {
     constructor(playerId) {
         super(playerId);
@@ -352,7 +343,7 @@ const Ui = {
         for (let x = 0; x < board.verticalLength; x++) {
             for (let y = 0; y < board.horizontalLength; y++) {
                 let oneSquare = board.gameBoardArray[x][y];
-                document.getElementById(`${i}`).innerHTML = PlayerChar[oneSquare];
+                document.getElementById(`${(x * board.horizontalLength) + y}`).innerHTML = PlayerChar[oneSquare];
             }
         }
     },

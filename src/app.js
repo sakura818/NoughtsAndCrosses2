@@ -1,6 +1,8 @@
 import { OXGame } from './oxGame.js';
+import { SquareBoard } from './board.js';
+import HumanPlayer from './humanPlayer.js';
+import { EasyCpu } from './cpu.js';
 
-//ゲームクラスを作成してゲームを開始する。
 OXGame3by3HumanVsCpu();
 
 /**

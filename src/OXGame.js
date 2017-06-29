@@ -1,4 +1,3 @@
-import { SquareBoard } from './board.js';
 import { PlayerChar, Ui } from './ui.js';
 import HumanPlayer from './humanPlayer.js';
 import { EasyCpu } from './cpu.js';
@@ -176,7 +175,7 @@ function createGameBoard(oxGame) {
 
         let button = document.createElement('button');
         button.id = `${i}`;
-        //buttonの表示でプレイヤーキャラを使うので注意。
+        //buttonの表示でプレイヤーキャラを使う
         button.innerHTML = PlayerChar[0];
         button.addEventListener('click', () => {
             if (oxGame.state === GameState.NOT_END) {

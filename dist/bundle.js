@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -71,12 +71,10 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__board_js__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ui_js__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__cpu_js__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__cpuLevel_js__ = __webpack_require__(4);
-
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ui_js__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__humanPlayer_js__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__cpu_js__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__cpuLevel_js__ = __webpack_require__(5);
 
 
 
@@ -112,12 +110,12 @@ class OXGame {
         this.nowPlayer = this.players[0];
 
         //TODO while文にしないとCpuVsCpuの場合に処理がストップすることになる。
-        if (!(this.nowPlayer instanceof __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__["a" /* default */])) {
+        if (!(this.nowPlayer instanceof __WEBPACK_IMPORTED_MODULE_1__humanPlayer_js__["a" /* default */])) {
             //CPUが先行の場合。
             this.nowPlayer.select(this.board);
             this.nowPlayer = this.getNextPlayer();
         }
-        __WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */].printBoard(this.board);
+        __WEBPACK_IMPORTED_MODULE_0__ui_js__["a" /* Ui */].printBoard(this.board);
 
         //ゲームの状態
         this.state = GameState.NOT_END;
@@ -130,17 +128,17 @@ class OXGame {
         //TODO ここの処理は二回書いてあるので、一回にしたい。
         this.state = this.board.checkGameEnd(this.nowPlayer.playerId);
 
-        __WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */].printBoard(this.board);
+        __WEBPACK_IMPORTED_MODULE_0__ui_js__["a" /* Ui */].printBoard(this.board);
         switch (this.state) {
             case GameState.END: {
-                __WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */].printResultMessage(GameState.END, this.nowPlayer.playerId);
+                __WEBPACK_IMPORTED_MODULE_0__ui_js__["a" /* Ui */].printResultMessage(GameState.END, this.nowPlayer.playerId);
                 return;
             }
             case GameState.NOT_END: {
                 break;
             }
             case GameState.DRAW: {
-                __WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */].printResultMessage(GameState.DRAW);
+                __WEBPACK_IMPORTED_MODULE_0__ui_js__["a" /* Ui */].printResultMessage(GameState.DRAW);
                 return;
             }
             default:
@@ -149,25 +147,25 @@ class OXGame {
         this.nowPlayer = this.getNextPlayer();
 
         //TODO while文にしないとHumanVsCpuVsCpuの場合に処理がストップすることになる。
-        if (!(this.nowPlayer instanceof __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__["a" /* default */])) {
+        if (!(this.nowPlayer instanceof __WEBPACK_IMPORTED_MODULE_1__humanPlayer_js__["a" /* default */])) {
             this.nowPlayer.select(this.board);
             this.board.checkGameEnd(this.nowPlayer.playerId);
-            __WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */].printBoard(this.board);
+            __WEBPACK_IMPORTED_MODULE_0__ui_js__["a" /* Ui */].printBoard(this.board);
         }
 
         //TODO ここの処理は二回書いてあるので、一回にしたい。
         this.state = this.board.checkGameEnd(this.nowPlayer.playerId);
-        __WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */].printBoard(this.board);
+        __WEBPACK_IMPORTED_MODULE_0__ui_js__["a" /* Ui */].printBoard(this.board);
         switch (this.state) {
             case GameState.END: {
-                __WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */].printResultMessage(GameState.END, this.nowPlayer.playerId);
+                __WEBPACK_IMPORTED_MODULE_0__ui_js__["a" /* Ui */].printResultMessage(GameState.END, this.nowPlayer.playerId);
                 return;
             }
             case GameState.NOT_END: {
                 break;
             }
             case GameState.DRAW: {
-                __WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */].printResultMessage(GameState.DRAW);
+                __WEBPACK_IMPORTED_MODULE_0__ui_js__["a" /* Ui */].printResultMessage(GameState.DRAW);
                 return;
             }
             default:
@@ -220,10 +218,10 @@ function createCpuLevelSelectBox(oxGame) {
     select.addEventListener('change', () => {
         //TODO CPUが複数いたとして、全部を一度に変更してしまうので注意
         for (let i = 0; i < oxGame.players.length; i++) {
-            if (!(oxGame.players[i] instanceof __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__["a" /* default */])) {
+            if (!(oxGame.players[i] instanceof __WEBPACK_IMPORTED_MODULE_1__humanPlayer_js__["a" /* default */])) {
                 switch (document.getElementById('CpuLevel').value) {
-                    case __WEBPACK_IMPORTED_MODULE_4__cpuLevel_js__["a" /* CpuLevel */].EASY:
-                        oxGame.players[i] = new __WEBPACK_IMPORTED_MODULE_3__cpu_js__["a" /* EasyCpu */](2);
+                    case __WEBPACK_IMPORTED_MODULE_3__cpuLevel_js__["a" /* CpuLevel */].EASY:
+                        oxGame.players[i] = new __WEBPACK_IMPORTED_MODULE_2__cpu_js__["a" /* EasyCpu */](2);
                         break;
 
                     default:
@@ -235,10 +233,10 @@ function createCpuLevelSelectBox(oxGame) {
     });
 
     //オプションを作る
-    for (let value of Object.keys(__WEBPACK_IMPORTED_MODULE_4__cpuLevel_js__["a" /* CpuLevel */])) {
+    for (let value of Object.keys(__WEBPACK_IMPORTED_MODULE_3__cpuLevel_js__["a" /* CpuLevel */])) {
         let option = document.createElement('option');
-        option.value = __WEBPACK_IMPORTED_MODULE_4__cpuLevel_js__["a" /* CpuLevel */][value];
-        option.innerHTML = __WEBPACK_IMPORTED_MODULE_4__cpuLevel_js__["a" /* CpuLevel */][value];
+        option.value = __WEBPACK_IMPORTED_MODULE_3__cpuLevel_js__["a" /* CpuLevel */][value];
+        option.innerHTML = __WEBPACK_IMPORTED_MODULE_3__cpuLevel_js__["a" /* CpuLevel */][value];
         select.appendChild(option);
     }
 
@@ -258,11 +256,11 @@ function createGameBoard(oxGame) {
 
         let button = document.createElement('button');
         button.id = `${i}`;
-        //buttonの表示でプレイヤーキャラを使うので注意。
-        button.innerHTML = __WEBPACK_IMPORTED_MODULE_1__ui_js__["b" /* PlayerChar */][0];
+        //buttonの表示でプレイヤーキャラを使う
+        button.innerHTML = __WEBPACK_IMPORTED_MODULE_0__ui_js__["b" /* PlayerChar */][0];
         button.addEventListener('click', () => {
             if (oxGame.state === GameState.NOT_END) {
-                oxGame.nowPlayer.select(oxGame.board, __WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */], Math.floor(i / oxGame.board.verticalLength), i % oxGame.board.verticalLength);
+                oxGame.nowPlayer.select(oxGame.board, __WEBPACK_IMPORTED_MODULE_0__ui_js__["a" /* Ui */], Math.floor(i / oxGame.board.verticalLength), i % oxGame.board.verticalLength);
                 oxGame.judge();
             }
         });
@@ -287,39 +285,75 @@ function createResetButton(oxGame) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (immutable) */ __webpack_exports__["OXGame3by3HumanVsCpu"] = OXGame3by3HumanVsCpu;
-/* harmony export (immutable) */ __webpack_exports__["OXGame3by3CpuVsHuman"] = OXGame3by3CpuVsHuman;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__oxGame_js__ = __webpack_require__(0);
-
-
-//ゲームクラスを作成してゲームを開始する。
-OXGame3by3HumanVsCpu();
-
 /**
- * 三目並べ
- * 先行:Human
- * 後攻:Cpu
+ * コンピュータのプレイヤー
+ *
+ * @author asada
  */
-function OXGame3by3HumanVsCpu() {
-    const board = new SquareBoard(3);
-    const players = [new HumanPlayer(1), new EasyCpu(2)];
-    return new __WEBPACK_IMPORTED_MODULE_0__oxGame_js__["a" /* OXGame */](board, players);
+class Cpu {
+    constructor(playerId) {
+        this.playerId = playerId;
+    }
+
+    /**
+     * CPUがボードに何を置くか決めるメソッド
+     *
+     * @throws {Error} Cpuを継承してselectメソッドを実装しない場合にスローする
+     */
+    select() {
+        //呼ばれない限り例外発生しないのでcatchしなくても良い
+        throw Error('不正なCPUが呼ばれました。');
+    }
 }
 
-/**
- * 三目並べ
- * 先行:Cpu
- * 後攻:Human
- */
-function OXGame3by3CpuVsHuman() {
-    const board = new SquareBoard(3);
-    const players = [new EasyCpu(1), new HumanPlayer(2)];
-    return new __WEBPACK_IMPORTED_MODULE_0__oxGame_js__["a" /* OXGame */](board, players);
+class EasyCpu extends Cpu {
+    constructor(playerId) {
+        super(playerId);
+    }
+
+    select(board) {
+        let x, y;
+        do {
+            x = Math.floor(Math.random() * board.verticalLength);
+            y = Math.floor(Math.random() * board.horizontalLength);
+        } while (board.isAlreadyPut(x, y));
+        board.put(x, y, this.playerId);
+    }
 }
+/* harmony export (immutable) */ __webpack_exports__["a"] = EasyCpu;
+
 
 /***/ }),
 /* 2 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/**
+ * 人間のプレイヤー
+ *
+ * @author asada
+ */
+class HumanPlayer {
+    constructor(playerId) {
+        this.playerId = playerId;
+    }
+
+    /**
+     * ユーザーが選択した場合に呼び出される関数
+     */
+    select(board, Ui, x, y) {
+        if (board.isAlreadyPut(x, y)) {
+            Ui.printIsAlreadyPutMessage();
+            return;
+        }
+        board.put(x, y, this.playerId);
+    }
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = HumanPlayer;
+
+
+/***/ }),
+/* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -471,55 +505,53 @@ class SquareBoard extends Board {
         return __WEBPACK_IMPORTED_MODULE_0__oxGame_js__["b" /* GameState */].NOT_END;
     }
 }
-/* unused harmony export SquareBoard */
+/* harmony export (immutable) */ __webpack_exports__["a"] = SquareBoard;
 
-
-
-/***/ }),
-/* 3 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/**
- * コンピュータのプレイヤー
- *
- * @author asada
- */
-class Cpu {
-    constructor(playerId) {
-        this.playerId = playerId;
-    }
-
-    /**
-     * CPUがボードに何を置くか決めるメソッド
-     *
-     * @throws {Error} Cpuを継承してselectメソッドを実装しない場合にスローする
-     */
-    select() {
-        //呼ばれない限り例外発生しないのでcatchしなくても良い
-        throw Error('不正なCPUが呼ばれました。');
-    }
-}
-
-class EasyCpu extends Cpu {
-    constructor(playerId) {
-        super(playerId);
-    }
-
-    select(board) {
-        let x, y;
-        do {
-            x = Math.floor(Math.random() * board.verticalLength);
-            y = Math.floor(Math.random() * board.horizontalLength);
-        } while (board.isAlreadyPut(x, y));
-        board.put(x, y, this.playerId);
-    }
-}
-/* harmony export (immutable) */ __webpack_exports__["a"] = EasyCpu;
 
 
 /***/ }),
 /* 4 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (immutable) */ __webpack_exports__["OXGame3by3HumanVsCpu"] = OXGame3by3HumanVsCpu;
+/* harmony export (immutable) */ __webpack_exports__["OXGame3by3CpuVsHuman"] = OXGame3by3CpuVsHuman;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__oxGame_js__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__board_js__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__cpu_js__ = __webpack_require__(1);
+
+
+
+
+
+OXGame3by3HumanVsCpu();
+
+/**
+ * 三目並べ
+ * 先行:Human
+ * 後攻:Cpu
+ */
+function OXGame3by3HumanVsCpu() {
+    const board = new __WEBPACK_IMPORTED_MODULE_1__board_js__["a" /* SquareBoard */](3);
+    const players = [new __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__["a" /* default */](1), new __WEBPACK_IMPORTED_MODULE_3__cpu_js__["a" /* EasyCpu */](2)];
+    return new __WEBPACK_IMPORTED_MODULE_0__oxGame_js__["a" /* OXGame */](board, players);
+}
+
+/**
+ * 三目並べ
+ * 先行:Cpu
+ * 後攻:Human
+ */
+function OXGame3by3CpuVsHuman() {
+    const board = new __WEBPACK_IMPORTED_MODULE_1__board_js__["a" /* SquareBoard */](3);
+    const players = [new __WEBPACK_IMPORTED_MODULE_3__cpu_js__["a" /* EasyCpu */](1), new __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__["a" /* default */](2)];
+    return new __WEBPACK_IMPORTED_MODULE_0__oxGame_js__["a" /* OXGame */](board, players);
+}
+
+/***/ }),
+/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -531,35 +563,6 @@ const CpuLevel = Object.freeze({
 });
 /* harmony export (immutable) */ __webpack_exports__["a"] = CpuLevel;
 
-
-
-/***/ }),
-/* 5 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/**
- * 人間のプレイヤー
- *
- * @author asada
- */
-class HumanPlayer {
-    constructor(playerId) {
-        this.playerId = playerId;
-    }
-
-    /**
-     * ユーザーが選択した場合に呼び出される関数
-     */
-    select(board, Ui, x, y) {
-        if (board.isAlreadyPut(x, y)) {
-            Ui.printIsAlreadyPutMessage();
-            return;
-        }
-        board.put(x, y, this.playerId);
-    }
-}
-/* harmony export (immutable) */ __webpack_exports__["a"] = HumanPlayer;
 
 
 /***/ }),

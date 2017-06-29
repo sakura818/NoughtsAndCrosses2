@@ -1,3 +1,5 @@
+import { Result } from './board.js';
+
 //ボードの駒とIDの連想配列。
 //画像を使用する場合も考えて、freezeの中止     _ _
 export const PlayerChar = ['_', '○', '×', '△', '□'];
@@ -23,11 +25,18 @@ export const Ui = {
      * 結果を表示する。
      * TODO Resultをオブジェクトにして、WINとDRAWにしたい。
      */
-    printResultMessage: function (result) {
-        if (result === undefined) {
-            window.alert('引き分けです。');
-        } else {
-            window.alert(`${PlayerChar[result]}の勝ちです。`)
+    printResultMessage: function (result, playerId) {
+        switch (result) {
+            case Result.END:
+                window.alert(`${PlayerChar[playerId]}の勝ちです。`)
+                break;
+
+            case Result.DRAW:
+                window.alert('引き分けです。');
+                break;
+
+            default:
+                throw new Error('printResultMessageの引数が予期されないものでした。');
         }
     },
     /**

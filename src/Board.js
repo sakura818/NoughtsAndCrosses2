@@ -1,5 +1,7 @@
 const GAME_BOARD_SQUARE_DEFAULT_VALUE = 0;
 
+export const Result = Object.freeze({ END: 'End', NOT_END: 'Not End', DRAW: 'Draw' });
+
 /**
  * ボードの抽象クラス
  * TODO 
@@ -7,8 +9,7 @@ const GAME_BOARD_SQUARE_DEFAULT_VALUE = 0;
  * @author asada
  */
 class Board {
-    constructor(ui, verticalLength, horizontalLength, terminationCondition) {
-        this.ui = ui;
+    constructor(verticalLength, horizontalLength, terminationCondition) {
         this.verticalLength = verticalLength;
         this.horizontalLength = horizontalLength;
         this.terminationCondition = terminationCondition;
@@ -39,9 +40,6 @@ class Board {
             this.gameBoardArray[i] = new Array(this.horizontalLength).fill(GAME_BOARD_SQUARE_DEFAULT_VALUE);
         }
 
-        //ゲームが終了条件を満たしている場合はtrue、まだ終了しない場合はfalse
-        this.endFlag = false;
-
         //プレイヤーが駒を置いた回数。
         this.times = 0;
     }
@@ -56,11 +54,11 @@ class Board {
                 }
                 score++;
                 if (score === this.terminationCondition) {
-                    return true;
+                    return Result.END;
                 }
             }
         }
-        return false;
+        return Result.NOT_END;
     }
 
     _checkVertical(playerId) {
@@ -73,22 +71,22 @@ class Board {
                 }
                 score++;
                 if (score === this.terminationCondition) {
-                    return true;
+                    return Result.END;
                 }
             }
         }
-        return false;
+        return Result.NOT_END;
     }
 
     _checkDraw() {
         for (let x = 0; x < this.gameBoardArray.length; x++) {
             for (let y = 0; y < this.gameBoardArray[x].length; y++) {
                 if (this.gameBoardArray[x][y] === GAME_BOARD_SQUARE_DEFAULT_VALUE) {
-                    return false;
+                    return Result.NOT_END;
                 }
             }
         }
-        return true;
+        return Result.DRAW;
     }
 }
 
@@ -98,8 +96,8 @@ class Board {
  * @author asada
  */
 export class SquareBoard extends Board {
-    constructor(ui, oneSideLength) {
-        super(ui, oneSideLength, oneSideLength, oneSideLength);
+    constructor(oneSideLength) {
+        super(oneSideLength, oneSideLength, oneSideLength);
         this.oneSideLength = oneSideLength;
     }
 
@@ -109,21 +107,19 @@ export class SquareBoard extends Board {
      * @param playerId 最後にプレイしたプレイヤーのIDを渡す
      */
     checkGameEnd(playerId) {
-        if (this._checkHorizontal(playerId) || this._checkVertical(playerId) || this._checkUpperLeftToLowerRight(playerId) || this._checkUpperRightToLowerLeft(playerId)) {
-            this.endFlag = true;
+        if (this._checkHorizontal() === Result.END) {
+            return Result.END;
         }
-
-        if (this.endFlag) {
-            this.ui.printBoard(this);
-            this.ui.printResultMessage(playerId);
-            return;
+        if (this._checkVertical() === Result.END) {
+            return Result.END;
         }
-
-        if (this._checkDraw()) {
-            this.endFlag = true;
-            this.ui.printBoard(this);
-            this.ui.printResultMessage();
+        if (this._checkUpperLeftToLowerRight() === Result.END) {
+            return Result.END;
         }
+        if (this._checkUpperRightToLowerLeft() === Result.END) {
+            return Result.END;
+        }
+        return this._checkDraw();
     }
 
     _checkUpperLeftToLowerRight(playerId) {
@@ -132,10 +128,10 @@ export class SquareBoard extends Board {
                 break;
             }
             if (i === this.terminationCondition - 1) {
-                return true;
+                return Result.END;
             }
         }
-        return false;
+        return Result.NOT_END;
     }
 
     _checkUpperRightToLowerLeft(playerId) {
@@ -144,9 +140,9 @@ export class SquareBoard extends Board {
                 break;
             }
             if (i === this.terminationCondition - 1) {
-                return true;
+                return Result.END;
             }
         }
-        return false;
+        return Result.NOT_END;
     }
 }

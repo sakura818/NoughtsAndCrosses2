@@ -1,4 +1,4 @@
-import { SquareBoard } from './board.js';
+import { Result, SquareBoard } from './board.js';
 import { PlayerChar, Ui } from './ui.js';
 import HumanPlayer from './humanPlayer.js';
 import { EasyCpu, TestCpu } from './cpu.js';
@@ -11,7 +11,6 @@ import { CpuLevel } from './cpuLevel.js';
  */
 class OXGame {
     constructor(board, players) {
-        this.ui = Ui;
         this.board = board;
         this.players = players;
 
@@ -32,34 +31,49 @@ class OXGame {
             this.nowPlayer.select(this.board);
             this.nowPlayer = this.getNextPlayer();
         }
-
-        this.ui.printBoard(this.board);
+        Ui.printBoard(this.board);
     }
 
     judge() {
-        if (this.board.endFlag) {
-            return;
+        switch (this.board.checkGameEnd(this.nowPlayer.playerId)) {
+            case Result.END: {
+                Ui.printResultMessage(Result.END, this.nowPlayer.playerId);
+                return;
+            }
+            case Result.NOT_END: {
+                break;
+            }
+            case Result.DRAW: {
+                Ui.printResultMessage(Result.DRAW);
+                return;
+            }
         }
-
-        this.board.checkGameEnd(this.nowPlayer.playerId);
 
         this.nowPlayer = this.getNextPlayer();
-
-        if (this.board.endFlag) {
-            return;
-        }
 
         if (!(this.nowPlayer instanceof HumanPlayer)) {
             this.nowPlayer.select(this.board);
             this.board.checkGameEnd(this.nowPlayer.playerId);
-            this.ui.printBoard(this.board);
+            Ui.printBoard(this.board);
         }
 
-        this.board.checkGameEnd(this.players.playerId);
+        switch (this.board.checkGameEnd(this.nowPlayer.playerId)) {
+            case Result.END: {
+                Ui.printResultMessage(Result.END, this.nowPlayer.playerId);
+                return;
+            }
+            case Result.NOT_END: {
+                break;
+            }
+            case Result.DRAW: {
+                Ui.printResultMessage(Result.DRAW);
+                return;
+            }
+        }
 
         this.nowPlayer = this.getNextPlayer();
 
-        this.ui.printBoard(this.board);
+        Ui.printBoard(this.board);
     }
 
     getNextPlayer() {
@@ -68,13 +82,13 @@ class OXGame {
 }
 
 export function OXGame3by3HumanVsCpu() {
-    const board = new SquareBoard(Ui, 3);
+    const board = new SquareBoard(3);
     const players = [new HumanPlayer(1), new EasyCpu(2)];
     return new OXGame(board, players);
 }
 
 export function OXGame3by3CpuVsHuman() {
-    const board = new SquareBoard(Ui, 3);
+    const board = new SquareBoard(3);
     const players = [new EasyCpu(1), new HumanPlayer(2)];
     return new OXGame(board, players);
 }
@@ -114,18 +128,15 @@ function createCpuLevelSelectBox(oxGame) {
     const select = document.createElement('select');
     select.id = 'CpuLevel';
     select.addEventListener('change', () => {
-        console.log('呼ばれたぞ');
         //CpuをoxGame.playersから見つけてきて、中身を変更する。
         for (let i = 0; i < oxGame.players.length; i++) {
             if (!(oxGame.players[i] instanceof HumanPlayer)) {
                 switch (document.getElementById('CpuLevel').value) {
                     case CpuLevel.EASY:
-                        console.log(i);
                         oxGame.players[i] = new EasyCpu(2);
                         break;
 
                     case CpuLevel.TEST:
-                        console.log(i);
                         oxGame.players[i] = new TestCpu(2);
                         break;
 

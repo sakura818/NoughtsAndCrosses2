@@ -73,6 +73,10 @@
 "use strict";
 const GAME_BOARD_SQUARE_DEFAULT_VALUE = 0;
 
+const Result = Object.freeze({ END: 'End', NOT_END: 'Not End', DRAW: 'Draw' });
+/* harmony export (immutable) */ __webpack_exports__["a"] = Result;
+
+
 /**
  * ボードの抽象クラス
  * TODO 
@@ -80,8 +84,7 @@ const GAME_BOARD_SQUARE_DEFAULT_VALUE = 0;
  * @author asada
  */
 class Board {
-    constructor(ui, verticalLength, horizontalLength, terminationCondition) {
-        this.ui = ui;
+    constructor(verticalLength, horizontalLength, terminationCondition) {
         this.verticalLength = verticalLength;
         this.horizontalLength = horizontalLength;
         this.terminationCondition = terminationCondition;
@@ -112,9 +115,6 @@ class Board {
             this.gameBoardArray[i] = new Array(this.horizontalLength).fill(GAME_BOARD_SQUARE_DEFAULT_VALUE);
         }
 
-        //ゲームが終了条件を満たしている場合はtrue、まだ終了しない場合はfalse
-        this.endFlag = false;
-
         //プレイヤーが駒を置いた回数。
         this.times = 0;
     }
@@ -129,11 +129,11 @@ class Board {
                 }
                 score++;
                 if (score === this.terminationCondition) {
-                    return true;
+                    return Result.END;
                 }
             }
         }
-        return false;
+        return Result.NOT_END;
     }
 
     _checkVertical(playerId) {
@@ -146,22 +146,22 @@ class Board {
                 }
                 score++;
                 if (score === this.terminationCondition) {
-                    return true;
+                    return Result.END;
                 }
             }
         }
-        return false;
+        return Result.NOT_END;
     }
 
     _checkDraw() {
         for (let x = 0; x < this.gameBoardArray.length; x++) {
             for (let y = 0; y < this.gameBoardArray[x].length; y++) {
                 if (this.gameBoardArray[x][y] === GAME_BOARD_SQUARE_DEFAULT_VALUE) {
-                    return false;
+                    return Result.NOT_END;
                 }
             }
         }
-        return true;
+        return Result.DRAW;
     }
 }
 
@@ -171,8 +171,8 @@ class Board {
  * @author asada
  */
 class SquareBoard extends Board {
-    constructor(ui, oneSideLength) {
-        super(ui, oneSideLength, oneSideLength, oneSideLength);
+    constructor(oneSideLength) {
+        super(oneSideLength, oneSideLength, oneSideLength);
         this.oneSideLength = oneSideLength;
     }
 
@@ -182,21 +182,19 @@ class SquareBoard extends Board {
      * @param playerId 最後にプレイしたプレイヤーのIDを渡す
      */
     checkGameEnd(playerId) {
-        if (this._checkHorizontal(playerId) || this._checkVertical(playerId) || this._checkUpperLeftToLowerRight(playerId) || this._checkUpperRightToLowerLeft(playerId)) {
-            this.endFlag = true;
+        if (this._checkHorizontal() === Result.END) {
+            return Result.END;
         }
-
-        if (this.endFlag) {
-            this.ui.printBoard(this);
-            this.ui.printResultMessage(playerId);
-            return;
+        if (this._checkVertical() === Result.END) {
+            return Result.END;
         }
-
-        if (this._checkDraw()) {
-            this.endFlag = true;
-            this.ui.printBoard(this);
-            this.ui.printResultMessage();
+        if (this._checkUpperLeftToLowerRight() === Result.END) {
+            return Result.END;
         }
+        if (this._checkUpperRightToLowerLeft() === Result.END) {
+            return Result.END;
+        }
+        return this._checkDraw();
     }
 
     _checkUpperLeftToLowerRight(playerId) {
@@ -205,10 +203,10 @@ class SquareBoard extends Board {
                 break;
             }
             if (i === this.terminationCondition - 1) {
-                return true;
+                return Result.END;
             }
         }
-        return false;
+        return Result.NOT_END;
     }
 
     _checkUpperRightToLowerLeft(playerId) {
@@ -217,13 +215,13 @@ class SquareBoard extends Board {
                 break;
             }
             if (i === this.terminationCondition - 1) {
-                return true;
+                return Result.END;
             }
         }
-        return false;
+        return Result.NOT_END;
     }
 }
-/* harmony export (immutable) */ __webpack_exports__["a"] = SquareBoard;
+/* harmony export (immutable) */ __webpack_exports__["b"] = SquareBoard;
 
 
 
@@ -324,15 +322,10 @@ class HumanPlayer {
      * ユーザーが選択した場合に呼び出される関数
      */
     select(board, ui, x, y) {
-        if (board.endFlag) {
-            return;
-        }
-
         if (board.isAlreadyPut(x, y)) {
             ui.printIsAlreadyPutMessage();
             return;
         }
-
         board.put(x, y, this.playerId);
     }
 }
@@ -344,6 +337,9 @@ class HumanPlayer {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__board_js__ = __webpack_require__(0);
+
+
 //ボードの駒とIDの連想配列。
 //画像を使用する場合も考えて、freezeの中止     _ _
 const PlayerChar = ['_', '○', '×', '△', '□'];
@@ -371,11 +367,18 @@ const Ui = {
      * 結果を表示する。
      * TODO Resultをオブジェクトにして、WINとDRAWにしたい。
      */
-    printResultMessage: function (result) {
-        if (result === undefined) {
-            window.alert('引き分けです。');
-        } else {
-            window.alert(`${PlayerChar[result]}の勝ちです。`)
+    printResultMessage: function (result, playerId) {
+        switch (result) {
+            case __WEBPACK_IMPORTED_MODULE_0__board_js__["default"].END:
+                window.alert(`${PlayerChar[playerId]}の勝ちです。`)
+                break;
+
+            case __WEBPACK_IMPORTED_MODULE_0__board_js__["default"].DRAW:
+                window.alert('引き分けです。');
+                break;
+
+            default:
+                throw new Error('printResultMessageの引数が予期されないものでした。');
         }
     },
     /**
@@ -413,7 +416,6 @@ const Ui = {
  */
 class OXGame {
     constructor(board, players) {
-        this.ui = __WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */];
         this.board = board;
         this.players = players;
 
@@ -434,34 +436,49 @@ class OXGame {
             this.nowPlayer.select(this.board);
             this.nowPlayer = this.getNextPlayer();
         }
-
-        this.ui.printBoard(this.board);
+        __WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */].printBoard(this.board);
     }
 
     judge() {
-        if (this.board.endFlag) {
-            return;
+        switch (this.board.checkGameEnd(this.nowPlayer.playerId)) {
+            case __WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* Result */].END: {
+                __WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */].printResultMessage(__WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* Result */].END, this.nowPlayer.playerId);
+                return;
+            }
+            case __WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* Result */].NOT_END: {
+                break;
+            }
+            case __WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* Result */].DRAW: {
+                __WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */].printResultMessage(__WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* Result */].DRAW);
+                return;
+            }
         }
-
-        this.board.checkGameEnd(this.nowPlayer.playerId);
 
         this.nowPlayer = this.getNextPlayer();
-
-        if (this.board.endFlag) {
-            return;
-        }
 
         if (!(this.nowPlayer instanceof __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__["a" /* default */])) {
             this.nowPlayer.select(this.board);
             this.board.checkGameEnd(this.nowPlayer.playerId);
-            this.ui.printBoard(this.board);
+            __WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */].printBoard(this.board);
         }
 
-        this.board.checkGameEnd(this.players.playerId);
+        switch (this.board.checkGameEnd(this.nowPlayer.playerId)) {
+            case __WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* Result */].END: {
+                __WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */].printResultMessage(__WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* Result */].END, this.nowPlayer.playerId);
+                return;
+            }
+            case __WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* Result */].NOT_END: {
+                break;
+            }
+            case __WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* Result */].DRAW: {
+                __WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */].printResultMessage(__WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* Result */].DRAW);
+                return;
+            }
+        }
 
         this.nowPlayer = this.getNextPlayer();
 
-        this.ui.printBoard(this.board);
+        __WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */].printBoard(this.board);
     }
 
     getNextPlayer() {
@@ -470,13 +487,13 @@ class OXGame {
 }
 
 function OXGame3by3HumanVsCpu() {
-    const board = new __WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* SquareBoard */](__WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */], 3);
+    const board = new __WEBPACK_IMPORTED_MODULE_0__board_js__["b" /* SquareBoard */](3);
     const players = [new __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__["a" /* default */](1), new __WEBPACK_IMPORTED_MODULE_3__cpu_js__["a" /* EasyCpu */](2)];
     return new OXGame(board, players);
 }
 
 function OXGame3by3CpuVsHuman() {
-    const board = new __WEBPACK_IMPORTED_MODULE_0__board_js__["a" /* SquareBoard */](__WEBPACK_IMPORTED_MODULE_1__ui_js__["a" /* Ui */], 3);
+    const board = new __WEBPACK_IMPORTED_MODULE_0__board_js__["b" /* SquareBoard */](3);
     const players = [new __WEBPACK_IMPORTED_MODULE_3__cpu_js__["a" /* EasyCpu */](1), new __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__["a" /* default */](2)];
     return new OXGame(board, players);
 }
@@ -516,18 +533,15 @@ function createCpuLevelSelectBox(oxGame) {
     const select = document.createElement('select');
     select.id = 'CpuLevel';
     select.addEventListener('change', () => {
-        console.log('呼ばれたぞ');
         //CpuをoxGame.playersから見つけてきて、中身を変更する。
         for (let i = 0; i < oxGame.players.length; i++) {
             if (!(oxGame.players[i] instanceof __WEBPACK_IMPORTED_MODULE_2__humanPlayer_js__["a" /* default */])) {
                 switch (document.getElementById('CpuLevel').value) {
                     case __WEBPACK_IMPORTED_MODULE_4__cpuLevel_js__["a" /* CpuLevel */].EASY:
-                        console.log(i);
                         oxGame.players[i] = new __WEBPACK_IMPORTED_MODULE_3__cpu_js__["a" /* EasyCpu */](2);
                         break;
 
                     case __WEBPACK_IMPORTED_MODULE_4__cpuLevel_js__["a" /* CpuLevel */].TEST:
-                        console.log(i);
                         oxGame.players[i] = new __WEBPACK_IMPORTED_MODULE_3__cpu_js__["b" /* TestCpu */](2);
                         break;
 

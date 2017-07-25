@@ -1,9 +1,9 @@
-import { PlayerChar, Ui } from './ui.js';
-import HumanPlayer from './humanPlayer.js';
-import { EasyCpu } from './cpu.js';
-import { CpuLevel } from './cpuLevel.js';
+import { PlayerChar, Ui } from "./ui.js";
+import { HumanPlayer } from "./humanPlayer.js";
+import { EasyCpu } from "./cpu.js";
+import { CpuLevel } from "./cpuLevel.js";
 
-export const GameState = Object.freeze({ END: 'end', NOT_END: 'notEnd', DRAW: 'draw' });
+export const GameState = Object.freeze({ END: "end", NOT_END: "notEnd", DRAW: "draw" });
 
 /**
  * OXGameクラス
@@ -15,8 +15,8 @@ export class OXGame {
         this.board = board;
         this.players = players;
 
-        const el = createDOM(this);
-        document.getElementById('root').appendChild(el);
+        const element = createDOM(this);
+        document.getElementById("root").appendChild(element);
 
         this.init();
     }
@@ -30,12 +30,11 @@ export class OXGame {
         this.nowPlayer = this.players[0];
 
         //TODO while文にしないと Cpu Vs Cpu の場合に処理がストップすることになる。
-        if (!(this.nowPlayer instanceof HumanPlayer)) {
-            //CPUが先行の場合。
+        if (!(this.nowPlayer instanceof HumanPlayer)) { // instanceofとはどのコンストラクタ(今回はHumanPlayer)から生成されたのかを示すもの https://developer.mozilla.org/ja/docs/JavaScript/Reference/Operators/instanceof
             this.nowPlayer.select(this.board);
             this.nowPlayer = this.getNextPlayer();
         }
-        Ui.printBoard(this.board);
+        Ui.printBoard(this.board); // 現在のボードの状況を表示
 
         //ゲームの状態
         this.state = GameState.NOT_END;
@@ -49,19 +48,19 @@ export class OXGame {
         this.state = this.board.checkGameEnd(this.nowPlayer.playerId);
         Ui.printBoard(this.board);
         switch (this.state) {
-            case GameState.END: {
-                Ui.printResultMessage(GameState.END, this.nowPlayer.playerId);
+            case GameState.END: { // ゲーム終了と判断したら
+                Ui.printResultMessage(GameState.END, this.nowPlayer.playerId); // 終了のフラグとそのときのplayerIDをわたして、勝利のアラートを表示する
                 return;
             }
-            case GameState.NOT_END: {
+            case GameState.NOT_END: { // ゲームはまだ終了しないと判断したらなにもしないでbreak
                 break;
             }
-            case GameState.DRAW: {
-                Ui.printResultMessage(GameState.DRAW);
+            case GameState.DRAW: { // ゲームひきわけと判断したら
+                Ui.printResultMessage(GameState.DRAW); // ひきわけのフラグをわたしてひきわけのアラートを表示する
                 return;
             }
-            default:
-                throw new Error('checkGameEndの戻り値が予期されないものでした。');
+            default: // 式の値にマッチするものが存在しない場合に実行する文 https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Statements/switch
+                throw new Error("checkGameEndの戻り値が予期されないものでした。");
         }
         this.nowPlayer = this.getNextPlayer();
 
@@ -88,7 +87,7 @@ export class OXGame {
                 return;
             }
             default:
-                throw new Error('checkGameEndの戻り値が予期されないものでした。');
+                throw new Error("checkGameEndの戻り値が予期されないものでした。");
         }
         this.nowPlayer = this.getNextPlayer();
     }
@@ -105,8 +104,8 @@ export class OXGame {
  * @returns {Element} index.htmlのコンテンツを返す。
  */
 function createDOM(oxGame) {
-    const divClassContent = document.createElement('div');
-    divClassContent.className = 'content';
+    const divClassContent = document.createElement("div");
+    divClassContent.className = "content";
 
     divClassContent.appendChild(createTitle());
 
@@ -119,30 +118,30 @@ function createDOM(oxGame) {
     return divClassContent;
 }
 
-function createTitle() {
-    const title = document.createElement('h1');
-    title.innerHTML = '○×ゲーム';
+function createTitle() { // タイトル作成
+    const title = document.createElement("h1"); // h1つくる
+    title.innerHTML = "○×ゲーム"; // h1に○×ゲームとかく
     return title;
 }
 
 function createCpuLevelSelectBox(oxGame) {
-    const pTag = document.createElement('p');
-    pTag.innerHTML = 'CPUの難易度:';
+    const pTag = document.createElement("p"); // pTagつくる
+    pTag.innerHTML = "CPUの難易度:"; 
 
     //セレクトボックスを作る
-    const select = document.createElement('select');
-    select.id = 'CpuLevel';
-    select.addEventListener('change', () => {
+    const select = document.createElement("select");
+    select.id = "CpuLevel";
+    select.addEventListener("change", () => {
         //TODO CPUが複数いたとして、全部を一度に変更してしまうので注意
         for (let i = 0; i < oxGame.players.length; i++) {
             if (!(oxGame.players[i] instanceof HumanPlayer)) {
-                switch (document.getElementById('CpuLevel').value) {
+                switch (document.getElementById("CpuLevel").value) {
                     case CpuLevel.EASY:
                         oxGame.players[i] = new EasyCpu(2);
                         break;
 
                     default:
-                        throw new Error('存在しないCPUが選択されました。');
+                        throw new Error("存在しないCPUが選択されました。");
                 }
             }
         }
@@ -151,7 +150,7 @@ function createCpuLevelSelectBox(oxGame) {
 
     //オプションを作る
     for (let value of Object.keys(CpuLevel)) {
-        let option = document.createElement('option');
+        let option = document.createElement("option");
         option.value = CpuLevel[value];
         option.innerHTML = CpuLevel[value];
         select.appendChild(option);
@@ -165,17 +164,17 @@ function createGameBoard(oxGame) {
     const fragment = document.createDocumentFragment();
 
     //pタグで段落をつける
-    let pTag = document.createElement('p');
+    let pTag = document.createElement("p");
     for (let i = 0; i < oxGame.board.verticalLength * oxGame.board.horizontalLength; i++) {
         if (i % oxGame.board.horizontalLength === 0) {
-            pTag = document.createElement('p');
+            pTag = document.createElement("p");
         }
 
-        let button = document.createElement('button');
+        let button = document.createElement("button");
         button.id = `${i}`;
         //buttonの表示でプレイヤーキャラを使う
         button.innerHTML = PlayerChar[0];
-        button.addEventListener('click', () => {
+        button.addEventListener("click", () => {
             if (oxGame.state === GameState.NOT_END) {
                 oxGame.nowPlayer.select(oxGame.board, Ui, Math.floor(i / oxGame.board.verticalLength), i % oxGame.board.verticalLength);
                 oxGame.judge();
@@ -188,10 +187,10 @@ function createGameBoard(oxGame) {
     return fragment;
 }
 
-function createResetButton(oxGame) {
-    const resetButton = document.createElement('button');
-    resetButton.innerHTML = 'リセット';
-    resetButton.addEventListener('click', () => {
+function createResetButton(oxGame) {　// リセットボタンを作る
+    const resetButton = document.createElement("button"); // buttonというelementをつくる
+    resetButton.innerHTML = "リセット"; // ボタンの表示は"リセット"とする
+    resetButton.addEventListener("click", () => { // アロー関数(無名関数) このresetButtonを"click"したときにinit()を呼び出す
         oxGame.init();
     });
     return resetButton;

@@ -3,7 +3,7 @@
  *
  * @author asada
  */
-export default class HumanPlayer {
+export default class HumanPlayer { // exportは外部クラスで使用するため　defaultは値を1つだけ返すことを意味する
     constructor(playerId) {
         this.playerId = playerId;
     }
@@ -13,7 +13,7 @@ export default class HumanPlayer {
      */
     select(board, Ui, x, y) {
         if (board.isAlreadyPut(x, y)) {
-            Ui.printIsAlreadyPutMessage();
+            Ui.printIsAlreadyPutMessage(); // もし選択したマスに既にコマが置かれていたらそのような旨のアラートをだす
             return;
         }
         board.put(x, y, this.playerId);
